@@ -2,3 +2,8 @@
 *.pyc
 __pycache__/
 demo/post.jpg
+demo/post_*.jpg
+demo/approval.html
+demo/_logo_b64.txt
+otica_logo.jpg
+.claude/
