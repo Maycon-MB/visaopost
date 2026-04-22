@@ -484,11 +484,16 @@
   @media (max-width: 700px) {
     nav .nav-links { display: none; }
     .hero h1 { font-size: 34px; }
-    .stat-grid, .comparison-grid, .ideas-grid, .pricing-grid, .calendar-grid {
+    .stat-grid, .comparison-grid, .ideas-grid, .pricing-grid, .calendar-grid, .demo-grid {
       grid-template-columns: 1fr;
     }
     section { padding: 60px 20px; }
     .warning-section, .pricing-section, .numbers-bg { padding: 60px 20px; }
+    .email-mockup-wrap { flex-direction: column; align-items: center; }
+    .email-phone { width: 260px; }
+    .flow-steps { gap: 16px; }
+    .flow-step { flex-direction: column; gap: 8px; }
+    .step-time { align-self: flex-start; }
   }
 </style>
 </head>
@@ -959,7 +964,7 @@
     <h2 style="color:white">Veja como fica na <span style="color:var(--blue-light)">prática</span></h2>
     <p class="section-sub">Perfil real antes e depois de 30 dias com o VisaoPost.</p>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;" class="demo-grid">
 
       <!-- ANTES -->
       <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);
