@@ -232,47 +232,65 @@
   .pricing-section .section-sub { color: rgba(255,255,255,0.6); }
   .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
   .price-card {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
     border-radius: 20px; padding: 32px 28px;
     transition: transform 0.2s;
+    display: flex; flex-direction: column;
   }
   .price-card:hover { transform: translateY(-4px); }
+
+  /* GROWTH — destaque sem sacrificar legibilidade */
   .price-card.featured {
-    background: var(--blue-light);
-    border-color: var(--blue-light);
+    background: #0D3322;
+    border: 2px solid var(--blue-light);
     position: relative;
   }
-  .price-card.featured::before {
-    content: 'Mais Popular';
-    display: none;
+  .price-card.featured::before { display: none; }
+
+  /* PREMIUM — visual premium escuro */
+  .price-card.premium {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(212,136,10,0.3);
   }
+
   .price-card .plan-name {
-    font-size: 13px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 1.5px; color: rgba(255,255,255,0.6); margin-bottom: 8px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 2px; color: rgba(255,255,255,0.45); margin-bottom: 12px;
   }
-  .price-card.featured .plan-name { color: rgba(255,255,255,0.85); }
+  .price-card.featured .plan-name { color: var(--blue-light); }
+  .price-card.premium .plan-name  { color: rgba(212,136,10,0.8); }
+
   .price-card .plan-price {
-    font-size: 40px; font-weight: 900; color: var(--white);
-    letter-spacing: -1px; line-height: 1;
+    font-size: 48px; font-weight: 900; color: var(--white);
+    letter-spacing: -2px; line-height: 1;
   }
   .price-card .plan-price sub {
-    font-size: 14px; font-weight: 500; vertical-align: baseline;
-    opacity: 0.7; letter-spacing: 0;
+    font-size: 15px; font-weight: 400; vertical-align: baseline;
+    opacity: 0.6; letter-spacing: 0;
   }
   .price-card .plan-setup {
-    font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; margin-bottom: 24px;
+    font-size: 12px; color: rgba(255,255,255,0.4);
+    margin-top: 6px; margin-bottom: 8px;
   }
-  .price-card ul { list-style: none; }
+  .price-card .plan-desc {
+    font-size: 13px; color: rgba(255,255,255,0.55);
+    line-height: 1.5; margin-bottom: 24px;
+    padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .price-card ul { list-style: none; flex: 1; }
   .price-card ul li {
-    font-size: 15px; padding: 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    color: rgba(255,255,255,0.8);
-    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; padding: 9px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.85);
+    display: flex; align-items: center; gap: 10px;
   }
   .price-card ul li:last-child { border-bottom: none; }
-  .price-card ul li .check { color: var(--green); font-weight: 700; }
-  .price-card ul li .dash { color: rgba(255,255,255,0.25); }
+  .price-card ul li .check { color: #4CAF50; font-weight: 700; font-size: 16px; flex-shrink:0; }
+  .price-card.featured ul li .check { color: var(--blue-light); }
+  .price-card.premium  ul li .check { color: var(--blue-light); }
+  .price-card ul li .dash { color: rgba(255,255,255,0.2); flex-shrink:0; }
+  .price-card ul li.highlight { color: #fff; font-weight: 600; }
 
   /* ── CALENDÁRIO ── */
   .calendar-grid {
@@ -912,10 +930,13 @@
     <p class="section-sub">Sem contrato de fidelidade. Cancela quando quiser.</p>
 
     <div class="pricing-grid">
+
+      <!-- STARTER -->
       <div class="price-card">
         <div class="plan-name">Starter</div>
         <div class="plan-price">R$97<sub>/mês</sub></div>
         <div class="plan-setup">+ R$800 no setup</div>
+        <div class="plan-desc">Instagram funcionando todo dia, sem você precisar fazer nada.</div>
         <ul>
           <li><span class="check">✓</span> 20 posts/mês no Instagram</li>
           <li><span class="check">✓</span> Identidade visual exclusiva</li>
@@ -928,26 +949,32 @@
           <li><span class="dash">—</span> Bot WhatsApp</li>
         </ul>
       </div>
+
+      <!-- GROWTH -->
       <div class="price-card featured">
         <div class="plan-name">Growth</div>
         <div class="plan-price">R$197<sub>/mês</sub></div>
         <div class="plan-setup">+ R$1.000 no setup</div>
+        <div class="plan-desc">Presença digital completa: Instagram, site próprio e Google — tudo atualizado automaticamente.</div>
         <ul>
           <li><span class="check">✓</span> 30 posts/mês no Instagram</li>
           <li><span class="check">✓</span> Identidade visual exclusiva</li>
           <li><span class="check">✓</span> Aprovação por e-mail</li>
           <li><span class="check">✓</span> Calendário comemorativo</li>
-          <li><span class="check">✓</span> Landing page profissional</li>
-          <li><span class="check">✓</span> Google Meu Negócio</li>
-          <li><span class="check">✓</span> Relatório mensal</li>
+          <li class="highlight"><span class="check">✓</span> Landing page profissional</li>
+          <li class="highlight"><span class="check">✓</span> Google Meu Negócio</li>
+          <li class="highlight"><span class="check">✓</span> Relatório mensal</li>
           <li><span class="dash">—</span> Oferta Relâmpago</li>
           <li><span class="dash">—</span> Bot WhatsApp</li>
         </ul>
       </div>
-      <div class="price-card">
+
+      <!-- PREMIUM -->
+      <div class="price-card premium">
         <div class="plan-name">Premium</div>
         <div class="plan-price">R$297<sub>/mês</sub></div>
         <div class="plan-setup">+ R$1.500 no setup</div>
+        <div class="plan-desc">Tudo do Growth mais atendimento automático e controle total sobre promoções.</div>
         <ul>
           <li><span class="check">✓</span> 30 posts/mês no Instagram</li>
           <li><span class="check">✓</span> Identidade visual exclusiva</li>
@@ -956,10 +983,11 @@
           <li><span class="check">✓</span> Landing page profissional</li>
           <li><span class="check">✓</span> Google Meu Negócio</li>
           <li><span class="check">✓</span> Relatório mensal com recomendações</li>
-          <li><span class="check">✓</span> Oferta Relâmpago</li>
-          <li><span class="check">✓</span> Bot WhatsApp 24h</li>
+          <li class="highlight"><span class="check">✓</span> Oferta Relâmpago</li>
+          <li class="highlight"><span class="check">✓</span> Bot WhatsApp 24h</li>
         </ul>
       </div>
+
     </div>
   </div>
 </div>
