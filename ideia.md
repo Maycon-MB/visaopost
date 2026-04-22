@@ -122,6 +122,32 @@ Sem contrato de fidelidade. Cancela quando quiser.
 
 ---
 
+## Relatório mensal
+
+Não exige painel de administração. É um **e-mail automático** enviado no fim de cada mês, igual ao e-mail de aprovação de post.
+
+Conteúdo do e-mail:
+- Posts publicados no mês
+- Posts aprovados vs reprovados
+- Seguidores no início vs fim do mês
+- Post com melhor desempenho
+- Recomendação para o próximo mês (Growth com recomendações / Premium)
+
+Painel de administração só entra quando houver 10+ clientes. Até lá, o Supabase dashboard cobre tudo que o operador precisa ver.
+
+---
+
+## Geração de imagens
+
+Tecnologia: **HTML/CSS → screenshot via Playwright → JPEG via Pillow.**
+Resultado com qualidade de designer: Google Fonts, gradientes CSS, glassmorphism, tipografia moderna.
+
+Cada tema tem múltiplos templates. A IA (Gemini) escolhe qual template usar, o posicionamento do texto e a cor de destaque — garantindo que o mesmo feriado nunca repita a mesma composição em anos consecutivos.
+
+Pillow é usado apenas para redimensionar e salvar o JPEG final.
+
+---
+
 ## Ordem de desenvolvimento
 
 1. Schema SQL + seed do calendário BR → valida no Supabase
