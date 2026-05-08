@@ -457,7 +457,17 @@ const PresentationPage = () => {
             
             {/* WPP Header */}
             <div style={{ padding: '12px 20px', background: '#075E54', display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-              <img src="/otica_logo.jpg" alt="Avatar" style={{ width: '40px', height: '40px', borderRadius: '50%', border: `1px solid ${colors.gold}`, objectFit: 'cover' }} />
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: `1px solid ${colors.gold}`, overflow: 'hidden', backgroundColor: colors.gold, display: 'flex', alignItems: 'center', justifyContent: 'center', color: colors.dark, fontWeight: '800', fontSize: '14px' }}>
+                <img 
+                  src="/otica_logo.jpg" 
+                  alt="DL" 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+                DL
+              </div>
               <div>
                 <div style={{ fontSize: '15px', fontWeight: '700', color: '#fff' }}>Ótica Di Lorenzo</div>
                 <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)' }}>online agora</div>
