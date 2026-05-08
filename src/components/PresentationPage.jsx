@@ -434,7 +434,7 @@ const PresentationPage = () => {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '60px', alignItems: 'center' }}>
-          {/* WhatsApp Mockup - High Fidelity */}
+          {/* WhatsApp Mockup - Ultra Fidelity */}
           <div style={{
             background: '#E5DDD5',
             borderRadius: '40px',
@@ -454,8 +454,8 @@ const PresentationPage = () => {
             </div>
             
             {/* WPP Header */}
-            <div style={{ padding: '15px 20px', background: '#075E54', display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: colors.gold, display: 'flex', alignItems: 'center', justifyContent: 'center', color: colors.dark, fontWeight: '800', fontSize: '14px' }}>DL</div>
+            <div style={{ padding: '12px 20px', background: '#075E54', display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+              <img src="/otica_logo.jpg" alt="Avatar" style={{ width: '40px', height: '40px', borderRadius: '50%', border: `1px solid ${colors.gold}`, objectFit: 'cover' }} />
               <div>
                 <div style={{ fontSize: '15px', fontWeight: '700', color: '#fff' }}>Ótica Di Lorenzo</div>
                 <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)' }}>online agora</div>
@@ -463,22 +463,30 @@ const PresentationPage = () => {
             </div>
 
             {/* Chat Body */}
-            <div style={{ padding: '20px', height: '400px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-              <div style={{ alignSelf: 'flex-start', background: '#fff', padding: '10px 14px', borderRadius: '0 15px 15px 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)', position: 'relative' }}>
+            <div style={{ padding: '20px', height: '420px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              <div style={{ alignSelf: 'flex-start', background: '#fff', padding: '10px 14px', borderRadius: '0 15px 15px 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)' }}>
                 Oi! Vocês fazem exame de vista? É pago?
                 <div style={{ fontSize: '10px', color: '#999', textAlign: 'right', marginTop: '4px' }}>14:10</div>
               </div>
-              <div style={{ alignSelf: 'flex-end', background: '#DCF8C6', padding: '10px 14px', borderRadius: '15px 15px 0 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)', position: 'relative' }}>
+              <div style={{ alignSelf: 'flex-end', background: '#DCF8C6', padding: '10px 14px', borderRadius: '15px 15px 0 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)' }}>
                 Olá! Sim, a Ótica Di Lorenzo realiza exame de vista gratuitamente 😊 Quer agendar para essa semana?
                 <div style={{ fontSize: '10px', color: '#669966', textAlign: 'right', marginTop: '4px' }}>14:10 ✓✓</div>
               </div>
-              <div style={{ alignSelf: 'flex-start', background: '#fff', padding: '10px 14px', borderRadius: '0 15px 15px 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)', position: 'relative' }}>
+              <div style={{ alignSelf: 'flex-start', background: '#fff', padding: '10px 14px', borderRadius: '0 15px 15px 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)' }}>
                 Vocês atendem em domicílio também?
                 <div style={{ fontSize: '10px', color: '#999', textAlign: 'right', marginTop: '4px' }}>14:11</div>
               </div>
-              <div style={{ alignSelf: 'flex-end', background: '#DCF8C6', padding: '10px 14px', borderRadius: '15px 15px 0 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)', position: 'relative' }}>
+              <div style={{ alignSelf: 'flex-end', background: '#DCF8C6', padding: '10px 14px', borderRadius: '15px 15px 0 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)' }}>
                 Sim! Fazemos atendimento em domicílio 🏠 Ideal pra quem tem dificuldade de se locomover. Posso agendar uma visita?
                 <div style={{ fontSize: '10px', color: '#669966', textAlign: 'right', marginTop: '4px' }}>14:11 ✓✓</div>
+              </div>
+              <div style={{ alignSelf: 'flex-start', background: '#fff', padding: '10px 14px', borderRadius: '0 15px 15px 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)' }}>
+                Qual o horário de vocês?
+                <div style={{ fontSize: '10px', color: '#999', textAlign: 'right', marginTop: '4px' }}>14:12</div>
+              </div>
+              <div style={{ alignSelf: 'flex-end', background: '#DCF8C6', padding: '10px 14px', borderRadius: '15px 15px 0 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)' }}>
+                Seg a Sex das 8h às 18h e Sábados das 8h às 13h 🕐 Aceitamos cartão, PIX e dinheiro ✅
+                <div style={{ fontSize: '10px', color: '#669966', textAlign: 'right', marginTop: '4px' }}>14:12 ✓✓</div>
               </div>
             </div>
 
