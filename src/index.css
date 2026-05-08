@@ -1,0 +1,126 @@
+:root {
+  --lzo-dark: #0d3322;
+  --lzo-green: #1a5c3d;
+  --lzo-light-green: #2e8b57;
+  --lzo-orange: #d4880a;
+  --lzo-gold: #ffd700;
+  --lzo-white: #f8f9fa;
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', 'Outfit', sans-serif;
+}
+
+body {
+  background-color: var(--lzo-dark);
+  color: white;
+  overflow-x: hidden;
+}
+
+/* Scrollbar Premium */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--lzo-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--lzo-orange);
+  border-radius: 10px;
+}
+
+.glass-card {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #fff 0%, var(--lzo-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-grid {
+  background-image: radial-gradient(circle at 2px 2px, rgba(212, 136, 10, 0.05) 1px, transparent 0);
+  background-size: 40px 40px;
+}
+
+.phone-mockup {
+  width: 280px;
+  height: 580px;
+  background: #000;
+  border-radius: 40px;
+  border: 8px solid #1a1a1a;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 50px 100px rgba(0,0,0,0.5);
+}
+
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  color: #333;
+  padding: 20px;
+  font-size: 12px;
+}
+
+.email-bubble {
+  background: #f0f0f0;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Classes Faltantes Di Lorenzo */
+.btn-p:hover {
+  background-color: #f5a623 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(212, 136, 10, 0.5) !important;
+}
+
+.btn-o:hover {
+  background-color: rgba(255,255,255,0.1);
+  border-color: #D4880A !important;
+  color: #D4880A !important;
+}
+
+.nav-links-container a:hover {
+  color: #D4880A !important;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .nav-links-container {
+    display: none !important;
+  }
+  
+  .unidade-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  header h1 {
+    font-size: 2.5rem !important;
+  }
+}
+
+.unidade-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+}
