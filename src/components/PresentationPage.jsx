@@ -208,12 +208,12 @@ const PresentationPage = () => {
         <SolutionSection />
       </div>
 
-      {/* NEW: SaaS Experience (Simulator & Dashboard) */}
+      {/* NEW: Experiência da Plataforma (Simulador & Gerenciamento) */}
       <section id="demo" style={{ padding: '100px 20px', backgroundColor: '#051A10' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', fontFamily: "'Playfair Display', serif" }}>
-              Experiência <span style={{ color: colors.gold }}>SaaS na Prática</span>
+              Experiência da <span style={{ color: colors.gold }}>Plataforma na Prática</span>
             </h2>
             <p style={{ color: colors.textMuted, fontSize: '1.1rem' }}>Sua ótica no piloto automático com controle total.</p>
           </div>
@@ -260,10 +260,10 @@ const PresentationPage = () => {
               </button>
             </div>
 
-            {/* Dashboard Mockup */}
+            {/* Painel de Gerenciamento Mockup */}
             <div style={{ background: colors.glass, padding: '40px', borderRadius: '30px', border: `1px solid ${colors.border}` }}>
               <h3 style={{ fontSize: '1.5rem', marginBottom: '25px', color: colors.gold, display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <LayoutDashboard size={24} /> Painel de Controle
+                <LayoutDashboard size={24} /> Painel de Gerenciamento
               </h3>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '25px' }}>
                 <div style={{ background: 'rgba(212, 136, 10, 0.1)', padding: '15px', borderRadius: '15px', border: '1px solid rgba(212, 136, 10, 0.2)' }}>
@@ -271,7 +271,7 @@ const PresentationPage = () => {
                   <div style={{ fontSize: '1.8rem', fontWeight: '900' }}>12</div>
                 </div>
                 <div style={{ background: 'rgba(34, 197, 94, 0.1)', padding: '15px', borderRadius: '15px', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
-                  <div style={{ fontSize: '0.7rem', color: '#22c55e', textTransform: 'uppercase', marginBottom: '5px' }}>Recall Auto</div>
+                  <div style={{ fontSize: '0.7rem', color: '#22c55e', textTransform: 'uppercase', marginBottom: '5px' }}>Lembrete de Retorno</div>
                   <div style={{ fontSize: '1.8rem', fontWeight: '900' }}>45</div>
                 </div>
               </div>
@@ -409,9 +409,9 @@ const PresentationPage = () => {
                 color: colors.gold
               },
               { 
-                title: "3. Retenção (Recall)", 
+                title: "3. Retenção (Lembrete)", 
                 icon: <MessageCircle size={28} />, 
-                desc: "O grande segredo: Nosso sistema identifica clientes que compraram há 1 ano e envia um convite automático via WhatsApp para renovar o exame. Dinheiro no caixa sem esforço.",
+                desc: "O grande segredo: Nosso sistema identifica clientes que compraram há 1 ano e envia um lembrete de retorno automático via WhatsApp para renovar o exame. Dinheiro no caixa sem esforço.",
                 color: '#22c55e'
               }
             ].map((item, i) => (
