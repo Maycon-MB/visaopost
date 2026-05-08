@@ -81,7 +81,7 @@ const LandingPage = () => {
           <motion.span 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            style={{ color: '#fff', background: 'rgba(0,0,0,0.3)', padding: '5px 15px', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px', display: 'inline-block' }}
+            style={{ color: colors.orange, background: 'rgba(212, 136, 10, 0.1)', padding: '5px 15px', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px', display: 'inline-block', border: `1px solid ${colors.orange}` }}
           >
             Tradição & Estilo em um só lugar
           </motion.span>
@@ -89,15 +89,15 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', fontWeight: 900, marginBottom: '25px', lineHeight: 1.1 }}
+            style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', fontWeight: 900, marginBottom: '25px', lineHeight: 1.1, color: colors.orange }}
           >
-            Visão que <span style={{ color: colors.orangeLight }}>Transforma</span> seu <span style={{ color: colors.orangeLight }}>Olhar</span>
+            Visão que Transforma seu Olhar
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.9)', marginBottom: '40px', maxWidth: '600px', marginInline: 'auto' }}
+            style={{ fontSize: '1.2rem', color: colors.orange, opacity: 0.9, marginBottom: '40px', maxWidth: '600px', marginInline: 'auto', fontWeight: 500 }}
           >
             A melhor curadoria de armações do mundo aliada à tecnologia de ponta para sua saúde ocular.
           </motion.p>
