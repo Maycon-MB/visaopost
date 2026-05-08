@@ -42,7 +42,18 @@ const LandingPage = () => {
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <img src="/otica_logo.jpg" alt="Logo" style={{ width: '40px', height: '40px', borderRadius: '50%', border: `2px solid ${colors.orange}`, objectFit: 'cover' }} />
+            <div style={{ 
+              width: '40px', height: '40px', borderRadius: '50%', border: `2px solid ${colors.orange}`, 
+              overflow: 'hidden', backgroundColor: colors.orange, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: '900', fontSize: '14px' 
+            }}>
+              <img 
+                src="otica_logo.jpg" 
+                alt="Logo" 
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+              DL
+            </div>
             <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#fff', letterSpacing: '1px' }}>DI LORENZO</span>
           </div>
           
