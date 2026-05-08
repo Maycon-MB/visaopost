@@ -104,19 +104,124 @@ body {
   color: #D4880A !important;
 }
 
-/* Responsividade */
+/* ─── RESPONSIVIDADE COMPLETA ─── */
+
+/* Tablets (≤ 1024px) */
+@media (max-width: 1024px) {
+  .unidade-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Tablets e Mobile médio (≤ 768px) */
 @media (max-width: 768px) {
   .nav-links-container {
     display: none !important;
   }
-  
+
   .unidade-grid {
     grid-template-columns: 1fr !important;
   }
-  
+
   header h1 {
     font-size: 2.5rem !important;
   }
+
+  /* Ajustar grid de cards de preço */
+  section > div > div[style*="gridTemplateColumns"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Mobile pequeno (≤ 480px) */
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 2rem !important;
+  }
+
+  /* Cards de preço mobile: reduzir padding */
+  section [style*="padding: '60px 40px'"],
+  section [style*="padding: '48px'"] {
+    padding: 30px 20px !important;
+  }
+
+  /* Ajustar seções principais */
+  section {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* Seção estratégia: remover scale no featured */
+  section div[style*="scale(1.05)"] {
+    transform: none !important;
+  }
+
+  /* Footer compacto */
+  footer {
+    padding: 50px 16px !important;
+  }
+
+  /* Hero section padding mobile */
+  header > div {
+    padding: 0 16px !important;
+  }
+
+  /* Botões hero empilhados */
+  header div[style*="display: 'flex'"][style*="gap: '20px'"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+}
+
+/* Smooth transitions para tudo */
+a, button {
+  transition: all 0.3s ease;
+}
+
+/* Focus styles acessíveis */
+input:focus,
+select:focus,
+button:focus-visible {
+  outline: 2px solid var(--lzo-orange);
+  outline-offset: 2px;
+}
+
+/* Remover outline para cliques de mouse, manter para teclado */
+button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Acessibilidade: placeholder mais visível */
+input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Seleção de texto */
+::selection {
+  background: rgba(212, 136, 10, 0.3);
+  color: #fff;
+}
+
+/* Animação suave para links sociais do footer */
+.footer-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.footer-social-link:hover {
+  background: rgba(212, 136, 10, 0.15);
+  border-color: var(--lzo-orange);
+  color: var(--lzo-orange);
+  transform: translateY(-3px);
 }
 
 .unidade-grid {
