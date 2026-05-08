@@ -34,8 +34,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+      - name: List dist files (Debug)
+        run: ls -R dist
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
