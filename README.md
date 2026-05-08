@@ -1,91 +1,59 @@
-# VisaoPost
+# VisaoPost 👓✨
 
-> Plataforma SaaS de automação de marketing digital para óticas — posts inteligentes com IA, landing page, bot WhatsApp e sistema de recall.
+> **A tecnologia que óticas usam para dominar o mercado local.**
+> Uma plataforma SaaS completa de automação de marketing: Posts com IA, Landing Pages, Bot de WhatsApp e Sistema de Recall Automático.
 
-🔗 **Produção:** [maycon-mb.github.io/visaopost](https://maycon-mb.github.io/visaopost/)
+🔗 **Acesse a Apresentação:** [maycon-mb.github.io/visaopost](https://maycon-mb.github.io/visaopost/)
 
-## O que faz
+---
 
-- **Posts automáticos no Instagram** com identidade visual personalizada (composição de camadas via Pillow)
-- **Legendas geradas por IA** (Gemini 2.0 Flash) com contexto sazonal e climático
-- **Aprovação em 10 segundos** — cliente recebe preview por e-mail e toca Aprovar/Reprovar
-- **Publicação automática** via Instagram Graph API no horário ideal
-- **Landing Page Premium** inclusa (SEO, Google Meu Negócio)
-- **Bot WhatsApp 24h** para FAQ e atendimento automatizado
-- **Sistema de Recall** — avisa clientes 1 ano após a compra para renovar o exame
-- **Calendário estratégico** de datas comemorativas brasileiras integrado
+## 🚀 O Diferencial
+O VisaoPost não é apenas um agendador de posts. É um ecossistema focado no **Ciclo de Vendas Óptico**:
+1. **Atração**: Posts inteligentes e contextuais (baseados no clima e tendências) gerados por IA.
+2. **Conversão**: Landing Pages de alta performance integradas ao Google Meu Negócio.
+3. **Fidelização (Recall)**: Sistema que identifica clientes que não renovam o exame há 1 ano e envia convites automáticos via WhatsApp.
 
-## Piloto
+---
 
-Ótica Di Lorenzo — primeiro cliente em fase de validação.
+## 🛠️ Stack Tecnológica
+Esta nova versão foi refatorada de HTML estático para uma aplicação **React moderna** para garantir performance e escalabilidade:
 
-## Stack
-
-### Backend (API)
-- **Runtime:** Python 3.13 + FastAPI
-- **Imagens:** Pillow (composição de camadas)
-- **IA:** Google Gemini 2.0 Flash (free tier)
-- **DB:** Supabase (PostgreSQL, SQL puro — sem ORM)
-- **Email:** Resend
-- **Deploy:** Docker + Railway
-
-### Frontend (Site)
-- **Framework:** React 18 + Vite
+- **Core:** React 18 + Vite
+- **Styling:** Vanilla CSS (Design System exclusivo Di Lorenzo)
 - **Animações:** Framer Motion
 - **Ícones:** Lucide React
-- **Fontes:** Inter, Playfair Display, Montserrat
-- **Deploy:** GitHub Pages (CI/CD via GitHub Actions)
+- **Deployment:** GitHub Pages (via GitHub Actions)
+- **Automação (Workflow):** Gemini 2.0 Flash (Legendas e Estratégia)
 
-## Estrutura do Projeto
+---
 
-```
-src/
-├── components/
-│   ├── PresentationPage.jsx   # Página de apresentação SaaS (pitch + planos)
-│   ├── LandingPage.jsx        # Landing page da ótica cliente
-│   └── App.jsx                # Router entre Landing e Presentation
-├── data/
-│   └── content.js             # Dados centralizados (planos, estratégias, depoimentos)
-├── styles/
-│   └── theme.js               # Design tokens (cores, fontes, bordas)
-├── index.css                  # Estilos globais e responsividade
-└── main.jsx                   # Entry point
+## 📋 Funcionalidades Core
 
-apresentacao.html              # Pitch original (HTML estático, 358KB)
-landing_dilorenzo.html         # Landing da Di Lorenzo (HTML estático)
-demo/                          # Protótipo de geração de post + envio de e-mail
-.github/workflows/deploy.yml   # CI/CD para GitHub Pages
-```
+- [x] **Post Simulator**: Visualização em tempo real de conteúdos gerados por IA.
+- [x] **WhatsApp Automation**: Mockup de atendimento 24h e FAQ inteligente.
+- [x] **Sistema de Recall**: Automação de retorno de clientes pós-12 meses.
+- [x] **Design Premium**: Identidade visual unificada em Dark Theme (Verde/Ouro).
+- [x] **Aprovação One-Click**: Fluxo simplificado para o dono da ótica aprovar posts via celular.
 
-## Planos
+---
 
-| Plano | Preço | Setup | Foco |
-|---|---|---|---|
-| **Presença Digital** | R$97/mês | R$800 | Atração — Instagram profissional ativo |
-| **Vendas Ativas** | R$197/mês | R$1.000 | Conversão — Landing Page + Google SEO |
-| **Piloto Automático** | R$297/mês | R$1.500 | Ciclo completo — WhatsApp Bot + Recall |
-
-## Desenvolvimento Local
+## 💻 Desenvolvimento Local
 
 ```bash
 # Instalar dependências
 npm install
 
-# Rodar em dev
+# Rodar em modo desenvolvimento
 npm run dev
 
 # Build para produção
 npm run build
 ```
 
-## Demo (Backend)
-
-```bash
-cd demo
-pip install Pillow
-python send_demo.py
-```
-
 ---
 
-Desenvolvido por **Maycon Bruno**
+## 📈 Roadmap & Visão
+O projeto iniciou como um piloto para a **Ótica Di Lorenzo** e evoluiu para uma estrutura SaaS (Software as a Service) modular, onde cada ótica pode ter seu próprio ecossistema de marketing operando no piloto automático.
+
+---
+Desenvolvido com ❤️ para o mercado óptico.

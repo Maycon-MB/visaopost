@@ -45,6 +45,7 @@ const PresentationPage = () => {
     { id: 'inicio', label: 'Início' },
     { id: 'problemas', label: 'Problemas' },
     { id: 'solucao', label: 'Solução' },
+    { id: 'demo', label: 'Demonstração' },
     { id: 'estrategia', label: 'Estratégia' },
     { id: 'precos', label: 'Preços' }
   ];
@@ -206,6 +207,98 @@ const PresentationPage = () => {
       <div id="solucao">
         <SolutionSection />
       </div>
+
+      {/* NEW: SaaS Experience (Simulator & Dashboard) */}
+      <section id="demo" style={{ padding: '100px 20px', backgroundColor: '#051A10' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+            <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', fontFamily: "'Playfair Display', serif" }}>
+              Experiência <span style={{ color: colors.gold }}>SaaS na Prática</span>
+            </h2>
+            <p style={{ color: colors.textMuted, fontSize: '1.1rem' }}>Sua ótica no piloto automático com controle total.</p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '40px' }}>
+            {/* Post Simulator */}
+            <div style={{ background: colors.glass, padding: '40px', borderRadius: '30px', border: `1px solid ${colors.border}` }}>
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '25px', color: colors.gold, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Wand2 size={24} /> Simulador de Post IA
+              </h3>
+              <div style={{ marginBottom: '20px' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', color: colors.textMuted, marginBottom: '8px', textTransform: 'uppercase' }}>O que quer promover?</label>
+                <input 
+                  type="text" 
+                  placeholder="Ex: Promoção de Ray-Ban Verão..." 
+                  defaultValue="Novas armações Prada chegaram"
+                  style={{ width: '100%', padding: '15px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: `1px solid ${colors.border}`, color: '#fff', fontSize: '1rem' }}
+                />
+              </div>
+              <div style={{ background: '#fff', borderRadius: '15px', overflow: 'hidden', color: '#333' }}>
+                <div style={{ padding: '12px', borderBottom: '1px solid #eee', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ width: '30px', height: '30px', borderRadius: '50%', backgroundColor: colors.orange }}></div>
+                  <span style={{ fontWeight: '700', fontSize: '13px' }}>Ótica Di Lorenzo</span>
+                </div>
+                <div style={{ height: '250px', background: `linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url("/oculos_luxo_close_1778271030465.png")`, backgroundSize: 'cover', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ backgroundColor: 'rgba(255,255,255,0.9)', padding: '15px', borderRadius: '5px', textAlign: 'center', maxWidth: '80%' }}>
+                    <div style={{ fontSize: '10px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: colors.orange }}>Nova Coleção</div>
+                    <div style={{ fontSize: '16px', fontWeight: '900' }}>Armações Prada</div>
+                    <div style={{ fontSize: '10px', marginTop: '5px' }}>Visite-nos hoje mesmo</div>
+                  </div>
+                </div>
+                <div style={{ padding: '12px' }}>
+                  <div style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
+                    <Star size={16} fill="#333" />
+                    <MessageCircle size={16} />
+                  </div>
+                  <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+                    <b>oticadilorenzo</b> O estilo que você merece com a precisão que sua visão precisa. ✨ #Prada #VisaoPost
+                  </div>
+                </div>
+              </div>
+              <button style={{ width: '100%', marginTop: '20px', padding: '15px', borderRadius: '10px', backgroundColor: colors.gold, color: colors.dark, fontWeight: '800', border: 'none', cursor: 'pointer' }}>
+                GERAR NOVA OPÇÃO
+              </button>
+            </div>
+
+            {/* Dashboard Mockup */}
+            <div style={{ background: colors.glass, padding: '40px', borderRadius: '30px', border: `1px solid ${colors.border}` }}>
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '25px', color: colors.gold, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <LayoutDashboard size={24} /> Painel de Controle
+              </h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '25px' }}>
+                <div style={{ background: 'rgba(212, 136, 10, 0.1)', padding: '15px', borderRadius: '15px', border: '1px solid rgba(212, 136, 10, 0.2)' }}>
+                  <div style={{ fontSize: '0.7rem', color: colors.gold, textTransform: 'uppercase', marginBottom: '5px' }}>Leads Hoje</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: '900' }}>12</div>
+                </div>
+                <div style={{ background: 'rgba(34, 197, 94, 0.1)', padding: '15px', borderRadius: '15px', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+                  <div style={{ fontSize: '0.7rem', color: '#22c55e', textTransform: 'uppercase', marginBottom: '5px' }}>Recall Auto</div>
+                  <div style={{ fontSize: '1.8rem', fontWeight: '900' }}>45</div>
+                </div>
+              </div>
+              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '15px', border: `1px solid ${colors.border}` }}>
+                <div style={{ fontSize: '0.9rem', marginBottom: '15px', fontWeight: '700' }}>Próximas Publicações</div>
+                {[
+                  { time: 'Amanhã, 09:00', type: 'Educativo', status: 'Agendado' },
+                  { time: 'Segunda, 18:30', type: 'Promocional', status: 'Aguardando Aprovação' }
+                ].map((item, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: i === 0 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                    <div>
+                      <div style={{ fontSize: '0.85rem' }}>{item.type}</div>
+                      <div style={{ fontSize: '0.7rem', color: colors.textMuted }}>{item.time}</div>
+                    </div>
+                    <div style={{ fontSize: '0.7rem', padding: '4px 8px', borderRadius: '4px', background: item.status === 'Agendado' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(212, 136, 10, 0.2)', color: item.status === 'Agendado' ? '#22c55e' : colors.gold }}>
+                      {item.status}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginTop: '25px', textAlign: 'center' }}>
+                <div style={{ fontSize: '0.8rem', color: colors.textMuted }}>Média de Engajamento: <span style={{ color: colors.gold, fontWeight: '800' }}>+24% este mês</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Email Mockup / Approval */}
       <EmailMockupSection />
