@@ -8,3 +8,6 @@ demo/_logo_b64.txt
 otica_logo.jpg
 .claude/
 .vercel
+node_modules
+dist
+.DS_Store

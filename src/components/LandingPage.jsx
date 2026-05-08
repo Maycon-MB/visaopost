@@ -37,19 +37,19 @@ const LandingPage = () => {
       {/* Navbar Luxo */}
       <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
-        backgroundColor: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(10px)',
-        height: '80px', display: 'flex', alignItems: 'center', borderBottom: '1px solid #eee'
+        backgroundColor: colors.green, backdropFilter: 'blur(10px)',
+        height: '80px', display: 'flex', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.1)'
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <img src="/otica_logo.jpg" alt="Logo" style={{ width: '40px', height: '40px', borderRadius: '50%', border: `2px solid ${colors.orange}`, objectFit: 'cover' }} />
-            <span style={{ fontWeight: 800, fontSize: '1.2rem', color: colors.green, letterSpacing: '1px' }}>DI LORENZO</span>
+            <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#fff', letterSpacing: '1px' }}>DI LORENZO</span>
           </div>
           
           <div style={{ display: 'flex', gap: '30px' }} className="nav-links-container">
             {['Experiência', 'Grifes', 'Agendar', 'Unidade'].map((item) => (
               <a key={item} href={`#${item.toLowerCase()}`} style={{
-                textDecoration: 'none', color: '#1A2E1C', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px'
+                textDecoration: 'none', color: '#fff', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', opacity: 0.8
               }}>
                 {item}
               </a>
@@ -57,7 +57,7 @@ const LandingPage = () => {
           </div>
 
           <a href="#agendar" style={{
-            backgroundColor: colors.green, color: '#fff', padding: '12px 25px', borderRadius: '50px',
+            backgroundColor: colors.orange, color: '#fff', padding: '12px 25px', borderRadius: '50px',
             textDecoration: 'none', fontWeight: 700, fontSize: '0.8rem', transition: '0.3s'
           }}>
             AGENDAR EXAME

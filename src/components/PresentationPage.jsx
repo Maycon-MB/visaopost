@@ -428,63 +428,93 @@ const PresentationPage = () => {
       <section style={{ padding: '120px 20px', maxWidth: '1100px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '80px' }}>
           <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', fontFamily: "'Playfair Display', serif" }}>
-            Atendimento & <span style={{ color: colors.gold }}>Fidelização</span>
+            Atendimento & <span style={{ color: colors.gold }}>Fidelização via WhatsApp</span>
           </h2>
           <p style={{ color: colors.textMuted, fontSize: '1.1rem' }}>Mais que um bot de respostas, um sistema de vendas que nunca esquece do seu cliente.</p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '60px', alignItems: 'center' }}>
-          {/* WhatsApp Mockup */}
+          {/* WhatsApp Mockup - High Fidelity */}
           <div style={{
-            background: '#075E54',
+            background: '#E5DDD5',
             borderRadius: '40px',
             overflow: 'hidden',
             boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
-            border: '8px solid #222',
-            position: 'relative'
+            border: '12px solid #222',
+            position: 'relative',
+            fontFamily: 'sans-serif'
           }}>
-            <div style={{ padding: '20px', background: '#128C7E', display: 'flex', alignItems: 'center', gap: '15px' }}>
-              <div style={{ width: '45px', height: '45px', borderRadius: '50%', backgroundColor: colors.gold, display: 'flex', alignItems: 'center', justifyContent: 'center', color: colors.dark, fontWeight: '900' }}>DL</div>
-              <div>
-                <div style={{ fontSize: '16px', fontWeight: '800', color: colors.white }}>Ótica Di Lorenzo</div>
-                <div style={{ fontSize: '11px', opacity: 0.8, color: colors.white }}>online agora</div>
+            {/* Status Bar */}
+            <div style={{ background: '#075E54', padding: '10px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#fff', fontSize: '12px' }}>
+              <span>14:12</span>
+              <div style={{ display: 'flex', gap: '5px' }}>
+                <Smartphone size={12} />
+                <Globe size={12} />
               </div>
             </div>
-            <div style={{ padding: '25px', background: '#e5ddd5', height: '450px', display: 'flex', flexDirection: 'column', gap: '20px', overflowY: 'auto' }}>
-              <div style={{ alignSelf: 'flex-start', background: 'white', padding: '12px 18px', borderRadius: '0 20px 20px 20px', maxWidth: '85%', fontSize: '14px', color: '#333', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+            
+            {/* WPP Header */}
+            <div style={{ padding: '15px 20px', background: '#075E54', display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: colors.gold, display: 'flex', alignItems: 'center', justifyContent: 'center', color: colors.dark, fontWeight: '800', fontSize: '14px' }}>DL</div>
+              <div>
+                <div style={{ fontSize: '15px', fontWeight: '700', color: '#fff' }}>Ótica Di Lorenzo</div>
+                <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)' }}>online agora</div>
+              </div>
+            </div>
+
+            {/* Chat Body */}
+            <div style={{ padding: '20px', height: '400px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              <div style={{ alignSelf: 'flex-start', background: '#fff', padding: '10px 14px', borderRadius: '0 15px 15px 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)', position: 'relative' }}>
                 Oi! Vocês fazem exame de vista? É pago?
                 <div style={{ fontSize: '10px', color: '#999', textAlign: 'right', marginTop: '4px' }}>14:10</div>
               </div>
-              <div style={{ alignSelf: 'flex-end', background: '#DCF8C6', padding: '12px 18px', borderRadius: '20px 20px 0 20px', maxWidth: '85%', fontSize: '14px', color: '#333', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+              <div style={{ alignSelf: 'flex-end', background: '#DCF8C6', padding: '10px 14px', borderRadius: '15px 15px 0 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)', position: 'relative' }}>
                 Olá! Sim, a Ótica Di Lorenzo realiza exame de vista gratuitamente 😊 Quer agendar para essa semana?
                 <div style={{ fontSize: '10px', color: '#669966', textAlign: 'right', marginTop: '4px' }}>14:10 ✓✓</div>
               </div>
-              <div style={{ alignSelf: 'flex-start', background: 'white', padding: '12px 18px', borderRadius: '0 20px 20px 20px', maxWidth: '85%', fontSize: '14px', color: '#333', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+              <div style={{ alignSelf: 'flex-start', background: '#fff', padding: '10px 14px', borderRadius: '0 15px 15px 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)', position: 'relative' }}>
                 Vocês atendem em domicílio também?
                 <div style={{ fontSize: '10px', color: '#999', textAlign: 'right', marginTop: '4px' }}>14:11</div>
               </div>
-              <div style={{ alignSelf: 'flex-end', background: '#DCF8C6', padding: '12px 18px', borderRadius: '20px 20px 0 20px', maxWidth: '85%', fontSize: '14px', color: '#333', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+              <div style={{ alignSelf: 'flex-end', background: '#DCF8C6', padding: '10px 14px', borderRadius: '15px 15px 0 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)', position: 'relative' }}>
                 Sim! Fazemos atendimento em domicílio 🏠 Ideal pra quem tem dificuldade de se locomover. Posso agendar uma visita?
                 <div style={{ fontSize: '10px', color: '#669966', textAlign: 'right', marginTop: '4px' }}>14:11 ✓✓</div>
               </div>
             </div>
-            <div style={{ padding: '15px', background: '#f0f0f0', display: 'flex', gap: '10px' }}>
-              <div style={{ flex: 1, height: '40px', background: 'white', borderRadius: '20px' }}></div>
-              <div style={{ width: '40px', height: '40px', background: '#128C7E', borderRadius: '50%' }}></div>
+
+            {/* Input Area */}
+            <div style={{ padding: '10px 15px', background: '#F0F0F0', display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <div style={{ flex: 1, height: '35px', background: '#fff', borderRadius: '20px', border: '1px solid #ddd' }}></div>
+              <div style={{ width: '35px', height: '35px', borderRadius: '50%', background: '#075E54', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                <MessageCircle size={16} />
+              </div>
             </div>
           </div>
 
+          {/* Features Column */}
           <div>
             <h3 style={{ fontSize: '2rem', marginBottom: '30px', fontWeight: '800', color: colors.gold }}>Respostas instantâneas, 24h por dia</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              {whatsappFeatures.map((item, i) => (
-                <div key={i} style={{ display: 'flex', gap: '20px' }}>
-                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: colors.primary, color: colors.gold, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: `1px solid ${colors.gold}` }}>
-                    <Check size={18} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {[
+                { title: 'Horário de funcionamento', desc: 'Responde instantaneamente, qualquer hora do dia ou da noite.' },
+                { title: 'Exame de vista e serviços', desc: 'Informa o que oferece sem você precisar digitar uma única palavra.' },
+                { title: 'Formas de pagamento e localização', desc: 'FAQ completo configurado no setup inicial da sua conta.' },
+                { title: 'Encaminhamento inteligente', desc: 'Perguntas complexas chegam com contexto já fornecido para o vendedor.' }
+              ].map((item, i) => (
+                <div key={i} style={{ 
+                  display: 'flex', 
+                  gap: '20px', 
+                  padding: '20px', 
+                  backgroundColor: 'rgba(255,255,255,0.05)', 
+                  borderRadius: '15px',
+                  border: `1px solid ${colors.border}`
+                }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: colors.gold, color: colors.dark, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontWeight: '800' }}>
+                    ✓
                   </div>
                   <div>
-                    <h4 style={{ fontSize: '1.2rem', marginBottom: '8px', color: colors.white }}>{item.title}</h4>
-                    <p style={{ fontSize: '0.95rem', color: colors.textMuted, lineHeight: 1.6 }}>{item.desc}</p>
+                    <h4 style={{ fontSize: '1.1rem', marginBottom: '5px', color: colors.white }}>{item.title}</h4>
+                    <p style={{ fontSize: '0.9rem', color: colors.textMuted, lineHeight: 1.5 }}>{item.desc}</p>
                   </div>
                 </div>
               ))}
