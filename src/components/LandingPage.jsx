@@ -109,8 +109,8 @@ const LandingPage = () => {
               Agendar Consulta
             </a>
             <a href="#grifes" className="btn-o" style={{
-              border: '2px solid #fff', color: '#fff', padding: '16px 45px', borderRadius: '50px',
-              fontWeight: 700, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '1px'
+              backgroundColor: colors.orange, color: '#fff', padding: '18px 45px', borderRadius: '50px',
+              fontWeight: 800, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '1px', boxShadow: '0 10px 30px rgba(212, 136, 10, 0.4)'
             }}>
               Conhecer Coleções
             </a>
