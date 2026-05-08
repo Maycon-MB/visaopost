@@ -209,7 +209,7 @@ const PresentationPage = () => {
       </div>
 
       {/* NEW: Experiência da Plataforma (Simulador & Gerenciamento) */}
-      <section id="demo" style={{ padding: '100px 20px', backgroundColor: '#051A10' }}>
+      <section id="demo" style={{ padding: '100px 20px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', fontFamily: "'Playfair Display', serif" }}>
@@ -377,10 +377,7 @@ const PresentationPage = () => {
 
       {/* Strategy Section */}
       <section id="estrategia" style={{ 
-        padding: '120px 20px', 
-        backgroundColor: '#0A261A', 
-        borderTop: `1px solid ${colors.border}`,
-        borderBottom: `1px solid ${colors.border}`
+        padding: '120px 20px'
       }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
           <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', color: colors.white, fontFamily: "'Playfair Display', serif" }}>
