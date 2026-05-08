@@ -38,6 +38,16 @@ const iconMap = { Wand2, Sun, Zap, Star, Globe, LayoutDashboard, Camera, MousePo
 
 const PresentationPage = () => {
   const [step, setStep] = useState(1);
+  const [activeNav, setActiveNav] = useState('inicio');
+
+  // Sticky Nav Links
+  const navLinks = [
+    { id: 'inicio', label: 'Início' },
+    { id: 'problemas', label: 'Problemas' },
+    { id: 'solucao', label: 'Solução' },
+    { id: 'estrategia', label: 'Estratégia' },
+    { id: 'precos', label: 'Preços' }
+  ];
 
   // Enrich plans with uniform styling (no highlights)
   const enrichedPlans = plans.map((plan, i) => ({
@@ -53,9 +63,7 @@ const PresentationPage = () => {
 
 
   const handlePlanSelect = (plan) => {
-    setSelectedPlan(plan);
-    setIsModalOpen(true);
-    setStep(1);
+    // Selection logic removed as requested for presentation-only mode
   };
 
   const nextStep = () => setStep(s => s + 1);
@@ -69,9 +77,45 @@ const PresentationPage = () => {
       fontFamily: "'Montserrat', sans-serif",
       overflowX: 'hidden'
     }}>
+      {/* Sticky Header Nav */}
+      <nav style={{
+        position: 'fixed',
+        top: '20px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 2000,
+        backgroundColor: 'rgba(13, 51, 34, 0.8)',
+        backdropFilter: 'blur(10px)',
+        padding: '10px 30px',
+        borderRadius: '50px',
+        border: `1px solid ${colors.border}`,
+        display: 'flex',
+        gap: '20px'
+      }}>
+        {navLinks.map(link => (
+          <a 
+            key={link.id} 
+            href={`#${link.id}`}
+            onClick={() => setActiveNav(link.id)}
+            style={{
+              textDecoration: 'none',
+              color: activeNav === link.id ? colors.gold : colors.white,
+              fontSize: '0.8rem',
+              fontWeight: '700',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              transition: '0.3s',
+              opacity: activeNav === link.id ? 1 : 0.6
+            }}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
       {/* Hero Section */}
-      <section style={{
-        padding: '140px 20px 100px',
+      <section id="inicio" style={{
+        padding: '160px 20px 100px',
         textAlign: 'center',
         background: `radial-gradient(circle at top, ${colors.primary} 0%, ${colors.dark} 70%)`,
         borderBottom: `1px solid ${colors.border}`
@@ -98,53 +142,45 @@ const PresentationPage = () => {
           </div>
           <h1 style={{
             fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
-            fontFamily: "'Playfair Display', serif",
-            marginBottom: '20px',
+            fontWeight: '900',
             lineHeight: 1.1,
-            fontWeight: 900
+            marginBottom: '30px',
+            fontFamily: "'Playfair Display', serif"
           }}>
-            Escale sua Ótica no <br />
-            <span style={{ 
-              color: colors.gold,
-              background: `linear-gradient(to right, ${colors.gold}, ${colors.goldLight})`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>Piloto Automático</span>
+            Acelerando as Vendas da <br />
+            <span style={{ color: colors.gold }}>Sua Ótica com Inteligência</span>
           </h1>
           <p style={{
-            fontSize: '1.2rem',
+            fontSize: '1.25rem',
             color: colors.textMuted,
-            maxWidth: '850px',
-            margin: '0 auto 48px',
+            maxWidth: '700px',
+            margin: '0 auto 50px',
             lineHeight: 1.6
           }}>
-            A tecnologia que a Di Lorenzo usa para dominar o mercado local, agora disponível como serviço. 
-            Atração, Conversão e Fidelização em uma única plataforma.
+            Não somos uma agência comum. Somos um sistema de marketing automatizado desenhado exclusivamente para o mercado óptico.
           </p>
-          <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
+
+          <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
             <button 
-              onClick={() => document.getElementById('precos').scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => document.getElementById('problemas').scrollIntoView({ behavior: 'smooth' })}
               style={{
                 backgroundColor: colors.gold,
                 color: colors.dark,
-                padding: '18px 36px',
+                padding: '18px 40px',
                 borderRadius: '12px',
                 border: 'none',
                 fontWeight: '800',
                 fontSize: '1rem',
                 cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                boxShadow: '0 10px 20px rgba(212, 136, 10, 0.3)'
+                boxShadow: `0 10px 20px rgba(212, 136, 10, 0.3)`
               }}
             >
-              CONHECER PLANOS <ChevronRight size={20} />
+              INICIAR APRESENTAÇÃO
             </button>
             <button style={{
               backgroundColor: 'transparent',
               color: colors.white,
-              padding: '18px 36px',
+              padding: '18px 40px',
               borderRadius: '12px',
               border: `1px solid ${colors.border}`,
               fontWeight: '700',
@@ -159,13 +195,17 @@ const PresentationPage = () => {
       </section>
 
       {/* Problem Section */}
-      <ProblemSection />
+      <div id="problemas">
+        <ProblemSection />
+      </div>
 
       {/* Fake Followers Warning */}
       <FakeFollowersSection />
 
       {/* Solution Flow */}
-      <SolutionSection />
+      <div id="solucao">
+        <SolutionSection />
+      </div>
 
       {/* Email Mockup / Approval */}
       <EmailMockupSection />
@@ -243,16 +283,17 @@ const PresentationPage = () => {
       </section>
 
       {/* Strategy Section */}
-      <section style={{ 
+      <section id="estrategia" style={{ 
         padding: '120px 20px', 
-        backgroundColor: colors.primary,
-        backgroundImage: `radial-gradient(circle at center, rgba(212, 136, 10, 0.05) 0%, transparent 70%)`
+        backgroundColor: '#0A261A', 
+        borderTop: `1px solid ${colors.border}`,
+        borderBottom: `1px solid ${colors.border}`
       }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
           <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', color: colors.white, fontFamily: "'Playfair Display', serif" }}>
             Estratégia: <span style={{ color: colors.gold }}>Marketing de Ciclo Completo</span>
           </h2>
-          <p style={{ color: colors.textMuted, maxWeight: '750px', margin: '0 auto 80px', fontSize: '1.1rem' }}>
+          <p style={{ color: colors.textMuted, maxWidth: '750px', margin: '0 auto 80px', fontSize: '1.1rem' }}>
             Não é apenas sobre "postar fotos", é sobre construir uma máquina que atrai, converte e fideliza seus clientes automaticamente.
           </p>
           
@@ -272,8 +313,7 @@ const PresentationPage = () => {
                 title: "2. Conversão", 
                 icon: <MousePointer size={28} />, 
                 desc: "A nova Landing Page profissional captura o contato do interessado e o direciona para o agendamento de exame ou visita, transformando seguidores em leads reais.",
-                color: colors.gold,
-                featured: true
+                color: colors.gold
               },
               { 
                 title: "3. Retenção (Recall)", 
@@ -283,25 +323,23 @@ const PresentationPage = () => {
               }
             ].map((item, i) => (
               <div key={i} style={{
-                background: 'rgba(0,0,0,0.2)',
+                background: colors.glass,
                 padding: '48px',
                 borderRadius: '30px',
-                border: item.featured ? `2px solid ${colors.gold}` : '1px solid rgba(255,255,255,0.1)',
-                position: 'relative',
-                transform: item.featured ? 'scale(1.05)' : 'none',
-                boxShadow: item.featured ? '0 20px 40px rgba(0,0,0,0.3)' : 'none',
-                zIndex: item.featured ? 2 : 1
+                border: `1px solid ${colors.border}`,
+                position: 'relative'
               }}>
                 <div style={{
                   width: '70px',
                   height: '70px',
-                  backgroundColor: item.color,
+                  backgroundColor: 'rgba(255,255,255,0.05)',
+                  border: `1px solid ${item.color}`,
                   borderRadius: '20px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   margin: '0 auto 30px',
-                  color: colors.dark,
+                  color: item.color,
                   boxShadow: `0 10px 20px ${item.color}33`
                 }}>
                   {item.icon}
@@ -318,9 +356,9 @@ const PresentationPage = () => {
       <section id="precos" style={{ padding: '120px 20px', maxWidth: '1240px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '80px' }}>
           <h2 style={{ fontSize: '3rem', marginBottom: '20px', fontFamily: "'Playfair Display', serif" }}>
-            Preços <span style={{ color: colors.blueLight }}>acessíveis para quem está começando</span>
+            Preços <span style={{ color: colors.gold }}>acessíveis e transparentes</span>
           </h2>
-          <p style={{ color: colors.textMuted, fontSize: '1.2rem' }}>Sem contrato de fidelidade. Cancela quando quiser.</p>
+          <p style={{ color: colors.textMuted, fontSize: '1.2rem' }}>Sem contrato de fidelidade. O foco é no seu resultado.</p>
         </div>
 
         <div style={{
@@ -331,39 +369,19 @@ const PresentationPage = () => {
           {enrichedPlans.map((plan, index) => (
             <motion.div
               key={index}
-              whileHover={{ y: -15 }}
-              onClick={() => handlePlanSelect(plan)}
+              whileHover={{ y: -10 }}
               style={{
-                background: plan.featured ? `linear-gradient(135deg, ${colors.primary} 0%, ${colors.dark} 100%)` : colors.glass,
+                background: colors.glass,
                 padding: '60px 40px',
                 borderRadius: '40px',
-                border: `1px solid ${plan.featured ? colors.gold : colors.border}`,
+                border: `1px solid ${colors.border}`,
                 textAlign: 'center',
-                cursor: 'pointer',
                 position: 'relative',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between'
               }}
             >
-              {plan.featured && (
-                <div style={{
-                  position: 'absolute',
-                  top: '0',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  backgroundColor: colors.gold,
-                  color: colors.dark,
-                  padding: '8px 24px',
-                  borderRadius: '30px',
-                  fontSize: '0.8rem',
-                  fontWeight: '900',
-                  letterSpacing: '1px'
-                }}>
-                  MAIS ESCOLHIDO
-                </div>
-              )}
-              
               <div>
                 <h3 style={{ fontSize: '1.8rem', marginBottom: '15px', fontWeight: '800' }}>{plan.name}</h3>
                 <div style={{ marginBottom: '10px' }}>
@@ -383,7 +401,7 @@ const PresentationPage = () => {
                 
                 <div style={{ height: '1px', backgroundColor: colors.border, marginBottom: '40px' }} />
                 
-                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 50px 0', textAlign: 'left' }}>
+                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 20px 0', textAlign: 'left' }}>
                   {plan.features.map((feature, i) => (
                     <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px', fontSize: '1rem' }}>
                       <div style={{ 
@@ -403,22 +421,6 @@ const PresentationPage = () => {
                   ))}
                 </ul>
               </div>
-
-              <button style={{
-                width: '100%',
-                padding: '22px',
-                borderRadius: '16px',
-                backgroundColor: colors.gold,
-                color: colors.dark,
-                fontWeight: '900',
-                fontSize: '1.1rem',
-                border: `2px solid ${colors.gold}`,
-                cursor: 'pointer',
-                transition: '0.3s',
-                boxShadow: '0 15px 30px rgba(212, 136, 10, 0.2)'
-              }} onClick={() => window.open('https://wa.me/5500000000000', '_blank')}>
-                CONVERSAR AGORA
-              </button>
             </motion.div>
           ))}
         </div>
