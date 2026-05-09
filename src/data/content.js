@@ -62,7 +62,7 @@ export const innovationIdeas = [
   },
   {
     title: 'Scripts de Autoridade',
-    desc: 'Geramos roteiros para você gravar vídeos como profissional (Optometrista). Mostre seu laboratório e ganhe confiança total do paciente.',
+    desc: 'Geração de roteiros para você gravar vídeos como profissional (Optometrista). Mostre seu laboratório e ganhe confiança total do paciente.',
     iconName: 'Wand2',
     badge: 'Autoridade',
   },
@@ -90,7 +90,7 @@ export const strategySteps = [
   {
     title: '1. Atração',
     iconName: 'Camera',
-    desc: 'Usamos o Instagram e o Google Meu Negócio para colocar sua ótica na frente de novos clientes todos os dias com posts inteligentes e contextuais.',
+    desc: 'Uso estratégico do Instagram e o Google Meu Negócio para colocar sua ótica na frente de novos clientes todos os dias com posts inteligentes e contextuais.',
     colorKey: 'blueLight',
   },
   {
@@ -103,7 +103,7 @@ export const strategySteps = [
   {
     title: '3. Retenção (Recall)',
     iconName: 'MessageCircle',
-    desc: 'O grande segredo: Nosso sistema identifica clientes que compraram há 1 ano e envia um convite automático via WhatsApp para renovar o exame. Dinheiro no caixa sem esforço.',
+    desc: 'O grande segredo: O sistema identifica clientes que compraram há 1 ano e envia um convite automático via WhatsApp para renovar o exame. Dinheiro no caixa sem esforço.',
     colorKey: 'green',
   },
 ];

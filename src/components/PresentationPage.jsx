@@ -196,7 +196,7 @@ const PresentationPage = () => {
             margin: '0 auto 50px',
             lineHeight: 1.6
           }}>
-            Não apenas posts. Construímos autoridade visual e automação de vendas para o mercado óptico premium.
+            Não apenas posts. Autoridade visual e automação de vendas construídas para o mercado óptico premium.
           </p>
         </motion.div>
       </section>
@@ -397,41 +397,85 @@ const PresentationPage = () => {
         </div>
       </section>
 
-      {/* Sessão WhatsApp Automation (RECUPERADA) */}
+      {/* Sessão WhatsApp Automation */}
       <section id="whatsapp" style={{ padding: '120px 20px', backgroundColor: 'rgba(34, 197, 94, 0.02)' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '80px' }}>
             <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', fontFamily: "'Playfair Display', serif" }}>
-              Automação de <span style={{ color: '#22c55e' }}>WhatsApp Inteligente</span>
+              Atendimento & <span style={{ color: '#22c55e' }}>Fidelização via WhatsApp</span>
             </h2>
             <p style={{ color: colors.textMuted, fontSize: '1.1rem', maxWidth: '700px', margin: '0 auto' }}>
-              Onde o lucro real acontece. Transformamos seu banco de dados em uma máquina de vendas recorrente.
+              Onde o lucro real acontece. Transforme seu banco de dados em uma máquina de vendas recorrente.
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
-            {whatsappFeatures.map((feature, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                style={{
-                  background: colors.glass,
-                  padding: '40px',
-                  borderRadius: '24px',
-                  border: `1px solid rgba(34, 197, 94, 0.1)`,
-                  position: 'relative'
-                }}
-              >
-                <div style={{ width: '50px', height: '50px', background: 'rgba(34, 197, 94, 0.1)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#22c55e', marginBottom: '25px' }}>
-                  <MessageCircle size={24} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '48px', alignItems: 'center' }}>
+            {/* WPP DEMO */}
+            <div>
+              {/* Phone frame */}
+              <div style={{
+                background: '#1a1a1a', borderRadius: '32px', padding: '20px 12px',
+                boxShadow: '0 40px 80px rgba(0,0,0,0.6)', maxWidth: '340px', margin: '0 auto',
+              }}>
+                {/* Status bar */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 8px 12px', fontSize: '11px', color: '#aaa' }}>
+                  <span>14:10</span><span>●●●</span>
                 </div>
-                <h3 style={{ fontSize: '1.3rem', marginBottom: '15px', fontWeight: '700' }}>{feature.title}</h3>
-                <p style={{ fontSize: '0.95rem', color: colors.textMuted, lineHeight: 1.6 }}>{feature.description}</p>
-              </motion.div>
-            ))}
+                {/* Screen */}
+                <div style={{ borderRadius: '16px', overflow: 'hidden', backgroundColor: '#E5DDD5' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 16px', backgroundColor: '#075E54' }}>
+                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#0D3322', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 'bold' }}>
+                    DL
+                  </div>
+                  <div>
+                    <div style={{ color: '#fff', fontWeight: '700', fontSize: '16px' }}>Ótica Di Lorenzo</div>
+                    <div style={{ color: 'rgba(255, 255, 255, 0.75)', fontSize: '12px' }}>online agora</div>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '16px 12px', minHeight: '200px' }}>
+                  <div style={{ maxWidth: '85%', padding: '8px 12px', borderRadius: '0 8px 8px 8px', fontSize: '14px', lineHeight: '1.4', backgroundColor: '#ffffff', color: '#111', alignSelf: 'flex-start', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+                    Oi! Vocês fazem exame de vista? É pago?
+                    <div style={{ fontSize: '10px', color: 'rgba(0,0,0,0.4)', textAlign: 'right', marginTop: '4px' }}>14:10</div>
+                  </div>
+                  <div style={{ maxWidth: '85%', padding: '8px 12px', borderRadius: '8px 0 8px 8px', fontSize: '14px', lineHeight: '1.4', backgroundColor: '#DCF8C6', color: '#111', alignSelf: 'flex-end', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+                    Olá! Sim, a Ótica Di Lorenzo realiza exame de vista gratuitamente 😊 Quer agendar para essa semana?
+                    <div style={{ fontSize: '10px', color: 'rgba(0,0,0,0.4)', textAlign: 'right', marginTop: '4px' }}>14:10 ✓✓</div>
+                  </div>
+                  <div style={{ maxWidth: '85%', padding: '8px 12px', borderRadius: '0 8px 8px 8px', fontSize: '14px', lineHeight: '1.4', backgroundColor: '#ffffff', color: '#111', alignSelf: 'flex-start', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+                    Vocês atendem em domicílio também?
+                    <div style={{ fontSize: '10px', color: 'rgba(0,0,0,0.4)', textAlign: 'right', marginTop: '4px' }}>14:11</div>
+                  </div>
+                  <div style={{ maxWidth: '85%', padding: '8px 12px', borderRadius: '8px 0 8px 8px', fontSize: '14px', lineHeight: '1.4', backgroundColor: '#DCF8C6', color: '#111', alignSelf: 'flex-end', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+                    Sim! Fazemos atendimento em domicílio 🏠 Ideal pra quem tem dificuldade de se locomover. Posso agendar uma visita?
+                    <div style={{ fontSize: '10px', color: 'rgba(0,0,0,0.4)', textAlign: 'right', marginTop: '4px' }}>14:11 ✓✓</div>
+                  </div>
+                  <div style={{ maxWidth: '85%', padding: '8px 12px', borderRadius: '0 8px 8px 8px', fontSize: '14px', lineHeight: '1.4', backgroundColor: '#ffffff', color: '#111', alignSelf: 'flex-start', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+                    Qual o horário de vocês?
+                    <div style={{ fontSize: '10px', color: 'rgba(0,0,0,0.4)', textAlign: 'right', marginTop: '4px' }}>14:12</div>
+                  </div>
+                  <div style={{ maxWidth: '85%', padding: '8px 12px', borderRadius: '8px 0 8px 8px', fontSize: '14px', lineHeight: '1.4', backgroundColor: '#DCF8C6', color: '#111', alignSelf: 'flex-end', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+                    Seg a Sex das 8h às 18h e Sábados das 8h às 13h 🕐 Aceitamos cartão, PIX e dinheiro ✅
+                    <div style={{ fontSize: '10px', color: 'rgba(0,0,0,0.4)', textAlign: 'right', marginTop: '4px' }}>14:12 ✓✓</div>
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+
+            {/* WPP FEATURES */}
+            <div>
+              <h3 style={{ fontSize: '1.4rem', color: colors.white, marginBottom: '24px', fontWeight: '700' }}>Respostas instantâneas, 24h por dia</h3>
+              {whatsappFeatures.map((feature, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', marginBottom: '16px', padding: '16px 20px', backgroundColor: colors.glass, borderRadius: '16px', border: `1px solid rgba(34, 197, 94, 0.1)` }}>
+                  <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#22c55e', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', flexShrink: 0, marginTop: '2px' }}>✓</div>
+                  <div>
+                    <h4 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '4px' }}>{feature.title}</h4>
+                    <p style={{ fontSize: '0.85rem', color: colors.textMuted }}>{feature.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -445,7 +489,7 @@ const PresentationPage = () => {
           <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', fontFamily: "'Playfair Display', serif" }}>
             Inovação <span style={{ color: colors.gold }}>exclusiva para Óticas</span>
           </h2>
-          <p style={{ color: colors.textMuted, fontSize: '1.1rem' }}>O que nos diferencia de qualquer solução genérica.</p>
+          <p style={{ color: colors.textMuted, fontSize: '1.1rem' }}>O que diferencia o VisaoPost de qualquer solução genérica.</p>
         </div>
 
         <div style={{
@@ -507,9 +551,9 @@ const PresentationPage = () => {
       <section id="precos" style={{ padding: '120px 20px', maxWidth: '1240px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '80px' }}>
           <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', color: colors.white, fontFamily: "'Playfair Display', serif" }}>
-            Investimento na <span style={{ color: colors.gold }}>Escalabilidade</span>
+            Preços <span style={{ color: colors.gold }}>acessíveis para quem está começando</span>
           </h2>
-          <p style={{ color: colors.textMuted, fontSize: '1.1rem' }}>Escolha o nível de automação ideal para o seu momento.</p>
+          <p style={{ color: colors.textMuted, fontSize: '1.1rem' }}>Sem contrato de fidelidade. Cancele quando quiser.</p>
         </div>
 
         <div style={{
@@ -517,65 +561,62 @@ const PresentationPage = () => {
           gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
           gap: '30px'
         }}>
-          {plans.map((plan, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              style={{
-                background: colors.glass,
-                padding: '50px 40px',
-                borderRadius: '32px',
-                border: `1px solid ${colors.border}`,
-                display: 'flex',
-                flexDirection: 'column',
-                position: 'relative',
-                overflow: 'hidden'
-              }}
-            >
-              <h3 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '10px' }}>{plan.name}</h3>
-              <p style={{ fontSize: '0.9rem', color: colors.textMuted, marginBottom: '30px', lineHeight: 1.5 }}>{plan.description}</p>
-              
-              <div style={{ marginBottom: '40px' }}>
-                <span style={{ fontSize: '1rem', color: colors.gold, fontWeight: '700' }}>R$</span>
-                <span style={{ fontSize: '3.5rem', fontWeight: '900', color: colors.white }}>{plan.price}</span>
-                <span style={{ color: colors.textMuted }}>/mês</span>
-              </div>
+          {plans.map((plan, index) => {
+            const isFeatured = plan.name === 'Vendas Ativas';
+            const isPremium = plan.name === 'Piloto Automático';
+            
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                style={{
+                  background: isFeatured ? colors.primary : (isPremium ? 'rgba(255, 255, 255, 0.06)' : 'rgba(255, 255, 255, 0.04)'),
+                  padding: '50px 40px',
+                  borderRadius: '32px',
+                  border: isFeatured ? `2px solid ${colors.gold}` : (isPremium ? `1px solid rgba(212, 136, 10, 0.3)` : `1px solid rgba(255, 255, 255, 0.12)`),
+                  display: 'flex',
+                  flexDirection: 'column',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
+              >
+                <h3 style={{ 
+                  fontSize: '11px', 
+                  fontWeight: '700', 
+                  textTransform: 'uppercase',
+                  letterSpacing: '2px',
+                  color: isFeatured ? colors.gold : (isPremium ? 'rgba(212, 136, 10, 0.8)' : 'rgba(255, 255, 255, 0.45)'), 
+                  marginBottom: '12px' 
+                }}>{plan.name}</h3>
+                
+                <div style={{ marginBottom: '10px' }}>
+                  <span style={{ fontSize: '1rem', color: colors.white, fontWeight: '700' }}>R$</span>
+                  <span style={{ fontSize: '3rem', fontWeight: '900', color: colors.white, letterSpacing: '-2px' }}>{plan.price}</span>
+                  <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.9rem' }}>/mês</span>
+                </div>
+                
+                <div style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.4)', marginBottom: '15px' }}>
+                  + R$ {plan.setup} no setup
+                </div>
 
-              <div style={{ flexGrow: 1 }}>
-                <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', color: colors.gold, fontWeight: '700', marginBottom: '20px' }}>O que está incluso:</div>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                <p style={{ fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.55)', marginBottom: '30px', paddingBottom: '20px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', lineHeight: 1.5 }}>
+                  {plan.description}
+                </p>
+                
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, flexGrow: 1 }}>
                   {plan.features.map((feature, fIndex) => (
-                    <li key={fIndex} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '16px', color: colors.white, fontSize: '0.95rem' }}>
-                      <Check size={18} style={{ color: colors.gold, marginTop: '3px', flexShrink: 0 }} />
-                      <span>{feature}</span>
+                    <li key={fIndex} style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', color: 'rgba(255, 255, 255, 0.85)', fontSize: '0.95rem' }}>
+                      <Check size={16} style={{ color: isFeatured || isPremium ? colors.gold : '#4CAF50', flexShrink: 0 }} />
+                      <span style={{ fontWeight: (isFeatured && fIndex >= 1) || (isPremium && fIndex >= 0) ? '600' : '400', color: (isFeatured && fIndex >= 1) || (isPremium && fIndex >= 0) ? '#fff' : 'inherit' }}>{feature}</span>
                     </li>
                   ))}
                 </ul>
-              </div>
-
-              <div style={{ marginTop: '40px', paddingTop: '30px', borderTop: `1px solid rgba(255,255,255,0.05)` }}>
-                <div style={{ color: colors.textMuted, fontSize: '0.8rem', marginBottom: '5px' }}>Setup inicial (único)</div>
-                <div style={{ fontSize: '1.2rem', fontWeight: '700', color: colors.white }}>R$ {plan.setup}</div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      <section style={{ padding: '120px 20px', textAlign: 'center' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto', background: `linear-gradient(135deg, ${colors.primary}, #051A10)`, padding: '80px 40px', borderRadius: '40px', border: `1px solid ${colors.border}`, boxShadow: `0 20px 40px rgba(0,0,0,0.3)` }}>
-          <h2 style={{ fontSize: '2.5rem', marginBottom: '24px', fontFamily: "'Playfair Display', serif" }}>
-            Pronto para <span style={{ color: colors.gold }}>mudar sua visão?</span>
-          </h2>
-          <p style={{ fontSize: '1.1rem', color: colors.textMuted, marginBottom: '40px', lineHeight: 1.6 }}>
-            Seja o próximo case de sucesso. Agende uma demonstração personalizada e veja o VisaoPost em ação com a sua própria marca.
-          </p>
-          <a href="https://wa.me/5500000000000" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', backgroundColor: colors.gold, color: colors.dark, padding: '20px 50px', borderRadius: '15px', textDecoration: 'none', fontWeight: '800', fontSize: '1.1rem', transition: '0.3s' }}>
-            CONVERSAR AGORA
-          </a>
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 
