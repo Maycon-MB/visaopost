@@ -12,8 +12,8 @@ export const plans = [
     features: [
       '20 posts/mês no Instagram',
       'Identidade visual exclusiva',
-      'Personagem da marca (IA)',
       'Posts baseados no clima',
+      'Aprovação via celular',
     ],
     featured: false,
   },
@@ -27,7 +27,7 @@ export const plans = [
       '30 posts/mês no Instagram',
       'Landing Page Premium',
       'Google Meu Negócio (SEO)',
-      'Formulário de Leads direto',
+      'Scripts para Reels de Autoridade',
     ],
     featured: true,
   },
@@ -36,11 +36,11 @@ export const plans = [
     price: '297',
     setup: '1.500',
     description:
-      'O Ciclo Completo. Automação total de vendas e fidelização de clientes com o sistema de Recall.',
+      'O Ciclo Completo. Automação total de vendas, agendamento de exames e fidelização com Lembrete de Retorno.',
     features: [
-      'Bot WhatsApp 24h (FAQ)',
-      'Sistema de Recall (1 Ano)',
-      'Modo Oferta Relâmpago',
+      'Bot WhatsApp de Agendamento',
+      'Lembrete de Retorno (1 Ano)',
+      'QR Code de Balcão Integrado',
       'Relatório de Vendas Mensal',
     ],
     featured: false,
@@ -49,10 +49,28 @@ export const plans = [
 
 export const innovationIdeas = [
   {
-    title: 'Personagem exclusivo da marca',
-    desc: 'Criamos um mascote digital único para a ótica usando IA generativa. Posts com personagens engajam muito mais que fotos de produto.',
+    title: 'Google Meu Negócio Automático',
+    desc: 'Todo post do Instagram vai direto para o Google. Quem pesquisar "Exame de vista perto de mim" vai ver sua ótica ativa e atualizada.',
+    iconName: 'Globe',
+    badge: 'Venda Local',
+  },
+  {
+    title: 'QR Code de Balcão',
+    desc: 'Um adesivo elegante no seu balcão que cadastra o cliente no Lembrete de Retorno assim que ele termina a compra. Cliente fiel para sempre.',
+    iconName: 'Zap',
+    badge: 'Loja Física',
+  },
+  {
+    title: 'Scripts de Autoridade',
+    desc: 'Geramos roteiros para você gravar vídeos como profissional (Optometrista). Mostre seu laboratório e ganhe confiança total do paciente.',
     iconName: 'Wand2',
-    badge: 'Identidade Visual',
+    badge: 'Autoridade',
+  },
+  {
+    title: 'Lembrete de Retorno Inteligente',
+    desc: 'O sistema "caça" clientes de 1 ano atrás e envia o convite via WhatsApp. O lucro da consulta e da nova armação garantidos.',
+    iconName: 'MessageCircle',
+    badge: 'Faturamento',
   },
   {
     title: 'Posts baseados no clima',
@@ -61,28 +79,10 @@ export const innovationIdeas = [
     badge: 'Inovação',
   },
   {
-    title: 'Modo oferta relâmpago',
-    desc: 'Botão de emergência no painel: você toca e em 2 minutos um post promocional é criado e publicado.',
-    iconName: 'Zap',
-    badge: 'Diferencial',
-  },
-  {
     title: 'Avaliações viram posts',
-    desc: 'Integração com Google Meu Negócio: avaliações 5 estrelas são transformadas em posts de prova social automaticamente.',
+    desc: 'Integração com Google: avaliações 5 estrelas são transformadas em posts de prova social automaticamente.',
     iconName: 'Star',
-    badge: 'Google Integration',
-  },
-  {
-    title: 'Instagram + Google juntos',
-    desc: 'Todo post vai para as duas redes simultaneamente. Dobra a presença sem dobrar o trabalho.',
-    iconName: 'Globe',
-    badge: 'Presença Dupla',
-  },
-  {
-    title: 'Landing Page inclusa',
-    desc: 'Criamos uma página profissional com horários, serviços e link para WhatsApp otimizada para o Google.',
-    iconName: 'LayoutDashboard',
-    badge: 'Website Grátis',
+    badge: 'Confiança',
   },
 ];
 
