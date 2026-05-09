@@ -39,16 +39,50 @@ const iconMap = { Wand2, Sun, Zap, Star, Globe, LayoutDashboard, Camera, MousePo
 const PresentationPage = () => {
   const [activeNav, setActiveNav] = useState('inicio');
   const [activePost, setActivePost] = useState(0);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const postTemplates = [
-    { tag: 'Nova Coleção', title: 'Armações Prada', desc: 'O estilo que você merece com a precisão que sua visão precisa. ✨ #Prada #VisaoPost', prompt: 'Novas armações Prada chegaram', img: '/stylish_person_glasses_1778289098822.png' },
-    { tag: 'Promoção Verão', title: 'Ray-Ban Aviator', desc: 'O clássico que nunca sai de moda. Aproveite 20% OFF esta semana! 😎 #RayBan #Promo', prompt: 'Promoção de Ray-Ban Verão', img: '/rayban_sunglasses_beach_1778289078548.png' },
-    { tag: 'Saúde Ocular', title: 'Exame de Vista', desc: 'Você sabia que deve revisar seu grau todo ano? Agende agora via WhatsApp! 📅 #Saude #Exame', prompt: 'Post sobre importância do exame', img: '/eye_exam_equipment_1778289213835.png' },
-    { tag: 'Tendência 2024', title: 'Vitrine Exclusiva', desc: 'A sofisticação que seu olhar procura. Confira as cores exclusivas em nossa loja. 💅 #Vogue #Trend', prompt: 'Novidades da Vitrine', img: '/optical_shop_display_1778289138291.png' },
-    { tag: 'Nossa Loja', title: 'Ambiente Premium', desc: 'Venha conhecer nosso novo espaço e tenha uma experiência ótica completa. 🚴‍♂️ #VisaoPost #Premium', prompt: 'Foto da nossa fachada/interior', img: '/premium_optical_storefront_1778289243187.png' }
+    { 
+      tag: 'PRADA', 
+      title: 'LUXO ACESSÍVEL', 
+      price: '10x R$ 89',
+      label: 'NOVA COLEÇÃO',
+      bgColor: 'linear-gradient(135deg, #0B1F0F 0%, #1A4D2E 100%)',
+      accentColor: colors.gold,
+      img: '/stylish_person_glasses_1778289098822.png',
+      desc: 'Sinta a exclusividade de uma das marcas mais desejadas do mundo. ✨ #Prada #VisaoPost'
+    },
+    { 
+      tag: 'RAY-BAN', 
+      title: 'VERÃO 2024', 
+      price: '20% OFF',
+      label: 'OFERTA VERÃO',
+      bgColor: 'linear-gradient(135deg, #1a1a1a 0%, #444 100%)',
+      accentColor: '#E63946',
+      img: '/rayban_sunglasses_beach_1778289078548.png',
+      desc: 'O sol chegou e o seu Ray-Ban também. Garanta o seu com desconto exclusivo! 😎 #RayBan #Promo'
+    },
+    { 
+      tag: 'SAÚDE', 
+      title: 'VISÃO EM DIA', 
+      price: 'AGENDAR',
+      label: 'CUIDADO TOTAL',
+      bgColor: 'linear-gradient(135deg, #0D3322 0%, #166534 100%)',
+      accentColor: '#22c55e',
+      img: '/eye_exam_equipment_1778289213835.png',
+      desc: 'Não espere sua visão cansar. Agende seu exame de vista hoje mesmo pelo WhatsApp. 📅 #Saude #Exame'
+    },
+    { 
+      tag: 'VITRINE', 
+      title: 'ESTILO ÚNICO', 
+      price: 'LANÇAMENTO',
+      label: 'TENDÊNCIA 2024',
+      bgColor: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',
+      accentColor: '#818cf8',
+      img: '/optical_shop_display_1778289138291.png',
+      desc: 'As melhores grifes do mundo reunidas em um só lugar. Venha nos visitar! 💅 #Vogue #Luxury'
+    }
   ];
-
-  const [isGenerating, setIsGenerating] = useState(false);
 
   const rotatePost = () => {
     if (isGenerating) return;
@@ -205,143 +239,147 @@ const PresentationPage = () => {
             {/* Post Simulator */}
             <div style={{ background: colors.glass, padding: '40px', borderRadius: '30px', border: `1px solid ${colors.border}` }}>
               <h3 style={{ fontSize: '1.5rem', marginBottom: '25px', color: colors.gold, display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Wand2 size={24} /> Simulador de Post IA
+                <Wand2 size={24} /> Simulador de Design IA
               </h3>
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '0.8rem', color: colors.textMuted, marginBottom: '8px', textTransform: 'uppercase' }}>O que quer promover?</label>
-                <input 
-                  type="text" 
-                  key={activePost}
-                  placeholder="Ex: Promoção de Ray-Ban Verão..." 
-                  defaultValue={postTemplates[activePost].prompt}
-                  style={{ width: '100%', padding: '15px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: `1px solid ${colors.border}`, color: '#fff', fontSize: '1rem' }}
-                />
-              </div>
+              
               <AnimatePresence mode="wait">
                 <motion.div 
                   key={activePost}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.4 }}
                   style={{ 
-                    background: '#051A10', 
+                    background: '#000', 
                     borderRadius: '20px', 
                     overflow: 'hidden', 
-                    color: '#fff',
-                    boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
-                    border: `1px solid ${colors.border}`
+                    boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
+                    aspectRatio: '4/5',
+                    position: 'relative'
                   }}
                 >
-                  {/* Instagram Header */}
-                  <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.02)' }}>
-                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: colors.gold, display: 'flex', alignItems: 'center', justifyContent: 'center', color: colors.dark, fontWeight: '900', fontSize: '11px' }}>DL</div>
-                    <span style={{ fontWeight: '700', fontSize: '14px', letterSpacing: '0.5px' }}>ótica_di_lorenzo</span>
-                  </div>
-
-                  {/* Main Image Canvas (4:5 Aspect Ratio) */}
+                  {/* DESIGN CANVAS (ESTILO POST AGÊNCIA) */}
                   <div style={{ 
-                    position: 'relative',
-                    height: '400px', 
-                    background: `url("${postTemplates[activePost].img}")`, 
-                    backgroundSize: 'cover', 
-                    backgroundPosition: 'center',
-                    display: 'flex', 
+                    height: '100%', 
+                    background: postTemplates[activePost].bgColor,
+                    padding: '30px',
+                    display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'flex-end'
+                    justifyContent: 'space-between',
+                    position: 'relative',
+                    overflow: 'hidden'
                   }}>
-                    {/* Artistic Overlay */}
-                    <div style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)'
-                    }} />
-
-                    {/* Brand Badge */}
-                    <div style={{
-                      position: 'absolute',
-                      top: '20px',
-                      right: '20px',
-                      background: 'rgba(212, 136, 10, 0.9)',
-                      color: colors.dark,
-                      padding: '8px 15px',
-                      borderRadius: '8px',
-                      fontSize: '0.7rem',
-                      fontWeight: '800',
-                      textTransform: 'uppercase',
-                      letterSpacing: '1px',
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-                    }}>
-                      {postTemplates[activePost].tag}
+                    {/* Background Graphic Elements */}
+                    <div style={{ position: 'absolute', top: '-10%', right: '-10%', width: '70%', height: '60%', background: 'rgba(255,255,255,0.02)', borderRadius: '50%', filter: 'blur(50px)' }} />
+                    <div style={{ position: 'absolute', bottom: '20%', left: '-20%', width: '100px', height: '100px', border: `1px solid ${postTemplates[activePost].accentColor}33`, borderRadius: '50%' }} />
+                    
+                    {/* Header: Label */}
+                    <div style={{ zIndex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: postTemplates[activePost].accentColor, fontSize: '0.7rem', fontWeight: '900', letterSpacing: '4px' }}>{postTemplates[activePost].label}</span>
+                      <div style={{ width: '30px', height: '30px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '900' }}>DL</div>
                     </div>
 
-                    {/* Text Content Layer */}
-                    <div style={{ position: 'relative', padding: '30px', textAlign: 'left' }}>
+                    {/* Middle: The Asset (Floating Image) */}
+                    <div style={{ position: 'relative', flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2 }}
+                        animate={{ y: [0, -15, 0], rotate: [0, 2, 0] }}
+                        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                        style={{
+                          width: '90%',
+                          height: '65%',
+                          background: `url("${postTemplates[activePost].img}")`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                          borderRadius: '40px',
+                          border: `2px solid ${postTemplates[activePost].accentColor}`,
+                          boxShadow: `0 30px 60px rgba(0,0,0,0.6)`,
+                          position: 'relative',
+                          zIndex: 2
+                        }}
+                      />
+                      {/* Artistic Shadow/Shape behind image */}
+                      <div style={{ position: 'absolute', width: '85%', height: '60%', background: postTemplates[activePost].accentColor, borderRadius: '40px', opacity: 0.1, transform: 'rotate(5deg)' }} />
+                      
+                      {/* Floating Price/Offer Badge */}
+                      <motion.div 
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.5, type: 'spring' }}
+                        style={{
+                          position: 'absolute',
+                          bottom: '10%',
+                          right: '0%',
+                          width: '110px',
+                          height: '110px',
+                          background: postTemplates[activePost].accentColor,
+                          borderRadius: '50%',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: colors.dark,
+                          fontWeight: '900',
+                          fontSize: '0.9rem',
+                          transform: 'rotate(-15deg)',
+                          boxShadow: '0 15px 30px rgba(0,0,0,0.3)',
+                          zIndex: 3,
+                          textAlign: 'center'
+                        }}
                       >
-                        <h4 style={{ 
-                          fontSize: '2rem', 
-                          fontWeight: '900', 
-                          margin: 0, 
-                          color: colors.white,
-                          fontFamily: "'Playfair Display', serif",
-                          lineHeight: 1.1,
-                          textShadow: '0 2px 10px rgba(0,0,0,0.5)'
-                        }}>
-                          {postTemplates[activePost].title}
-                        </h4>
-                        <div style={{ 
-                          width: '40px', 
-                          height: '3px', 
-                          backgroundColor: colors.gold, 
-                          margin: '15px 0' 
-                        }} />
-                        <p style={{ 
-                          fontSize: '0.9rem', 
-                          fontWeight: '500',
-                          color: 'rgba(255,255,255,0.9)',
-                          margin: 0,
-                          maxWidth: '80%'
-                        }}>
-                          Elegância e precisão para o seu olhar. <br />
-                          Descubra a nova experiência Di Lorenzo.
-                        </p>
+                        <div style={{ fontSize: '0.5rem', opacity: 0.8, letterSpacing: '1px' }}>APROVEITE</div>
+                        <div style={{ lineHeight: 1.1 }}>{postTemplates[activePost].price}</div>
                       </motion.div>
                     </div>
-                  </div>
 
-                  {/* Interaction Bar */}
-                  <div style={{ padding: '15px 20px', background: 'rgba(255,255,255,0.03)' }}>
-                    <div style={{ display: 'flex', gap: '15px', marginBottom: '10px' }}>
-                      <Star size={20} color={colors.gold} fill={colors.gold} />
-                      <MessageCircle size={20} color="#fff" />
+                    {/* Footer: Typography */}
+                    <div style={{ zIndex: 1 }}>
+                      <h4 style={{ 
+                        fontSize: '2.5rem', 
+                        fontWeight: '900', 
+                        fontFamily: "'Playfair Display', serif", 
+                        lineHeight: 1, 
+                        marginBottom: '10px',
+                        color: colors.white,
+                        textShadow: '0 5px 15px rgba(0,0,0,0.3)'
+                      }}>
+                        {postTemplates[activePost].tag} <br />
+                        <span style={{ fontSize: '1.2rem', color: postTemplates[activePost].accentColor, letterSpacing: '2px', fontWeight: '400', fontFamily: "'Montserrat', sans-serif" }}>
+                          {postTemplates[activePost].title}
+                        </span>
+                      </h4>
+                      <div style={{ height: '2px', width: '50px', background: postTemplates[activePost].accentColor, marginBottom: '20px' }} />
                     </div>
-                    <div style={{ fontSize: '12px', lineHeight: '1.5', color: 'rgba(255,255,255,0.7)' }}>
-                      <b style={{ color: '#fff' }}>otica_di_lorenzo</b> {postTemplates[activePost].desc}
-                    </div>
+
+                    {/* Glassy Finish Overlay */}
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(45deg, rgba(255,255,255,0.05) 0%, transparent 40%)', pointerEvents: 'none' }} />
                   </div>
                 </motion.div>
               </AnimatePresence>
+
+              <div style={{ padding: '20px 0', borderBottom: `1px solid ${colors.border}`, marginBottom: '20px' }}>
+                <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.6 }}>
+                  <b style={{ color: colors.gold }}>otica_di_lorenzo</b> {postTemplates[activePost].desc}
+                </div>
+              </div>
+
               <button 
                 onClick={rotatePost}
                 disabled={isGenerating}
                 style={{ 
                   width: '100%', 
-                  marginTop: '20px', 
-                  padding: '15px', 
-                  borderRadius: '10px', 
+                  padding: '18px', 
+                  borderRadius: '12px', 
                   backgroundColor: isGenerating ? 'rgba(212, 136, 10, 0.5)' : colors.gold, 
                   color: colors.dark, 
                   fontWeight: '800', 
+                  fontSize: '1rem',
                   border: 'none', 
                   cursor: isGenerating ? 'not-allowed' : 'pointer', 
-                  transition: '0.3s' 
+                  transition: '0.3s',
+                  boxShadow: isGenerating ? 'none' : `0 10px 20px rgba(212, 136, 10, 0.3)`
                 }}
               >
-                {isGenerating ? 'GERANDO OPÇÃO...' : 'GERAR NOVA OPÇÃO'}
+                {isGenerating ? 'INTELIGÊNCIA GERANDO DESIGN...' : 'GERAR NOVA OPÇÃO DE POST'}
               </button>
             </div>
 
