@@ -384,39 +384,66 @@ const PresentationPage = () => {
             </div>
 
             {/* Painel de Gerenciamento Mockup */}
-            <div style={{ background: colors.glass, padding: '40px', borderRadius: '30px', border: `1px solid ${colors.border}` }}>
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '25px', color: colors.gold, display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ background: colors.glass, padding: '40px', borderRadius: '30px', border: `1px solid ${colors.border}`, display: 'flex', flexDirection: 'column', gap: '25px' }}>
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '5px', color: colors.gold, display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <LayoutDashboard size={24} /> Painel de Gerenciamento
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '25px' }}>
+              
+              {/* Stats Grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '15px' }}>
                 <div style={{ background: 'rgba(212, 136, 10, 0.1)', padding: '15px', borderRadius: '15px', border: '1px solid rgba(212, 136, 10, 0.2)' }}>
-                  <div style={{ fontSize: '0.7rem', color: colors.gold, textTransform: 'uppercase', marginBottom: '5px' }}>Leads Hoje</div>
-                  <div style={{ fontSize: '1.8rem', fontWeight: '900' }}>12</div>
+                  <div style={{ fontSize: '0.6rem', color: colors.gold, textTransform: 'uppercase', marginBottom: '5px', fontWeight: '800' }}>Leads Hoje</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>14</div>
                 </div>
                 <div style={{ background: 'rgba(34, 197, 94, 0.1)', padding: '15px', borderRadius: '15px', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
-                  <div style={{ fontSize: '0.7rem', color: '#22c55e', textTransform: 'uppercase', marginBottom: '5px' }}>Lembrete de Retorno</div>
-                  <div style={{ fontSize: '1.8rem', fontWeight: '900' }}>45</div>
+                  <div style={{ fontSize: '0.6rem', color: '#22c55e', textTransform: 'uppercase', marginBottom: '5px', fontWeight: '800' }}>Recall Ativo</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>48</div>
+                </div>
+                <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '15px', border: `1px solid ${colors.border}` }}>
+                  <div style={{ fontSize: '0.6rem', color: colors.textMuted, textTransform: 'uppercase', marginBottom: '5px', fontWeight: '800' }}>Post Score</div>
+                  <div style={{ fontSize: '1.5rem', fontWeight: '900' }}>9.2</div>
                 </div>
               </div>
+
+              {/* Schedule List */}
               <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '15px', border: `1px solid ${colors.border}` }}>
-                <div style={{ fontSize: '0.9rem', marginBottom: '15px', fontWeight: '700' }}>Próximas Publicações</div>
+                <div style={{ fontSize: '0.8rem', marginBottom: '15px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Calendário de Posts</span>
+                  <span style={{ color: colors.gold, fontSize: '0.7rem' }}>VER TUDO</span>
+                </div>
                 {[
-                  { time: 'Amanhã, 09:00', type: 'Educativo', status: 'Agendado' },
-                  { time: 'Segunda, 18:30', type: 'Promocional', status: 'Aguardando Aprovação' }
+                  { time: 'Hoje, 18:00', type: 'Prada Luxury', status: 'Publicado', color: '#22c55e' },
+                  { time: 'Amanhã, 09:00', type: 'Exame de Vista', status: 'Agendado', color: colors.gold },
+                  { time: '12 Out, 10:30', type: 'Promo Ray-Ban', status: 'Aprovação', color: colors.textMuted }
                 ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: i === 0 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
                     <div>
-                      <div style={{ fontSize: '0.85rem' }}>{item.type}</div>
-                      <div style={{ fontSize: '0.7rem', color: colors.textMuted }}>{item.time}</div>
+                      <div style={{ fontSize: '0.8rem', fontWeight: '600' }}>{item.type}</div>
+                      <div style={{ fontSize: '0.65rem', color: colors.textMuted }}>{item.time}</div>
                     </div>
-                    <div style={{ fontSize: '0.7rem', padding: '4px 8px', borderRadius: '4px', background: item.status === 'Agendado' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(212, 136, 10, 0.2)', color: item.status === 'Agendado' ? '#22c55e' : colors.gold }}>
-                      {item.status}
+                    <div style={{ fontSize: '0.6rem', padding: '4px 8px', borderRadius: '4px', background: `${item.color}22`, color: item.color, border: `1px solid ${item.color}44`, fontWeight: '800' }}>
+                      {item.status.toUpperCase()}
                     </div>
                   </div>
                 ))}
               </div>
-              <div style={{ marginTop: '25px', textAlign: 'center' }}>
-                <div style={{ fontSize: '0.8rem', color: colors.textMuted }}>Média de Engajamento: <span style={{ color: colors.gold, fontWeight: '800' }}>+24% este mês</span></div>
+
+              {/* Recall Progress Section */}
+              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '20px', borderRadius: '15px', border: `1px solid ${colors.border}` }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: '800', marginBottom: '10px' }}>META DE VENDAS (RECALL)</div>
+                <div style={{ height: '8px', width: '100%', background: 'rgba(255,255,255,0.1)', borderRadius: '10px', overflow: 'hidden', marginBottom: '10px' }}>
+                  <div style={{ height: '100%', width: '75%', background: `linear-gradient(to right, ${colors.gold}, #f59e0b)`, borderRadius: '10px' }} />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: colors.textMuted }}>
+                  <span>75% da meta atingida</span>
+                  <span style={{ color: colors.white, fontWeight: '700' }}>R$ 12.450 / R$ 18.000</span>
+                </div>
+              </div>
+
+              {/* System Health / Logs */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px', borderRadius: '10px', background: 'rgba(34, 197, 94, 0.05)', border: '1px solid rgba(34, 197, 94, 0.1)' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 10px #22c55e' }} />
+                <span style={{ fontSize: '0.7rem', color: '#22c55e', fontWeight: '600' }}>BOT WHATSAPP: ONLINE E RESPONDENDO</span>
               </div>
             </div>
           </div>
