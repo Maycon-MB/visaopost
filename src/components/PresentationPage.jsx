@@ -37,10 +37,21 @@ import NumbersSection from './sections/NumbersSection';
 const iconMap = { Wand2, Sun, Zap, Star, Globe, LayoutDashboard, Camera, MousePointer, MessageCircle };
 
 const PresentationPage = () => {
-  const [step, setStep] = useState(1);
   const [activeNav, setActiveNav] = useState('inicio');
+  const [activePost, setActivePost] = useState(0);
 
-  // Sticky Nav Links
+  const postTemplates = [
+    { tag: 'Nova Coleção', title: 'Armações Prada', desc: 'O estilo que você merece com a precisão que sua visão precisa. ✨ #Prada #VisaoPost', prompt: 'Novas armações Prada chegaram', img: '/oculos_luxo_close_1778271030465.png' },
+    { tag: 'Promoção', title: 'Ray-Ban Wayfarer', desc: 'O clássico que nunca sai de moda. Aproveite 20% OFF esta semana! 😎 #RayBan #Promo', prompt: 'Promoção de Ray-Ban Verão', img: '/oculos_luxo_close_1778271030465.png' },
+    { tag: 'Saúde Ocular', title: 'Exame de Vista', desc: 'Você sabia que deve revisar seu grau todo ano? Agende agora via WhatsApp! 📅 #Saude #Exame', prompt: 'Post sobre importância do exame', img: '/oculos_luxo_close_1778271030465.png' },
+    { tag: 'Lançamento', title: 'Vogue Eyewear', desc: 'A sofisticação que seu olhar procura. Confira as cores exclusivas. 💅 #Vogue #Trend', prompt: 'Novidades da Vogue', img: '/oculos_luxo_close_1778271030465.png' },
+    { tag: 'Performance', title: 'Oakley Sport', desc: 'Proteção e performance para o seu treino. Durabilidade extrema. 🚴‍♂️ #Oakley #Sport', prompt: 'Óculos Oakley para ciclistas', img: '/oculos_luxo_close_1778271030465.png' }
+  ];
+
+  const rotatePost = () => {
+    setActivePost((prev) => (prev + 1) % postTemplates.length);
+  };
+
   const navLinks = [
     { id: 'inicio', label: 'Início' },
     { id: 'problemas', label: 'Problemas' },
@@ -50,25 +61,10 @@ const PresentationPage = () => {
     { id: 'precos', label: 'Preços' }
   ];
 
-  // Enrich plans with uniform styling (no highlights)
-  const enrichedPlans = plans.map((plan, i) => ({
-    ...plan,
-    color: colors.gold,
-  }));
-
-  // Enrich innovation ideas with actual icon components
   const innovationIdeas = innovationData.map(idea => ({
     ...idea,
     icon: iconMap[idea.iconName] ? React.createElement(iconMap[idea.iconName], { size: 24 }) : null,
   }));
-
-
-  const handlePlanSelect = (plan) => {
-    // Selection logic removed as requested for presentation-only mode
-  };
-
-  const nextStep = () => setStep(s => s + 1);
-  const prevStep = () => setStep(s => s - 1);
 
   return (
     <div style={{
@@ -138,7 +134,7 @@ const PresentationPage = () => {
             textTransform: 'uppercase',
             letterSpacing: '2px'
           }}>
-            VisaoPost SaaS v2.0
+            VisaoPost v2.0
           </div>
           <h1 style={{
             fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
@@ -159,7 +155,6 @@ const PresentationPage = () => {
           }}>
             Não somos uma agência comum. Somos um sistema de marketing automatizado desenhado exclusivamente para o mercado óptico.
           </p>
-
         </motion.div>
       </section>
 
@@ -168,15 +163,13 @@ const PresentationPage = () => {
         <ProblemSection />
       </div>
 
-      {/* Fake Followers Warning */}
       <FakeFollowersSection />
 
-      {/* Solution Flow */}
       <div id="solucao">
         <SolutionSection />
       </div>
 
-      {/* NEW: Experiência da Plataforma (Simulador & Gerenciamento) */}
+      {/* Experiência da Plataforma (Simulador & Gerenciamento) */}
       <section id="demo" style={{ padding: '100px 20px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
@@ -196,34 +189,47 @@ const PresentationPage = () => {
                 <label style={{ display: 'block', fontSize: '0.8rem', color: colors.textMuted, marginBottom: '8px', textTransform: 'uppercase' }}>O que quer promover?</label>
                 <input 
                   type="text" 
+                  key={activePost}
                   placeholder="Ex: Promoção de Ray-Ban Verão..." 
-                  defaultValue="Novas armações Prada chegaram"
+                  defaultValue={postTemplates[activePost].prompt}
                   style={{ width: '100%', padding: '15px', borderRadius: '10px', background: 'rgba(255,255,255,0.05)', border: `1px solid ${colors.border}`, color: '#fff', fontSize: '1rem' }}
                 />
               </div>
-              <div style={{ background: '#fff', borderRadius: '15px', overflow: 'hidden', color: '#333' }}>
-                <div style={{ padding: '12px', borderBottom: '1px solid #eee', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '30px', height: '30px', borderRadius: '50%', backgroundColor: colors.orange }}></div>
-                  <span style={{ fontWeight: '700', fontSize: '13px' }}>Ótica Di Lorenzo</span>
-                </div>
-                <div style={{ height: '250px', background: `linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url("/oculos_luxo_close_1778271030465.png")`, backgroundSize: 'cover', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{ backgroundColor: 'rgba(255,255,255,0.9)', padding: '15px', borderRadius: '5px', textAlign: 'center', maxWidth: '80%' }}>
-                    <div style={{ fontSize: '10px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: colors.orange }}>Nova Coleção</div>
-                    <div style={{ fontSize: '16px', fontWeight: '900' }}>Armações Prada</div>
-                    <div style={{ fontSize: '10px', marginTop: '5px' }}>Visite-nos hoje mesmo</div>
+              <AnimatePresence mode="wait">
+                <motion.div 
+                  key={activePost}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                  style={{ background: '#fff', borderRadius: '15px', overflow: 'hidden', color: '#333' }}
+                >
+                  <div style={{ padding: '12px', borderBottom: '1px solid #eee', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', backgroundColor: colors.orange, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 'bold', fontSize: '10px' }}>DL</div>
+                    <span style={{ fontWeight: '700', fontSize: '13px' }}>Ótica Di Lorenzo</span>
                   </div>
-                </div>
-                <div style={{ padding: '12px' }}>
-                  <div style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
-                    <Star size={16} fill="#333" />
-                    <MessageCircle size={16} />
+                  <div style={{ height: '250px', background: `linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url("${postTemplates[activePost].img}")`, backgroundSize: 'cover', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ backgroundColor: 'rgba(255,255,255,0.9)', padding: '15px', borderRadius: '5px', textAlign: 'center', maxWidth: '80%', boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}>
+                      <div style={{ fontSize: '10px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: colors.orange }}>{postTemplates[activePost].tag}</div>
+                      <div style={{ fontSize: '16px', fontWeight: '900' }}>{postTemplates[activePost].title}</div>
+                      <div style={{ fontSize: '10px', marginTop: '5px' }}>Visite-nos hoje mesmo</div>
+                    </div>
                   </div>
-                  <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
-                    <b>oticadilorenzo</b> O estilo que você merece com a precisão que sua visão precisa. ✨ #Prada #VisaoPost
+                  <div style={{ padding: '12px' }}>
+                    <div style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
+                      <Star size={16} fill="#333" />
+                      <MessageCircle size={16} />
+                    </div>
+                    <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+                      <b>oticadilorenzo</b> {postTemplates[activePost].desc}
+                    </div>
                   </div>
-                </div>
-              </div>
-              <button style={{ width: '100%', marginTop: '20px', padding: '15px', borderRadius: '10px', backgroundColor: colors.gold, color: colors.dark, fontWeight: '800', border: 'none', cursor: 'pointer' }}>
+                </motion.div>
+              </AnimatePresence>
+              <button 
+                onClick={rotatePost}
+                style={{ width: '100%', marginTop: '20px', padding: '15px', borderRadius: '10px', backgroundColor: colors.gold, color: colors.dark, fontWeight: '800', border: 'none', cursor: 'pointer', transition: '0.3s' }}
+              >
                 GERAR NOVA OPÇÃO
               </button>
             </div>
@@ -268,16 +274,10 @@ const PresentationPage = () => {
         </div>
       </section>
 
-      {/* Email Mockup / Approval */}
       <EmailMockupSection />
-
-      {/* Numbers / Metrics */}
       <NumbersSection />
-
-      {/* Calendar */}
       <CalendarSection />
 
-      {/* Innovation Section */}
       <section style={{ padding: '100px 20px', maxWidth: '1200px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '80px' }}>
           <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', fontFamily: "'Playfair Display', serif" }}>
@@ -343,10 +343,7 @@ const PresentationPage = () => {
         </div>
       </section>
 
-      {/* Strategy Section */}
-      <section id="estrategia" style={{ 
-        padding: '120px 20px'
-      }}>
+      <section id="estrategia" style={{ padding: '120px 20px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
           <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', color: colors.white, fontFamily: "'Playfair Display', serif" }}>
             Estratégia: <span style={{ color: colors.gold }}>Marketing de Ciclo Completo</span>
@@ -410,257 +407,113 @@ const PresentationPage = () => {
         </div>
       </section>
 
-      {/* Pricing Section */}
       <section id="precos" style={{ padding: '120px 20px', maxWidth: '1240px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-          <h2 style={{ fontSize: '3rem', marginBottom: '20px', fontFamily: "'Playfair Display', serif" }}>
-            Preços <span style={{ color: colors.gold }}>acessíveis e transparentes</span>
+          <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', color: colors.white, fontFamily: "'Playfair Display', serif" }}>
+            Investimento na <span style={{ color: colors.gold }}>Escalabilidade</span>
           </h2>
-          <p style={{ color: colors.textMuted, fontSize: '1.2rem' }}>Sem contrato de fidelidade. O foco é no seu resultado.</p>
+          <p style={{ color: colors.textMuted, fontSize: '1.1rem' }}>Escolha o nível de automação ideal para o seu momento.</p>
         </div>
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-          gap: '30px'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '30px',
+          marginBottom: '80px'
         }}>
-          {enrichedPlans.map((plan, index) => (
+          {plans.map((plan, index) => (
             <motion.div
               key={index}
-              whileHover={{ y: -10 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
               style={{
                 background: colors.glass,
-                padding: '60px 40px',
-                borderRadius: '40px',
+                padding: '50px 40px',
+                borderRadius: '32px',
                 border: `1px solid ${colors.border}`,
-                textAlign: 'center',
-                position: 'relative',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'space-between'
+                position: 'relative',
+                overflow: 'hidden'
               }}
             >
-              <div>
-                <h3 style={{ fontSize: '1.8rem', marginBottom: '15px', fontWeight: '800' }}>{plan.name}</h3>
-                <div style={{ marginBottom: '10px' }}>
-                  <span style={{ fontSize: '4rem', fontWeight: '900', color: colors.gold }}>R${plan.price}</span>
-                  <span style={{ fontSize: '1.2rem', color: colors.textMuted }}>/mês</span>
-                </div>
-                <div style={{ 
-                  fontSize: '1rem', 
-                  color: colors.gold, 
-                  fontWeight: '700',
-                  marginBottom: '20px',
-                  opacity: 0.8
-                }}>
-                  + R${plan.setup} no setup inicial
-                </div>
-                <p style={{ fontSize: '0.95rem', color: colors.textMuted, marginBottom: '40px', lineHeight: 1.6 }}>{plan.description}</p>
-                
-                <div style={{ height: '1px', backgroundColor: colors.border, marginBottom: '40px' }} />
-                
-                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 20px 0', textAlign: 'left' }}>
-                  {plan.features.map((feature, i) => (
-                    <li key={i} style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px', fontSize: '1rem' }}>
-                      <div style={{ 
-                        width: '24px', 
-                        height: '24px', 
-                        borderRadius: '50%', 
-                        backgroundColor: colors.primary, 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center',
-                        border: `1px solid ${colors.gold}`
-                      }}>
-                        <Check size={14} style={{ color: colors.gold }} />
-                      </div>
-                      <span style={{ color: colors.white }}>{feature}</span>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '10px' }}>{plan.name}</h3>
+              <p style={{ fontSize: '0.9rem', color: colors.textMuted, marginBottom: '30px', lineHeight: 1.5 }}>{plan.description}</p>
+              
+              <div style={{ marginBottom: '40px' }}>
+                <span style={{ fontSize: '1rem', color: colors.gold, fontWeight: '700' }}>R$</span>
+                <span style={{ fontSize: '3.5rem', fontWeight: '900', color: colors.white }}>{plan.price}</span>
+                <span style={{ color: colors.textMuted }}>/mês</span>
+              </div>
+
+              <div style={{ flexGrow: 1 }}>
+                <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', color: colors.gold, fontWeight: '700', marginBottom: '20px' }}>O que está incluso:</div>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                  {plan.features.map((feature, fIndex) => (
+                    <li key={fIndex} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '16px', color: colors.white, fontSize: '0.95rem' }}>
+                      <Check size={18} style={{ color: colors.gold, marginTop: '3px', flexShrink: 0 }} />
+                      <span>{feature}</span>
                     </li>
                   ))}
                 </ul>
+              </div>
+
+              <div style={{ marginTop: '40px', paddingTop: '30px', borderTop: `1px solid rgba(255,255,255,0.05)` }}>
+                <div style={{ color: colors.textMuted, fontSize: '0.8rem', marginBottom: '5px' }}>Setup inicial (único)</div>
+                <div style={{ fontSize: '1.2rem', fontWeight: '700', color: colors.white }}>R$ {plan.setup}</div>
               </div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* WhatsApp Demo Section */}
-      <section style={{ padding: '120px 20px', maxWidth: '1100px', margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-          <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', fontFamily: "'Playfair Display', serif" }}>
-            Atendimento & <span style={{ color: colors.gold }}>Fidelização via WhatsApp</span>
+      <section style={{ padding: '120px 20px', textAlign: 'center' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', background: `linear-gradient(135deg, ${colors.primary}, #051A10)`, padding: '80px 40px', borderRadius: '40px', border: `1px solid ${colors.border}`, boxShadow: `0 20px 40px rgba(0,0,0,0.3)` }}>
+          <h2 style={{ fontSize: '2.5rem', marginBottom: '24px', fontFamily: "'Playfair Display', serif" }}>
+            Pronto para <span style={{ color: colors.gold }}>mudar sua visão?</span>
           </h2>
-          <p style={{ color: colors.textMuted, fontSize: '1.1rem' }}>Mais que um bot de respostas, um sistema de vendas que nunca esquece do seu cliente.</p>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '60px', alignItems: 'center' }}>
-          {/* WhatsApp Mockup - Ultra Fidelity */}
-          <div style={{
-            background: '#E5DDD5',
-            borderRadius: '40px',
-            overflow: 'hidden',
-            boxShadow: '0 30px 60px rgba(0,0,0,0.5)',
-            border: '12px solid #222',
-            position: 'relative',
-            fontFamily: 'sans-serif'
-          }}>
-            {/* Status Bar */}
-            <div style={{ background: '#075E54', padding: '10px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#fff', fontSize: '12px' }}>
-              <span>14:12</span>
-              <div style={{ display: 'flex', gap: '5px' }}>
-                <Smartphone size={12} />
-                <Globe size={12} />
-              </div>
-            </div>
-            
-            {/* WPP Header */}
-            <div style={{ padding: '12px 20px', background: '#075E54', display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '50%', border: `1px solid ${colors.gold}`, overflow: 'hidden', backgroundColor: colors.gold, display: 'flex', alignItems: 'center', justifyContent: 'center', color: colors.dark, fontWeight: '800', fontSize: '14px' }}>
-                <img 
-                  src="/otica_logo.jpg" 
-                  alt="DL" 
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-                />
-                DL
-              </div>
-              <div>
-                <div style={{ fontSize: '15px', fontWeight: '700', color: '#fff' }}>Ótica Di Lorenzo</div>
-                <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)' }}>online agora</div>
-              </div>
-            </div>
-
-            {/* Chat Body */}
-            <div style={{ padding: '20px', height: '420px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-              <div style={{ alignSelf: 'flex-start', background: '#fff', padding: '10px 14px', borderRadius: '0 15px 15px 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)' }}>
-                Oi! Vocês fazem exame de vista? É pago?
-                <div style={{ fontSize: '10px', color: '#999', textAlign: 'right', marginTop: '4px' }}>14:10</div>
-              </div>
-              <div style={{ alignSelf: 'flex-end', background: '#DCF8C6', padding: '10px 14px', borderRadius: '15px 15px 0 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)' }}>
-                Olá! Sim, a Ótica Di Lorenzo realiza exame de vista gratuitamente 😊 Quer agendar para essa semana?
-                <div style={{ fontSize: '10px', color: '#669966', textAlign: 'right', marginTop: '4px' }}>14:10 ✓✓</div>
-              </div>
-              <div style={{ alignSelf: 'flex-start', background: '#fff', padding: '10px 14px', borderRadius: '0 15px 15px 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)' }}>
-                Vocês atendem em domicílio também?
-                <div style={{ fontSize: '10px', color: '#999', textAlign: 'right', marginTop: '4px' }}>14:11</div>
-              </div>
-              <div style={{ alignSelf: 'flex-end', background: '#DCF8C6', padding: '10px 14px', borderRadius: '15px 15px 0 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)' }}>
-                Sim! Fazemos atendimento em domicílio 🏠 Ideal pra quem tem dificuldade de se locomover. Posso agendar uma visita?
-                <div style={{ fontSize: '10px', color: '#669966', textAlign: 'right', marginTop: '4px' }}>14:11 ✓✓</div>
-              </div>
-              <div style={{ alignSelf: 'flex-start', background: '#fff', padding: '10px 14px', borderRadius: '0 15px 15px 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)' }}>
-                Qual o horário de vocês?
-                <div style={{ fontSize: '10px', color: '#999', textAlign: 'right', marginTop: '4px' }}>14:12</div>
-              </div>
-              <div style={{ alignSelf: 'flex-end', background: '#DCF8C6', padding: '10px 14px', borderRadius: '15px 15px 0 15px', maxWidth: '85%', fontSize: '13px', color: '#333', boxShadow: '0 1px 1px rgba(0,0,0,0.1)' }}>
-                Seg a Sex das 8h às 18h e Sábados das 8h às 13h 🕐 Aceitamos cartão, PIX e dinheiro ✅
-                <div style={{ fontSize: '10px', color: '#669966', textAlign: 'right', marginTop: '4px' }}>14:12 ✓✓</div>
-              </div>
-            </div>
-
-            {/* Input Area */}
-            <div style={{ padding: '10px 15px', background: '#F0F0F0', display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <div style={{ flex: 1, height: '35px', background: '#fff', borderRadius: '20px', border: '1px solid #ddd' }}></div>
-              <div style={{ width: '35px', height: '35px', borderRadius: '50%', background: '#075E54', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
-                <MessageCircle size={16} />
-              </div>
-            </div>
-          </div>
-
-          {/* Features Column */}
-          <div>
-            <h3 style={{ fontSize: '2rem', marginBottom: '30px', fontWeight: '800', color: colors.gold }}>Respostas instantâneas, 24h por dia</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              {[
-                { title: 'Horário de funcionamento', desc: 'Responde instantaneamente, qualquer hora do dia ou da noite.' },
-                { title: 'Exame de vista e serviços', desc: 'Informa o que oferece sem você precisar digitar uma única palavra.' },
-                { title: 'Formas de pagamento e localização', desc: 'FAQ completo configurado no setup inicial da sua conta.' },
-                { title: 'Encaminhamento inteligente', desc: 'Perguntas complexas chegam com contexto já fornecido para o vendedor.' }
-              ].map((item, i) => (
-                <div key={i} style={{ 
-                  display: 'flex', 
-                  gap: '20px', 
-                  padding: '20px', 
-                  backgroundColor: 'rgba(255,255,255,0.05)', 
-                  borderRadius: '15px',
-                  border: `1px solid ${colors.border}`
-                }}>
-                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: colors.gold, color: colors.dark, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontWeight: '800' }}>
-                    ✓
-                  </div>
-                  <div>
-                    <h4 style={{ fontSize: '1.1rem', marginBottom: '5px', color: colors.white }}>{item.title}</h4>
-                    <p style={{ fontSize: '0.9rem', color: colors.textMuted, lineHeight: 1.5 }}>{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <p style={{ fontSize: '1.1rem', color: colors.textMuted, marginBottom: '40px', lineHeight: 1.6 }}>
+            Seja o próximo case de sucesso. Agende uma demonstração personalizada e veja o VisaoPost em ação com a sua própria marca.
+          </p>
+          <a href="https://wa.me/5500000000000" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', backgroundColor: colors.gold, color: colors.dark, padding: '20px 50px', borderRadius: '15px', textDecoration: 'none', fontWeight: '800', fontSize: '1.1rem', transition: '0.3s' }}>
+            CONVERSAR AGORA
+          </a>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer style={{ 
-        padding: '80px 20px'
-      }}>
+      <footer style={{ padding: '80px 20px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          {/* Top: Logo + Social */}
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', marginBottom: '50px', gap: '20px' }}>
             <div>
               <span style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.8rem', fontWeight: 900, color: colors.white }}>VisaoPost</span>
-              <p style={{ color: colors.textMuted, fontSize: '0.9rem', marginTop: '8px' }}>Automação inteligente para óticas</p>
             </div>
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-              <a href="https://www.instagram.com/mayconbruno00/" target="_blank" rel="noopener noreferrer" className="footer-social-link" aria-label="Instagram">
+            <div style={{ display: 'flex', gap: '20px' }}>
+              <a href="#" className="footer-social-link" aria-label="Instagram">
                 <Instagram size={20} />
               </a>
               <a href="https://wa.me/5500000000000" target="_blank" rel="noopener noreferrer" className="footer-social-link" aria-label="WhatsApp">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                </svg>
-              </a>
-              <a href="https://www.linkedin.com/in/maycon-/" target="_blank" rel="noopener noreferrer" className="footer-social-link" aria-label="LinkedIn">
-                <Linkedin size={20} />
-              </a>
-              <a href="mailto:contato@visaopost.com" className="footer-social-link" aria-label="Email">
                 <Mail size={20} />
+              </a>
+              <a href="#" className="footer-social-link" aria-label="LinkedIn">
+                <Linkedin size={20} />
               </a>
             </div>
           </div>
 
-          {/* Middle: Sitemap Columns */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '40px', marginBottom: '50px', textAlign: 'left' }}>
             <div>
               <h4 style={{ color: colors.gold, fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '16px' }}>Produto</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <a href="#precos" style={{ color: colors.textMuted, textDecoration: 'none', fontSize: '0.9rem' }}>Planos</a>
-                <span style={{ color: colors.textMuted, fontSize: '0.9rem' }}>Funcionalidades</span>
-                <span style={{ color: colors.textMuted, fontSize: '0.9rem' }}>Integrações</span>
-              </div>
-            </div>
-            <div>
-              <h4 style={{ color: colors.gold, fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '16px' }}>Empresa</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <span style={{ color: colors.textMuted, fontSize: '0.9rem' }}>Sobre nós</span>
-                <span style={{ color: colors.textMuted, fontSize: '0.9rem' }}>Blog</span>
-                <span style={{ color: colors.textMuted, fontSize: '0.9rem' }}>Contato</span>
-              </div>
-            </div>
-            <div>
-              <h4 style={{ color: colors.gold, fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '16px' }}>Legal</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <span style={{ color: colors.textMuted, fontSize: '0.9rem' }}>Política de Privacidade</span>
-                <span style={{ color: colors.textMuted, fontSize: '0.9rem' }}>Termos de Uso</span>
               </div>
             </div>
           </div>
 
-          {/* Bottom */}
           <div style={{ borderTop: `1px solid ${colors.border}`, paddingTop: '30px', textAlign: 'center' }}>
             <p style={{ color: colors.textMuted, fontSize: '0.8rem', opacity: 0.6 }}>
-              © 2026 VisaoPost SaaS — Todos os direitos reservados. Desenvolvido por <strong style={{ color: colors.goldLight }}>Maycon Bruno</strong>
+              © 2026 VisaoPost — Todos os direitos reservados.
             </p>
           </div>
         </div>
