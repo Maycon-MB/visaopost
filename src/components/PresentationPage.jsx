@@ -160,37 +160,6 @@ const PresentationPage = () => {
             Não somos uma agência comum. Somos um sistema de marketing automatizado desenhado exclusivamente para o mercado óptico.
           </p>
 
-          <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
-            <button 
-              onClick={() => document.getElementById('problemas').scrollIntoView({ behavior: 'smooth' })}
-              style={{
-                backgroundColor: colors.gold,
-                color: colors.dark,
-                padding: '18px 40px',
-                borderRadius: '12px',
-                border: 'none',
-                fontWeight: '800',
-                fontSize: '1rem',
-                cursor: 'pointer',
-                boxShadow: `0 10px 20px rgba(212, 136, 10, 0.3)`
-              }}
-            >
-              INICIAR APRESENTAÇÃO
-            </button>
-            <button style={{
-              backgroundColor: 'transparent',
-              color: colors.white,
-              padding: '18px 40px',
-              borderRadius: '12px',
-              border: `1px solid ${colors.border}`,
-              fontWeight: '700',
-              fontSize: '1rem',
-              cursor: 'pointer',
-              backdropFilter: 'blur(5px)'
-            }}>
-              VER DEMONSTRAÇÃO
-            </button>
-          </div>
         </motion.div>
       </section>
 
