@@ -118,8 +118,7 @@ const PresentationPage = () => {
       <section id="inicio" style={{
         padding: '160px 20px 100px',
         textAlign: 'center',
-        background: `radial-gradient(circle at top, ${colors.primary} 0%, ${colors.dark} 70%)`,
-        borderBottom: `1px solid ${colors.border}`
+        backgroundColor: colors.dark
       }}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -635,9 +634,7 @@ const PresentationPage = () => {
 
       {/* Footer */}
       <footer style={{ 
-        padding: '80px 20px', 
-        borderTop: `1px solid ${colors.border}`,
-        backgroundColor: colors.dark
+        padding: '80px 20px'
       }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           {/* Top: Logo + Social */}
