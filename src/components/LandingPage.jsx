@@ -58,11 +58,16 @@ const LandingPage = () => {
           </div>
           
           <div style={{ display: 'flex', gap: '30px' }} className="nav-links-container">
-            {['Experiência', 'Grifes', 'Agendar', 'Unidade'].map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} style={{
+            {[
+              { label: 'Experiência', id: 'experiencia' },
+              { label: 'Grifes', id: 'grifes' },
+              { label: 'Agendar', id: 'agendar' },
+              { label: 'Unidade', id: 'unidade' }
+            ].map((item) => (
+              <a key={item.id} href={`#${item.id}`} style={{
                 textDecoration: 'none', color: '#fff', fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', opacity: 0.8
               }}>
-                {item}
+                {item.label}
               </a>
             ))}
           </div>
