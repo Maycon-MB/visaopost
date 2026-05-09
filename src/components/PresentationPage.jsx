@@ -261,78 +261,57 @@ const PresentationPage = () => {
                   {/* DESIGN CANVAS (ESTILO POST AGÊNCIA) */}
                   <div style={{ 
                     height: '100%', 
-                    background: postTemplates[activePost].bgColor,
-                    padding: '30px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
                     position: 'relative',
                     overflow: 'hidden'
                   }}>
-                    {/* Background Graphic Elements */}
-                    <div style={{ position: 'absolute', top: '-10%', right: '-10%', width: '70%', height: '60%', background: 'rgba(255,255,255,0.02)', borderRadius: '50%', filter: 'blur(50px)' }} />
-                    <div style={{ position: 'absolute', bottom: '20%', left: '-20%', width: '100px', height: '100px', border: `1px solid ${postTemplates[activePost].accentColor}33`, borderRadius: '50%' }} />
+                    {/* A IMAGEM DE VERDADE AQUI */}
+                    <img 
+                      src={postTemplates[activePost].img} 
+                      alt="Post"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0, zIndex: 0 }}
+                    />
+                    
+                    {/* Overlay Escuro para dar leitura no texto */}
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)', zIndex: 1 }} />
                     
                     {/* Header: Label */}
-                    <div style={{ zIndex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ color: postTemplates[activePost].accentColor, fontSize: '0.7rem', fontWeight: '900', letterSpacing: '4px' }}>{postTemplates[activePost].label}</span>
-                      <div style={{ width: '30px', height: '30px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '900' }}>DL</div>
+                    <div style={{ zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', padding: '20px' }}>
+                      <span style={{ color: postTemplates[activePost].accentColor, fontSize: '0.7rem', fontWeight: '900', letterSpacing: '4px', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>{postTemplates[activePost].label}</span>
+                      <div style={{ width: '35px', height: '35px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '900' }}>DL</div>
                     </div>
 
-                    {/* Middle: The Asset (Floating Image) */}
-                    <div style={{ position: 'relative', flexGrow: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <motion.div
-                        animate={{ y: [0, -15, 0], rotate: [0, 2, 0] }}
-                        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-                        style={{
-                          width: '90%',
-                          height: '65%',
-                          background: `url("${postTemplates[activePost].img}")`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                          borderRadius: '40px',
-                          border: `2px solid ${postTemplates[activePost].accentColor}`,
-                          boxShadow: `0 30px 60px rgba(0,0,0,0.6)`,
-                          position: 'relative',
-                          zIndex: 2
-                        }}
-                      />
-                      {/* Artistic Shadow/Shape behind image */}
-                      <div style={{ position: 'absolute', width: '85%', height: '60%', background: postTemplates[activePost].accentColor, borderRadius: '40px', opacity: 0.1, transform: 'rotate(5deg)' }} />
-                      
-                      {/* Floating Price/Offer Badge */}
-                      <motion.div 
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: 0.5, type: 'spring' }}
-                        style={{
-                          position: 'absolute',
-                          bottom: '10%',
-                          right: '0%',
-                          width: '110px',
-                          height: '110px',
-                          background: postTemplates[activePost].accentColor,
-                          borderRadius: '50%',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: colors.dark,
-                          fontWeight: '900',
-                          fontSize: '0.9rem',
-                          transform: 'rotate(-15deg)',
-                          boxShadow: '0 15px 30px rgba(0,0,0,0.3)',
-                          zIndex: 3,
-                          textAlign: 'center'
-                        }}
-                      >
-                        <div style={{ fontSize: '0.5rem', opacity: 0.8, letterSpacing: '1px' }}>APROVEITE</div>
-                        <div style={{ lineHeight: 1.1 }}>{postTemplates[activePost].price}</div>
-                      </motion.div>
-                    </div>
+                    {/* Floating Price/Offer Badge */}
+                    <motion.div 
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.5, type: 'spring' }}
+                      style={{
+                        position: 'absolute',
+                        top: '80px',
+                        right: '20px',
+                        width: '90px',
+                        height: '90px',
+                        background: postTemplates[activePost].accentColor,
+                        borderRadius: '50%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: colors.dark,
+                        fontWeight: '900',
+                        fontSize: '0.8rem',
+                        transform: 'rotate(15deg)',
+                        boxShadow: '0 10px 20px rgba(0,0,0,0.3)',
+                        zIndex: 3,
+                        textAlign: 'center'
+                      }}
+                    >
+                      <div style={{ fontSize: '0.45rem', opacity: 0.8, letterSpacing: '1px' }}>APROVEITE</div>
+                      <div style={{ lineHeight: 1.1 }}>{postTemplates[activePost].price}</div>
+                    </motion.div>
 
                     {/* Footer: Typography */}
-                    <div style={{ zIndex: 1 }}>
+                    <div style={{ zIndex: 2, position: 'absolute', bottom: '0', left: '0', width: '100%', padding: '30px' }}>
                       <h4 style={{ 
                         fontSize: '2.5rem', 
                         fontWeight: '900', 
@@ -340,18 +319,19 @@ const PresentationPage = () => {
                         lineHeight: 1, 
                         marginBottom: '10px',
                         color: colors.white,
-                        textShadow: '0 5px 15px rgba(0,0,0,0.3)'
+                        textShadow: '0 5px 15px rgba(0,0,0,0.5)'
                       }}>
                         {postTemplates[activePost].tag} <br />
                         <span style={{ fontSize: '1.2rem', color: postTemplates[activePost].accentColor, letterSpacing: '2px', fontWeight: '400', fontFamily: "'Montserrat', sans-serif" }}>
                           {postTemplates[activePost].title}
                         </span>
                       </h4>
-                      <div style={{ height: '2px', width: '50px', background: postTemplates[activePost].accentColor, marginBottom: '20px' }} />
+                      <div style={{ height: '3px', width: '60px', background: postTemplates[activePost].accentColor, marginBottom: '20px' }} />
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                        <div style={{ background: postTemplates[activePost].accentColor, color: colors.dark, padding: '8px 20px', borderRadius: '5px', fontSize: '0.7rem', fontWeight: '900', textTransform: 'uppercase' }}>AGENDAR AGORA</div>
+                        <div style={{ fontSize: '0.75rem', fontWeight: '600', color: 'rgba(255,255,255,0.8)' }}>@oticadilorenzo</div>
+                      </div>
                     </div>
-
-                    {/* Glassy Finish Overlay */}
-                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(45deg, rgba(255,255,255,0.05) 0%, transparent 40%)', pointerEvents: 'none' }} />
                   </div>
                 </motion.div>
               </AnimatePresence>
