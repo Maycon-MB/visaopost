@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Check, 
@@ -40,10 +40,45 @@ import NumbersSection from './sections/NumbersSection';
 // Icon map for dynamic rendering from content.js
 const iconMap = { Wand2, Sun, Zap, Star, Globe, LayoutDashboard, Camera, MousePointer, MessageCircle };
 
+const navLinks = [
+  { id: 'inicio', label: 'Início' },
+  { id: 'problemas', label: 'Problemas' },
+  { id: 'solucao', label: 'Solução' },
+  { id: 'demo', label: 'Demonstração' },
+  { id: 'whatsapp', label: 'WhatsApp' },
+  { id: 'precos', label: 'Preços' }
+];
+
 const PresentationPage = () => {
   const [activeNav, setActiveNav] = useState('inicio');
   const [activePost, setActivePost] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + window.innerHeight / 3;
+      
+      const sections = navLinks.map(link => ({
+        id: link.id,
+        element: document.getElementById(link.id)
+      })).filter(s => s.element);
+
+      let currentActive = navLinks[0].id;
+      for (let i = sections.length - 1; i >= 0; i--) {
+        if (sections[i].element.offsetTop <= scrollPosition) {
+          currentActive = sections[i].id;
+          break;
+        }
+      }
+      
+      setActiveNav(prev => prev !== currentActive ? currentActive : prev);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const postTemplates = [
     { 
@@ -81,14 +116,7 @@ const PresentationPage = () => {
     }, 1500);
   };
 
-  const navLinks = [
-    { id: 'inicio', label: 'Início' },
-    { id: 'problemas', label: 'Problemas' },
-    { id: 'solucao', label: 'Solução' },
-    { id: 'demo', label: 'Demonstração' },
-    { id: 'whatsapp', label: 'WhatsApp' },
-    { id: 'precos', label: 'Preços' }
-  ];
+  // navLinks moved outside component
 
   const innovationIdeas = innovationData.map(idea => ({
     ...idea,
