@@ -45,31 +45,31 @@ const PresentationPage = () => {
   const [activePost, setActivePost] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Removendo a barra inicial para funcionar no GitHub Pages subfolder
+  // Usando caminhos relativos ./ para garantir funcionamento no GitHub Pages subfolder
   const postTemplates = [
     { 
       tag: 'PRADA', 
       location: 'Ótica Di Lorenzo - Premium Store',
-      img: 'stylish_person_glasses_1778289098822.png',
-      desc: 'Sinta a exclusividade de uma das marcas mais desejadas do mundo. A nova coleção Prada chegou com modelos que unem design icônico e precisão impecável. ✨ #Prada #VisaoPost #OticaDeLuxo'
+      img: './stylish_person_glasses_1778289098822.png',
+      desc: 'A nova coleção Prada acaba de chegar. Sofisticação e precisão técnica em cada detalhe. O acessório que define sua autoridade visual. ✨ #PradaEyewear #OticaDiLorenzo #Luxury'
     },
     { 
       tag: 'RAY-BAN', 
-      location: 'Shopping Village Mall',
-      img: 'rayban_sunglasses_beach_1778289078548.png',
-      desc: 'O sol de verão pede um clássico. Aproveite nossa oferta exclusiva de 20% OFF em toda a linha Aviator. O ícone que nunca sai de moda. 😎 #RayBan #SummerVibes #Promo'
+      location: 'Village Mall - Rio de Janeiro',
+      img: './rayban_sunglasses_beach_1778289078548.png',
+      desc: 'Os clássicos nunca morrem. Aproveite nossa Special Week com 20% OFF em toda a linha Aviator. Proteção e estilo para os dias de sol. 😎 #RayBan #ClassicStyle #Summer2024'
     },
     { 
       tag: 'SAÚDE', 
-      location: 'Centro de Exames de Vista',
-      img: 'eye_exam_equipment_1778289213835.png',
-      desc: 'Sua visão merece cuidado especializado. Nossos equipamentos de última geração garantem o diagnóstico mais preciso para o seu conforto visual. Agende seu exame! 📅 #SaudeOcular #ExameDeVista'
+      location: 'Check-up Visual Semanal',
+      img: './eye_exam_equipment_1778289213835.png',
+      desc: 'Sua visão muda, seu cuidado não pode parar. Agende seu check-up anual e garanta que sua saúde ocular esteja em dia. Atendimento especializado via WhatsApp. 📅 #SaudeVisual #Optometria'
     },
     { 
-      tag: 'VITRINE', 
-      location: 'Visite nossa Unidade Conceito',
-      img: 'optical_shop_display_1778289138291.png',
-      desc: 'Um ambiente pensado para quem não abre mão do estilo. Venha conhecer nosso novo espaço e descubra por que somos referência em ótica premium. 💅 #Vogue #Trend2024 #Otica'
+      tag: 'LOJA', 
+      location: 'Conheça nossa Unidade Conceito',
+      img: './premium_optical_storefront_1778289243187.png',
+      desc: 'Mais que uma ótica, uma experiência de luxo. Venha tomar um café conosco e descobrir a moldura perfeita para o seu olhar. 💅 #PremiumExperience #Otica #Design'
     }
   ];
 
@@ -156,7 +156,7 @@ const PresentationPage = () => {
           position: 'absolute',
           inset: 0,
           zIndex: -1,
-          backgroundImage: 'linear-gradient(to bottom, rgba(11, 31, 15, 0.85), rgba(11, 31, 15, 0.95)), url("hero_otica_premium_1778270703774.png")',
+          backgroundImage: 'linear-gradient(to bottom, rgba(11, 31, 15, 0.85), rgba(11, 31, 15, 0.95)), url("./hero_otica_premium_1778270703774.png")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }} />
@@ -187,8 +187,8 @@ const PresentationPage = () => {
             marginBottom: '30px',
             fontFamily: "'Playfair Display', serif"
           }}>
-            Conteúdo de Luxo para sua Ótica <br />
-            <span style={{ color: colors.gold }}>Gerado em Segundos</span>
+            O Social Media de Luxo <br />
+            <span style={{ color: colors.gold }}>da sua Ótica 24h por dia</span>
           </h1>
           <p style={{
             fontSize: '1.25rem',
@@ -197,7 +197,7 @@ const PresentationPage = () => {
             margin: '0 auto 50px',
             lineHeight: 1.6
           }}>
-            Transforme seu Instagram em uma vitrine de grife. Automação completa de posts, legendas e engajamento.
+            Não apenas posts. Construímos autoridade visual e automação de vendas para o mercado óptico premium.
           </p>
         </motion.div>
       </section>
@@ -212,45 +212,45 @@ const PresentationPage = () => {
         <SolutionSection />
       </div>
 
-      {/* Experiência da Plataforma (Simulador Real Instagram) */}
+      {/* Simulador Instagram */}
       <section id="demo" style={{ padding: '120px 20px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', fontFamily: "'Playfair Display', serif" }}>
-              O <span style={{ color: colors.gold }}>Instagram da sua Ótica</span> hoje
+              Visual <span style={{ color: colors.gold }}>Premium Automatizado</span>
             </h2>
-            <p style={{ color: colors.textMuted, fontSize: '1.1rem' }}>Sua vitrine digital no nível das maiores grifes do mundo.</p>
+            <p style={{ color: colors.textMuted, fontSize: '1.1rem' }}>Como seu Instagram aparecerá para o mundo com o VisaoPost.</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '40px', alignItems: 'flex-start' }}>
-            {/* Instagram Mockup Simulator */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '50px', alignItems: 'flex-start' }}>
+            {/* Instagram Mockup */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: colors.gold, fontWeight: '700', fontSize: '0.9rem', marginBottom: '10px' }}>
-                <Wand2 size={18} /> IA GERANDO CONTEÚDO...
+              <div style={{ textAlign: 'center', color: colors.gold, fontWeight: '700', fontSize: '0.8rem', letterSpacing: '2px', textTransform: 'uppercase' }}>
+                <Wand2 size={16} style={{ marginBottom: '-3px', marginRight: '8px' }} /> Simulando Postagem IA
               </div>
               
               <AnimatePresence mode="wait">
                 <motion.div 
                   key={activePost}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
                   style={{ 
                     background: '#fff', 
                     borderRadius: '12px', 
                     overflow: 'hidden', 
-                    boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
+                    boxShadow: '0 30px 60px rgba(0,0,0,0.6)',
                     color: '#000',
-                    maxWidth: '450px',
+                    maxWidth: '420px',
                     margin: '0 auto'
                   }}
                 >
                   {/* IG Header */}
                   <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: `linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)`, padding: '2px' }}>
-                        <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: '#fff', padding: '1px' }}>
+                      <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)', padding: '2px' }}>
+                        <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: '#fff', padding: '2px' }}>
                           <div style={{ width: '100%', height: '100%', borderRadius: '50%', backgroundColor: colors.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '10px', fontWeight: '900' }}>DL</div>
                         </div>
                       </div>
@@ -262,21 +262,21 @@ const PresentationPage = () => {
                     <MoreHorizontal size={20} color="#666" />
                   </div>
 
-                  {/* IG Image */}
-                  <div style={{ position: 'relative', aspectRatio: '1/1', background: '#f0f0f0', overflow: 'hidden' }}>
+                  {/* IG Post Body */}
+                  <div style={{ position: 'relative', aspectRatio: '1/1', background: '#eee' }}>
+                    <img 
+                      src={postTemplates[activePost].img} 
+                      alt="Post"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
                     {isGenerating && (
-                      <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.8)', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.7)', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1 }} style={{ width: '30px', height: '30px', border: `3px solid ${colors.gold}`, borderTopColor: 'transparent', borderRadius: '50%' }} />
                       </div>
                     )}
-                    <img 
-                      src={postTemplates[activePost].img} 
-                      alt="Instagram Post"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
                   </div>
 
-                  {/* IG Interaction Bar */}
+                  {/* IG Footer Icons */}
                   <div style={{ padding: '12px 16px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                       <div style={{ display: 'flex', gap: '16px' }}>
@@ -286,12 +286,12 @@ const PresentationPage = () => {
                       </div>
                       <Bookmark size={24} />
                     </div>
-                    <div style={{ fontSize: '14px', fontWeight: '700', marginBottom: '8px' }}>142 curtidas</div>
+                    <div style={{ fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>156 curtidas</div>
                     <div style={{ fontSize: '14px', lineHeight: '1.4' }}>
                       <span style={{ fontWeight: '700', marginRight: '6px' }}>otica_di_lorenzo</span>
                       {postTemplates[activePost].desc}
                     </div>
-                    <div style={{ fontSize: '12px', color: '#8e8e8e', marginTop: '8px', textTransform: 'uppercase' }}>HÁ 2 HORAS</div>
+                    <div style={{ fontSize: '11px', color: '#8e8e8e', marginTop: '10px', textTransform: 'uppercase' }}>HÁ 1 HORA</div>
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -301,62 +301,61 @@ const PresentationPage = () => {
                 disabled={isGenerating}
                 style={{ 
                   width: '100%', 
-                  maxWidth: '450px',
+                  maxWidth: '420px',
                   margin: '10px auto 0',
-                  padding: '16px', 
+                  padding: '18px', 
                   borderRadius: '12px', 
                   backgroundColor: isGenerating ? 'rgba(255,255,255,0.1)' : colors.gold, 
                   color: colors.dark, 
                   fontWeight: '800', 
-                  fontSize: '1rem',
                   border: 'none', 
                   cursor: isGenerating ? 'not-allowed' : 'pointer', 
                   transition: '0.3s',
-                  boxShadow: isGenerating ? 'none' : `0 10px 20px rgba(212, 136, 10, 0.3)`
+                  boxShadow: isGenerating ? 'none' : `0 10px 20px rgba(212, 136, 10, 0.4)`
                 }}
               >
-                {isGenerating ? 'IA PROCESSANDO DESIGN...' : 'GERAR NOVA OPÇÃO DE POST'}
+                {isGenerating ? 'IA PROCESSANDO CONTEÚDO...' : 'GERAR NOVA OPÇÃO DE POST'}
               </button>
             </div>
 
-            {/* Dashboad de Métricas Profissional */}
+            {/* Dashboad de Métricas */}
             <div style={{ background: colors.glass, padding: '40px', borderRadius: '30px', border: `1px solid ${colors.border}`, height: 'fit-content' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '30px' }}>
-                <div style={{ width: '45px', height: '45px', borderRadius: '12px', background: 'rgba(212, 136, 10, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: colors.gold }}>
-                  <TrendingUp size={24} />
+                <div style={{ width: '50px', height: '50px', borderRadius: '15px', background: 'rgba(212, 136, 10, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: colors.gold }}>
+                  <LayoutDashboard size={28} />
                 </div>
                 <div>
-                  <h3 style={{ fontSize: '1.4rem', fontWeight: '800' }}>Performance Semanal</h3>
-                  <p style={{ fontSize: '0.85rem', color: colors.textMuted }}>Sua ótica em crescimento constante.</p>
+                  <h3 style={{ fontSize: '1.4rem', fontWeight: '800' }}>Painel de Controle</h3>
+                  <p style={{ fontSize: '0.85rem', color: colors.textMuted }}>Métricas em tempo real da sua ótica.</p>
                 </div>
               </div>
               
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '30px' }}>
-                <div style={{ padding: '20px', borderRadius: '20px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div style={{ padding: '20px', borderRadius: '20px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                   <div style={{ fontSize: '0.7rem', color: colors.textMuted, marginBottom: '5px', textTransform: 'uppercase' }}>Impressões</div>
-                  <div style={{ fontSize: '1.6rem', fontWeight: '900' }}>14.2k</div>
-                  <div style={{ fontSize: '0.75rem', color: '#22c55e', marginTop: '5px' }}>+12% vs última semana</div>
+                  <div style={{ fontSize: '1.6rem', fontWeight: '900' }}>24.8k</div>
+                  <div style={{ fontSize: '0.7rem', color: '#22c55e', marginTop: '5px' }}>+15% este mês</div>
                 </div>
-                <div style={{ padding: '20px', borderRadius: '20px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <div style={{ fontSize: '0.7rem', color: colors.textMuted, marginBottom: '5px', textTransform: 'uppercase' }}>Leads (WhatsApp)</div>
-                  <div style={{ fontSize: '1.6rem', fontWeight: '900' }}>84</div>
-                  <div style={{ fontSize: '0.75rem', color: '#22c55e', marginTop: '5px' }}>+24% via Landing Page</div>
+                <div style={{ padding: '20px', borderRadius: '20px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div style={{ fontSize: '0.7rem', color: colors.textMuted, marginBottom: '5px', textTransform: 'uppercase' }}>Novos Leads</div>
+                  <div style={{ fontSize: '1.6rem', fontWeight: '900' }}>142</div>
+                  <div style={{ fontSize: '0.7rem', color: '#22c55e', marginTop: '5px' }}>85% convertidos</div>
                 </div>
               </div>
 
-              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '25px', borderRadius: '20px', border: `1px solid ${colors.border}` }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700' }}>Status do Agendador AI</span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.7rem', color: '#22c55e', fontWeight: '700' }}>
-                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#22c55e' }} /> ATIVO
-                  </div>
+              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '25px', borderRadius: '20px', border: `1px solid ${colors.border}`, marginBottom: '20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
+                  <span style={{ fontSize: '0.9rem', fontWeight: '700' }}>Meta de Recall Ativo</span>
+                  <span style={{ color: colors.gold, fontWeight: '800' }}>78%</span>
                 </div>
-                <div style={{ height: '6px', width: '100%', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden', marginBottom: '15px' }}>
-                  <div style={{ height: '100%', width: '85%', background: colors.gold }} />
+                <div style={{ height: '8px', width: '100%', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: '78%', background: colors.gold }} />
                 </div>
-                <p style={{ fontSize: '0.8rem', color: colors.textMuted, lineHeight: 1.5 }}>
-                  85% dos leads respondidos nos primeiros 2 minutos. O sistema identificou 12 novos exames agendados hoje.
-                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '15px', borderRadius: '12px', background: 'rgba(34, 197, 94, 0.05)', border: '1px solid rgba(34, 197, 94, 0.1)' }}>
+                <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 10px #22c55e' }} />
+                <span style={{ fontSize: '0.75rem', color: '#22c55e', fontWeight: '700' }}>BOT WHATSAPP: ONLINE E RESPONDENDO</span>
               </div>
             </div>
           </div>
@@ -370,9 +369,9 @@ const PresentationPage = () => {
       <section style={{ padding: '120px 20px', maxWidth: '1200px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '80px' }}>
           <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', fontFamily: "'Playfair Display', serif" }}>
-            Além do básico — <span style={{ color: colors.gold }}>ideias inovadoras</span>
+            Inovação <span style={{ color: colors.gold }}>exclusiva para Óticas</span>
           </h2>
-          <p style={{ color: colors.textMuted, fontSize: '1.1rem' }}>O que nos diferencia de qualquer concorrente genérico.</p>
+          <p style={{ color: colors.textMuted, fontSize: '1.1rem' }}>O que nos diferencia de qualquer solução genérica.</p>
         </div>
 
         <div style={{
@@ -392,8 +391,7 @@ const PresentationPage = () => {
                 padding: '40px',
                 borderRadius: '24px',
                 border: `1px solid ${colors.border}`,
-                position: 'relative',
-                transition: '0.3s'
+                position: 'relative'
               }}
             >
               <div style={{
@@ -405,8 +403,7 @@ const PresentationPage = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: colors.gold,
-                marginBottom: '24px',
-                boxShadow: `0 8px 16px rgba(13, 51, 34, 0.5)`
+                marginBottom: '24px'
               }}>
                 {idea.icon}
               </div>
@@ -429,146 +426,6 @@ const PresentationPage = () => {
               </span>
             </motion.div>
           ))}
-        </div>
-      </section>
-
-      <section id="estrategia" style={{ padding: '120px 20px' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', color: colors.white, fontFamily: "'Playfair Display', serif" }}>
-            Estratégia: <span style={{ color: colors.gold }}>Marketing de Ciclo Completo</span>
-          </h2>
-          <p style={{ color: colors.textMuted, maxWidth: '750px', margin: '0 auto 80px', fontSize: '1.1rem' }}>
-            Não é apenas sobre "postar fotos", é sobre construir uma máquina que atrai, converte e fideliza seus clientes automaticamente.
-          </p>
-          
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '40px'
-          }}>
-            {[
-              { 
-                title: "1. Atração", 
-                icon: <Camera size={28} />, 
-                desc: "Usamos o Instagram e o Google Meu Negócio para colocar sua ótica na frente de novos clientes todos os dias com posts inteligentes e contextuais.",
-                color: colors.blueLight
-              },
-              { 
-                title: "2. Conversão", 
-                icon: <MousePointer size={28} />, 
-                desc: "A nova Landing Page profissional captura o contato do interessado e o direciona para o agendamento de exame ou visita, transformando seguidores em leads reais.",
-                color: colors.gold
-              },
-              { 
-                title: "3. Retenção (Lembrete)", 
-                icon: <MessageCircle size={28} />, 
-                desc: "O grande segredo: Nosso sistema identifica clientes que compraram há 1 ano e envia um lembrete de retorno automático via WhatsApp para renovar o exame. Dinheiro no caixa sem esforço.",
-                color: '#22c55e'
-              }
-            ].map((item, i) => (
-              <div key={i} style={{
-                background: colors.glass,
-                padding: '48px',
-                borderRadius: '30px',
-                border: `1px solid ${colors.border}`,
-                position: 'relative'
-              }}>
-                <div style={{
-                  width: '70px',
-                  height: '70px',
-                  backgroundColor: 'rgba(255,255,255,0.05)',
-                  border: `1px solid ${item.color}`,
-                  borderRadius: '20px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 30px',
-                  color: item.color,
-                  boxShadow: `0 10px 20px ${item.color}33`
-                }}>
-                  {item.icon}
-                </div>
-                <h3 style={{ fontSize: '1.6rem', marginBottom: '20px', fontWeight: '800' }}>{item.title}</h3>
-                <p style={{ fontSize: '1rem', color: colors.textMuted, lineHeight: 1.7 }}>{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="precos" style={{ padding: '120px 20px', maxWidth: '1240px', margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-          <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', color: colors.white, fontFamily: "'Playfair Display', serif" }}>
-            Investimento na <span style={{ color: colors.gold }}>Escalabilidade</span>
-          </h2>
-          <p style={{ color: colors.textMuted, fontSize: '1.1rem' }}>Escolha o nível de automação ideal para o seu momento.</p>
-        </div>
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '30px',
-          marginBottom: '80px'
-        }}>
-          {plans.map((plan, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              style={{
-                background: colors.glass,
-                padding: '50px 40px',
-                borderRadius: '32px',
-                border: `1px solid ${colors.border}`,
-                display: 'flex',
-                flexDirection: 'column',
-                position: 'relative',
-                overflow: 'hidden'
-              }}
-            >
-              <h3 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '10px' }}>{plan.name}</h3>
-              <p style={{ fontSize: '0.9rem', color: colors.textMuted, marginBottom: '30px', lineHeight: 1.5 }}>{plan.description}</p>
-              
-              <div style={{ marginBottom: '40px' }}>
-                <span style={{ fontSize: '1rem', color: colors.gold, fontWeight: '700' }}>R$</span>
-                <span style={{ fontSize: '3.5rem', fontWeight: '900', color: colors.white }}>{plan.price}</span>
-                <span style={{ color: colors.textMuted }}>/mês</span>
-              </div>
-
-              <div style={{ flexGrow: 1 }}>
-                <div style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', color: colors.gold, fontWeight: '700', marginBottom: '20px' }}>O que está incluso:</div>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                  {plan.features.map((feature, fIndex) => (
-                    <li key={fIndex} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '16px', color: colors.white, fontSize: '0.95rem' }}>
-                      <Check size={18} style={{ color: colors.gold, marginTop: '3px', flexShrink: 0 }} />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div style={{ marginTop: '40px', paddingTop: '30px', borderTop: `1px solid rgba(255,255,255,0.05)` }}>
-                <div style={{ color: colors.textMuted, fontSize: '0.8rem', marginBottom: '5px' }}>Setup inicial (único)</div>
-                <div style={{ fontSize: '1.2rem', fontWeight: '700', color: colors.white }}>R$ {plan.setup}</div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      <section style={{ padding: '120px 20px', textAlign: 'center' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto', background: `linear-gradient(135deg, ${colors.primary}, #051A10)`, padding: '80px 40px', borderRadius: '40px', border: `1px solid ${colors.border}`, boxShadow: `0 20px 40px rgba(0,0,0,0.3)` }}>
-          <h2 style={{ fontSize: '2.5rem', marginBottom: '24px', fontFamily: "'Playfair Display', serif" }}>
-            Pronto para <span style={{ color: colors.gold }}>mudar sua visão?</span>
-          </h2>
-          <p style={{ fontSize: '1.1rem', color: colors.textMuted, marginBottom: '40px', lineHeight: 1.6 }}>
-            Seja o próximo case de sucesso. Agende uma demonstração personalizada e veja o VisaoPost em ação com a sua própria marca.
-          </p>
-          <a href="https://wa.me/5500000000000" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', backgroundColor: colors.gold, color: colors.dark, padding: '20px 50px', borderRadius: '15px', textDecoration: 'none', fontWeight: '800', fontSize: '1.1rem', transition: '0.3s' }}>
-            CONVERSAR AGORA
-          </a>
         </div>
       </section>
 
