@@ -222,7 +222,14 @@ const PresentationPage = () => {
             <p style={{ color: colors.textMuted, fontSize: '1.1rem' }}>Como seu Instagram aparecerá para o mundo com o VisaoPost.</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '50px', alignItems: 'flex-start' }}>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
+            gap: '40px', 
+            alignItems: 'stretch', // Alinhamento perfeito
+            maxWidth: '1000px',
+            margin: '0 auto'
+          }}>
             {/* Instagram Mockup */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div style={{ textAlign: 'center', color: colors.gold, fontWeight: '700', fontSize: '0.8rem', letterSpacing: '2px', textTransform: 'uppercase' }}>
@@ -242,8 +249,12 @@ const PresentationPage = () => {
                     overflow: 'hidden', 
                     boxShadow: '0 30px 60px rgba(0,0,0,0.6)',
                     color: '#000',
+                    width: '100%',
                     maxWidth: '420px',
-                    margin: '0 auto'
+                    margin: '0 auto',
+                    flexGrow: 1,
+                    display: 'flex',
+                    flexDirection: 'column'
                   }}
                 >
                   {/* IG Header */}
@@ -277,7 +288,7 @@ const PresentationPage = () => {
                   </div>
 
                   {/* IG Footer Icons */}
-                  <div style={{ padding: '12px 16px' }}>
+                  <div style={{ padding: '12px 16px', flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                       <div style={{ display: 'flex', gap: '16px' }}>
                         <Heart size={24} />
@@ -287,11 +298,11 @@ const PresentationPage = () => {
                       <Bookmark size={24} />
                     </div>
                     <div style={{ fontSize: '14px', fontWeight: '700', marginBottom: '6px' }}>156 curtidas</div>
-                    <div style={{ fontSize: '14px', lineHeight: '1.4' }}>
+                    <div style={{ fontSize: '14px', lineHeight: '1.4', flexGrow: 1 }}>
                       <span style={{ fontWeight: '700', marginRight: '6px' }}>otica_di_lorenzo</span>
                       {postTemplates[activePost].desc}
                     </div>
-                    <div style={{ fontSize: '11px', color: '#8e8e8e', marginTop: '10px', textTransform: 'uppercase' }}>HÁ 1 HORA</div>
+                    <div style={{ fontSize: '11px', color: '#8e8e8e', marginTop: '15px', textTransform: 'uppercase' }}>HÁ 1 HORA</div>
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -308,6 +319,7 @@ const PresentationPage = () => {
                   backgroundColor: isGenerating ? 'rgba(255,255,255,0.1)' : colors.gold, 
                   color: colors.dark, 
                   fontWeight: '800', 
+                  fontSize: '1rem',
                   border: 'none', 
                   cursor: isGenerating ? 'not-allowed' : 'pointer', 
                   transition: '0.3s',
@@ -318,8 +330,17 @@ const PresentationPage = () => {
               </button>
             </div>
 
-            {/* Dashboad de Métricas */}
-            <div style={{ background: colors.glass, padding: '40px', borderRadius: '30px', border: `1px solid ${colors.border}`, height: 'fit-content' }}>
+            {/* Dashboad de Métricas Profissional */}
+            <div style={{ 
+              background: colors.glass, 
+              padding: '40px', 
+              borderRadius: '30px', 
+              border: `1px solid ${colors.border}`, 
+              display: 'flex', 
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              marginTop: '34px' // Compensação do header do simulador
+            }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '30px' }}>
                 <div style={{ width: '50px', height: '50px', borderRadius: '15px', background: 'rgba(212, 136, 10, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: colors.gold }}>
                   <LayoutDashboard size={28} />
