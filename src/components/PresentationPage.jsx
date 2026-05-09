@@ -220,30 +220,107 @@ const PresentationPage = () => {
               <AnimatePresence mode="wait">
                 <motion.div 
                   key={activePost}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.3 }}
-                  style={{ background: '#fff', borderRadius: '15px', overflow: 'hidden', color: '#333' }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.4 }}
+                  style={{ 
+                    background: '#051A10', 
+                    borderRadius: '20px', 
+                    overflow: 'hidden', 
+                    color: '#fff',
+                    boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+                    border: `1px solid ${colors.border}`
+                  }}
                 >
-                  <div style={{ padding: '12px', borderBottom: '1px solid #eee', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', backgroundColor: colors.orange, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 'bold', fontSize: '10px' }}>DL</div>
-                    <span style={{ fontWeight: '700', fontSize: '13px' }}>Ótica Di Lorenzo</span>
+                  {/* Instagram Header */}
+                  <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(255,255,255,0.02)' }}>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: colors.gold, display: 'flex', alignItems: 'center', justifyContent: 'center', color: colors.dark, fontWeight: '900', fontSize: '11px' }}>DL</div>
+                    <span style={{ fontWeight: '700', fontSize: '14px', letterSpacing: '0.5px' }}>ótica_di_lorenzo</span>
                   </div>
-                  <div style={{ height: '250px', background: `linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)), url("${postTemplates[activePost].img}")`, backgroundSize: 'cover', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <div style={{ backgroundColor: 'rgba(255,255,255,0.9)', padding: '15px', borderRadius: '5px', textAlign: 'center', maxWidth: '80%', boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}>
-                      <div style={{ fontSize: '10px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: colors.orange }}>{postTemplates[activePost].tag}</div>
-                      <div style={{ fontSize: '16px', fontWeight: '900' }}>{postTemplates[activePost].title}</div>
-                      <div style={{ fontSize: '10px', marginTop: '5px' }}>Visite-nos hoje mesmo</div>
+
+                  {/* Main Image Canvas (4:5 Aspect Ratio) */}
+                  <div style={{ 
+                    position: 'relative',
+                    height: '400px', 
+                    background: `url("${postTemplates[activePost].img}")`, 
+                    backgroundSize: 'cover', 
+                    backgroundPosition: 'center',
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    justifyContent: 'flex-end'
+                  }}>
+                    {/* Artistic Overlay */}
+                    <div style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)'
+                    }} />
+
+                    {/* Brand Badge */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '20px',
+                      right: '20px',
+                      background: 'rgba(212, 136, 10, 0.9)',
+                      color: colors.dark,
+                      padding: '8px 15px',
+                      borderRadius: '8px',
+                      fontSize: '0.7rem',
+                      fontWeight: '800',
+                      textTransform: 'uppercase',
+                      letterSpacing: '1px',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+                    }}>
+                      {postTemplates[activePost].tag}
+                    </div>
+
+                    {/* Text Content Layer */}
+                    <div style={{ position: 'relative', padding: '30px', textAlign: 'left' }}>
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.2 }}
+                      >
+                        <h4 style={{ 
+                          fontSize: '2rem', 
+                          fontWeight: '900', 
+                          margin: 0, 
+                          color: colors.white,
+                          fontFamily: "'Playfair Display', serif",
+                          lineHeight: 1.1,
+                          textShadow: '0 2px 10px rgba(0,0,0,0.5)'
+                        }}>
+                          {postTemplates[activePost].title}
+                        </h4>
+                        <div style={{ 
+                          width: '40px', 
+                          height: '3px', 
+                          backgroundColor: colors.gold, 
+                          margin: '15px 0' 
+                        }} />
+                        <p style={{ 
+                          fontSize: '0.9rem', 
+                          fontWeight: '500',
+                          color: 'rgba(255,255,255,0.9)',
+                          margin: 0,
+                          maxWidth: '80%'
+                        }}>
+                          Elegância e precisão para o seu olhar. <br />
+                          Descubra a nova experiência Di Lorenzo.
+                        </p>
+                      </motion.div>
                     </div>
                   </div>
-                  <div style={{ padding: '12px' }}>
-                    <div style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
-                      <Star size={16} fill="#333" />
-                      <MessageCircle size={16} />
+
+                  {/* Interaction Bar */}
+                  <div style={{ padding: '15px 20px', background: 'rgba(255,255,255,0.03)' }}>
+                    <div style={{ display: 'flex', gap: '15px', marginBottom: '10px' }}>
+                      <Star size={20} color={colors.gold} fill={colors.gold} />
+                      <MessageCircle size={20} color="#fff" />
                     </div>
-                    <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
-                      <b>oticadilorenzo</b> {postTemplates[activePost].desc}
+                    <div style={{ fontSize: '12px', lineHeight: '1.5', color: 'rgba(255,255,255,0.7)' }}>
+                      <b style={{ color: '#fff' }}>otica_di_lorenzo</b> {postTemplates[activePost].desc}
                     </div>
                   </div>
                 </motion.div>
