@@ -16,7 +16,7 @@ const dates = [
 
 export default function CalendarSection() {
   return (
-    <section id="calendario" style={{ padding: '100px 20px', maxWidth: '1100px', margin: '0 auto', background: 'transparent' }}>
+    <section id="calendario" style={{ padding: '120px 20px', maxWidth: '1100px', margin: '0 auto', background: 'transparent' }}>
       <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
         <h2 style={{ fontSize: '2.8rem', marginBottom: '16px', fontFamily: "'Playfair Display', serif", color: 'white' }}>
           Calendário <span style={{ color: colors.gold }}>estratégico</span> incluso

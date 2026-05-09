@@ -12,7 +12,7 @@ export default function NumbersSection() {
   return (
     <section style={{
       background: 'transparent',
-      padding: '80px 20px',
+      padding: '120px 20px',
     }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>

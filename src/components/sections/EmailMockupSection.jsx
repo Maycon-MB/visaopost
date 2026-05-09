@@ -10,7 +10,7 @@ export default function EmailMockupSection() {
   return (
     <section id="email" style={{
       background: 'transparent',
-      padding: '100px 20px',
+      padding: '120px 20px',
     }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}

@@ -41,15 +41,22 @@ const PresentationPage = () => {
   const [activePost, setActivePost] = useState(0);
 
   const postTemplates = [
-    { tag: 'Nova Coleção', title: 'Armações Prada', desc: 'O estilo que você merece com a precisão que sua visão precisa. ✨ #Prada #VisaoPost', prompt: 'Novas armações Prada chegaram', img: '/oculos_luxo_close_1778271030465.png' },
-    { tag: 'Promoção', title: 'Ray-Ban Wayfarer', desc: 'O clássico que nunca sai de moda. Aproveite 20% OFF esta semana! 😎 #RayBan #Promo', prompt: 'Promoção de Ray-Ban Verão', img: '/oculos_luxo_close_1778271030465.png' },
-    { tag: 'Saúde Ocular', title: 'Exame de Vista', desc: 'Você sabia que deve revisar seu grau todo ano? Agende agora via WhatsApp! 📅 #Saude #Exame', prompt: 'Post sobre importância do exame', img: '/oculos_luxo_close_1778271030465.png' },
-    { tag: 'Lançamento', title: 'Vogue Eyewear', desc: 'A sofisticação que seu olhar procura. Confira as cores exclusivas. 💅 #Vogue #Trend', prompt: 'Novidades da Vogue', img: '/oculos_luxo_close_1778271030465.png' },
-    { tag: 'Performance', title: 'Oakley Sport', desc: 'Proteção e performance para o seu treino. Durabilidade extrema. 🚴‍♂️ #Oakley #Sport', prompt: 'Óculos Oakley para ciclistas', img: '/oculos_luxo_close_1778271030465.png' }
+    { tag: 'Nova Coleção', title: 'Armações Prada', desc: 'O estilo que você merece com a precisão que sua visão precisa. ✨ #Prada #VisaoPost', prompt: 'Novas armações Prada chegaram', img: '/stylish_person_glasses_1778289098822.png' },
+    { tag: 'Promoção Verão', title: 'Ray-Ban Aviator', desc: 'O clássico que nunca sai de moda. Aproveite 20% OFF esta semana! 😎 #RayBan #Promo', prompt: 'Promoção de Ray-Ban Verão', img: '/rayban_sunglasses_beach_1778289078548.png' },
+    { tag: 'Saúde Ocular', title: 'Exame de Vista', desc: 'Você sabia que deve revisar seu grau todo ano? Agende agora via WhatsApp! 📅 #Saude #Exame', prompt: 'Post sobre importância do exame', img: '/eye_exam_equipment_1778289213835.png' },
+    { tag: 'Tendência 2024', title: 'Vitrine Exclusiva', desc: 'A sofisticação que seu olhar procura. Confira as cores exclusivas em nossa loja. 💅 #Vogue #Trend', prompt: 'Novidades da Vitrine', img: '/optical_shop_display_1778289138291.png' },
+    { tag: 'Nossa Loja', title: 'Ambiente Premium', desc: 'Venha conhecer nosso novo espaço e tenha uma experiência ótica completa. 🚴‍♂️ #VisaoPost #Premium', prompt: 'Foto da nossa fachada/interior', img: '/premium_optical_storefront_1778289243187.png' }
   ];
 
+  const [isGenerating, setIsGenerating] = useState(false);
+
   const rotatePost = () => {
-    setActivePost((prev) => (prev + 1) % postTemplates.length);
+    if (isGenerating) return;
+    setIsGenerating(true);
+    setTimeout(() => {
+      setActivePost((prev) => (prev + 1) % postTemplates.length);
+      setIsGenerating(false);
+    }, 1500);
   };
 
   const navLinks = [
@@ -112,10 +119,25 @@ const PresentationPage = () => {
 
       {/* Hero Section */}
       <section id="inicio" style={{
-        padding: '160px 20px 100px',
+        padding: '160px 20px 120px',
         textAlign: 'center',
-        backgroundColor: colors.dark
+        position: 'relative',
+        overflow: 'hidden',
+        backgroundColor: colors.dark,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}>
+        {/* Background Image with Overlay */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: -1,
+          backgroundImage: 'linear-gradient(to bottom, rgba(11, 31, 15, 0.85), rgba(11, 31, 15, 0.95)), url("/hero_otica_premium_1778270703774.png")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }} />
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -170,7 +192,7 @@ const PresentationPage = () => {
       </div>
 
       {/* Experiência da Plataforma (Simulador & Gerenciamento) */}
-      <section id="demo" style={{ padding: '100px 20px' }}>
+      <section id="demo" style={{ padding: '120px 20px' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', fontFamily: "'Playfair Display', serif" }}>
@@ -228,9 +250,21 @@ const PresentationPage = () => {
               </AnimatePresence>
               <button 
                 onClick={rotatePost}
-                style={{ width: '100%', marginTop: '20px', padding: '15px', borderRadius: '10px', backgroundColor: colors.gold, color: colors.dark, fontWeight: '800', border: 'none', cursor: 'pointer', transition: '0.3s' }}
+                disabled={isGenerating}
+                style={{ 
+                  width: '100%', 
+                  marginTop: '20px', 
+                  padding: '15px', 
+                  borderRadius: '10px', 
+                  backgroundColor: isGenerating ? 'rgba(212, 136, 10, 0.5)' : colors.gold, 
+                  color: colors.dark, 
+                  fontWeight: '800', 
+                  border: 'none', 
+                  cursor: isGenerating ? 'not-allowed' : 'pointer', 
+                  transition: '0.3s' 
+                }}
               >
-                GERAR NOVA OPÇÃO
+                {isGenerating ? 'GERANDO OPÇÃO...' : 'GERAR NOVA OPÇÃO'}
               </button>
             </div>
 
@@ -278,7 +312,7 @@ const PresentationPage = () => {
       <NumbersSection />
       <CalendarSection />
 
-      <section style={{ padding: '100px 20px', maxWidth: '1200px', margin: '0 auto' }}>
+      <section style={{ padding: '120px 20px', maxWidth: '1200px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '80px' }}>
           <h2 style={{ fontSize: '2.8rem', marginBottom: '20px', fontFamily: "'Playfair Display', serif" }}>
             Além do básico — <span style={{ color: colors.gold }}>ideias inovadoras</span>
@@ -483,7 +517,7 @@ const PresentationPage = () => {
         </div>
       </section>
 
-      <footer style={{ padding: '80px 20px' }}>
+      <footer style={{ padding: '120px 20px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', marginBottom: '50px', gap: '20px' }}>
             <div>
