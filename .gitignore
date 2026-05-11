@@ -1,0 +1,12 @@
+.env
+*.pyc
+__pycache__/
+demo/post.jpg
+demo/post_*.jpg
+demo/approval.html
+demo/_logo_b64.txt
+.claude/
+.vercel
+node_modules
+dist
+.DS_Store
