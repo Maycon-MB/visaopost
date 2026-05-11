@@ -1,10 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-
-const colors = {
-  gold: '#D4880A', goldLight: '#F5A623', primary: '#0D3322',
-  textMuted: 'rgba(255,255,255,0.7)', glass: 'rgba(255,255,255,0.05)',
-};
+import { colors } from '../../styles/theme';
 
 const steps = [
   { num: '1', time: '08h00', title: 'Sistema gera o post do dia automaticamente', desc: 'IA analisa a data, o calendário de datas comemorativas e o histórico de posts aprovados. Gera a legenda e compõe a imagem com a identidade visual da ótica.' },
@@ -15,12 +11,12 @@ const steps = [
 
 export default function SolutionSection() {
   return (
-    <section id="solucao" style={{ padding: '120px 20px', maxWidth: '1100px', margin: '0 auto', background: 'transparent' }}>
+    <section id="solucao" style={{ padding: '140px 20px', maxWidth: '1100px', margin: '0 auto', background: 'transparent' }}>
       <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-        <h2 style={{ fontSize: '2.8rem', marginBottom: '16px', fontFamily: "'Playfair Display', serif", color: 'white' }}>
+        <h2 style={{ fontSize: '2.8rem', marginBottom: '16px', fontFamily: "'Playfair Display', serif", color: '#1A2E1C' }}>
           Como o <span style={{ color: colors.gold }}>VisaoPost</span> funciona
         </h2>
-        <p style={{ color: colors.textMuted, fontSize: '1.1rem', marginBottom: '60px' }}>
+        <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '1.1rem', marginBottom: '60px' }}>
           Você foca no negócio. O sistema cuida do Instagram.
         </p>
 
@@ -30,8 +26,8 @@ export default function SolutionSection() {
               transition={{ delay: i * 0.1 }} viewport={{ once: true }}
               style={{
                 display: 'flex', alignItems: 'flex-start', gap: '20px',
-                background: 'rgba(255,255,255,0.03)', borderRadius: '16px', padding: '24px 28px',
-                border: '1px solid rgba(255,255,255,0.05)',
+                background: 'rgba(255,255,255,0.7)', borderRadius: '16px', padding: '24px 28px',
+                border: '1px solid rgba(0,0,0,0.05)',
                 borderLeft: `4px solid ${colors.gold}`,
               }}>
               <div style={{
@@ -40,8 +36,8 @@ export default function SolutionSection() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
               }}>{s.num}</div>
               <div style={{ flex: 1 }}>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'white', marginBottom: '4px' }}>{s.title}</h4>
-                <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.6)' }}>{s.desc}</p>
+                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#1A2E1C', marginBottom: '4px' }}>{s.title}</h4>
+                <p style={{ fontSize: '0.9rem', color: 'rgba(0,0,0,0.6)' }}>{s.desc}</p>
               </div>
               <div style={{
                 background: 'rgba(212,136,10,0.1)', color: colors.goldLight, fontSize: '11px', fontWeight: 600,

@@ -1,5 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import { colors, fonts, radii } from '../styles/theme'
 import { 
   Eye, 
   Crown, 
@@ -23,28 +24,21 @@ const LandingPage = () => {
     { name: 'Juliana Costa', text: 'Ambiente super elegante e atendimento nota 1000. Não troco a Di Lorenzo por nenhuma outra.', time: 'Cliente fiel' }
   ]
 
-  // Estilos inline para garantir as cores da marca sem depender de Tailwind
-  const colors = {
-    green: '#0D3322',
-    orange: '#D4880A',
-    orangeLight: '#F5A623',
-    white: '#ffffff',
-    gray: '#F8F9FA'
-  }
+  const { landing } = colors;
 
   return (
     <div style={{ backgroundColor: '#fff', color: '#1A2E1C', fontFamily: "'Montserrat', sans-serif" }}>
       {/* Navbar Luxo */}
       <nav style={{
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
-        backgroundColor: colors.green, backdropFilter: 'blur(10px)',
+        backgroundColor: landing.green, backdropFilter: 'blur(10px)',
         height: '80px', display: 'flex', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.1)'
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ 
-              width: '40px', height: '40px', borderRadius: '50%', border: `2px solid ${colors.orange}`, 
-              overflow: 'hidden', backgroundColor: colors.orange, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: '900', fontSize: '14px' 
+              width: '40px', height: '40px', borderRadius: '50%', border: `2px solid ${landing.orange}`, 
+              overflow: 'hidden', backgroundColor: landing.orange, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: '900', fontSize: '14px' 
             }}>
               <img 
                 src="otica_logo.jpg" 
@@ -73,7 +67,7 @@ const LandingPage = () => {
           </div>
 
           <a href="#agendar" style={{
-            backgroundColor: colors.orange, color: '#fff', padding: '12px 25px', borderRadius: '50px',
+            backgroundColor: landing.orange, color: '#fff', padding: '12px 25px', borderRadius: '50px',
             textDecoration: 'none', fontWeight: 700, fontSize: '0.8rem', transition: '0.3s'
           }}>
             AGENDAR EXAME
@@ -97,7 +91,7 @@ const LandingPage = () => {
           <motion.span 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            style={{ color: colors.orange, background: 'rgba(212, 136, 10, 0.1)', padding: '5px 15px', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px', display: 'inline-block', border: `1px solid ${colors.orange}` }}
+            style={{ color: landing.orange, background: 'rgba(212, 136, 10, 0.1)', padding: '5px 15px', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px', display: 'inline-block', border: `1px solid ${landing.orange}` }}
           >
             Tradição & Estilo em um só lugar
           </motion.span>
@@ -105,7 +99,7 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', fontWeight: 900, marginBottom: '25px', lineHeight: 1.1, color: colors.orange }}
+            style={{ fontFamily: fonts.heading, fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', fontWeight: 900, marginBottom: '25px', lineHeight: 1.1, color: landing.orange }}
           >
             Visão que Transforma seu Olhar
           </motion.h1>
@@ -113,19 +107,19 @@ const LandingPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            style={{ fontSize: '1.2rem', color: colors.orange, opacity: 0.9, marginBottom: '40px', maxWidth: '600px', marginInline: 'auto', fontWeight: 500 }}
+            style={{ fontSize: '1.2rem', color: landing.orange, opacity: 0.9, marginBottom: '40px', maxWidth: '600px', marginInline: 'auto', fontWeight: 500 }}
           >
             A melhor curadoria de armações do mundo aliada à tecnologia de ponta para sua saúde ocular.
           </motion.p>
           <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <a href="#agendar" className="btn-p" style={{
-              backgroundColor: colors.orange, color: '#fff', padding: '18px 45px', borderRadius: '50px',
+              backgroundColor: landing.orange, color: '#fff', padding: '18px 45px', borderRadius: '50px',
               fontWeight: 800, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '1px', boxShadow: '0 10px 30px rgba(212, 136, 10, 0.4)'
             }}>
               Agendar Consulta
             </a>
             <a href="#grifes" className="btn-o" style={{
-              backgroundColor: colors.orange, color: '#fff', padding: '18px 45px', borderRadius: '50px',
+              backgroundColor: landing.orange, color: '#fff', padding: '18px 45px', borderRadius: '50px',
               fontWeight: 800, textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '1px', boxShadow: '0 10px 30px rgba(212, 136, 10, 0.4)'
             }}>
               Conhecer Coleções
@@ -138,9 +132,9 @@ const LandingPage = () => {
       <section id="experiencia" style={{ padding: '100px 20px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-            <span style={{ color: colors.orange, fontWeight: 800, fontSize: '0.8rem', letterSpacing: '3px', textTransform: 'uppercase' }}>Diferenciais</span>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.8rem', color: colors.green, fontWeight: 900 }}>Por que a Di Lorenzo?</h2>
-            <p style={{ color: '#5A7A62', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>Combinamos 15 anos de história com o que há de mais moderno no mercado óptico mundial.</p>
+            <span style={{ color: landing.orange, fontWeight: 800, fontSize: '0.8rem', letterSpacing: '3px', textTransform: 'uppercase' }}>Diferenciais</span>
+            <h2 style={{ fontFamily: fonts.heading, fontSize: '2.8rem', color: landing.green, fontWeight: 900 }}>Por que a Di Lorenzo?</h2>
+            <p style={{ color: landing.textMuted, fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>Combinamos 15 anos de história com o que há de mais moderno no mercado óptico mundial.</p>
           </div>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
@@ -152,11 +146,11 @@ const LandingPage = () => {
               <motion.div 
                 key={i}
                 whileHover={{ y: -10 }}
-                style={{ padding: '40px', borderRadius: '25px', backgroundColor: '#F8F9FA', borderBottom: `5px solid ${colors.orange}`, transition: '0.4s' }}
+                style={{ padding: '40px', borderRadius: radii.lg, backgroundColor: landing.gray, borderBottom: `5px solid ${landing.orange}`, transition: '0.4s' }}
               >
-                <item.icon size={40} color={colors.orange} style={{ marginBottom: '25px' }} />
-                <h3 style={{ fontSize: '1.4rem', color: colors.green, marginBottom: '15px', fontWeight: 800 }}>{item.title}</h3>
-                <p style={{ color: '#5A7A62', fontSize: '0.95rem' }}>{item.desc}</p>
+                <item.icon size={40} color={landing.orange} style={{ marginBottom: '25px' }} />
+                <h3 style={{ fontSize: '1.4rem', color: landing.green, marginBottom: '15px', fontWeight: 800 }}>{item.title}</h3>
+                <p style={{ color: landing.textMuted, fontSize: '0.95rem' }}>{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -172,20 +166,20 @@ const LandingPage = () => {
             viewport={{ once: true }}
             style={{ flex: '1', minWidth: '300px' }}
           >
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '3.5rem', fontWeight: 900, color: colors.green, lineHeight: 1.1, marginBottom: '30px' }}>
-              A perfeição em <br /> cada <span style={{ color: colors.orange }}>detalhe</span>
+            <h2 style={{ fontFamily: fonts.heading, fontSize: '3.5rem', fontWeight: 900, color: landing.green, lineHeight: 1.1, marginBottom: '30px' }}>
+              A perfeição em <br /> cada <span style={{ color: landing.orange }}>detalhe</span>
             </h2>
-            <p style={{ fontSize: '1.1rem', color: '#5A7A62', lineHeight: 1.8, marginBottom: '40px' }}>
+            <p style={{ fontSize: '1.1rem', color: landing.textMuted, lineHeight: 1.8, marginBottom: '40px' }}>
               Não vendemos apenas óculos. Entregamos uma nova forma de ver e ser visto pelo mundo. Nossa curadoria seleciona apenas peças que unem design atemporal e conforto absoluto.
             </p>
             <div style={{ display: 'flex', gap: '30px' }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '2rem', fontWeight: 900, color: colors.orange }}>15+</div>
-                <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: colors.green }}>Anos de Tradição</div>
+                <div style={{ fontSize: '2rem', fontWeight: 900, color: landing.orange }}>15+</div>
+                <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: landing.green }}>Anos de Tradição</div>
               </div>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '2rem', fontWeight: 900, color: colors.orange }}>20k+</div>
-                <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: colors.green }}>Vidas Transformadas</div>
+                <div style={{ fontSize: '2rem', fontWeight: 900, color: landing.orange }}>20k+</div>
+                <div style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: landing.green }}>Vidas Transformadas</div>
               </div>
             </div>
           </motion.div>
@@ -198,9 +192,9 @@ const LandingPage = () => {
             <img 
               src="/oculos_luxo_close_1778271030465.png" 
               alt="Detalhe Óculos" 
-              style={{ width: '100%', borderRadius: '40px', boxShadow: '0 40px 80px rgba(0,0,0,0.15)' }} 
+              style={{ width: '100%', borderRadius: radii.card, boxShadow: '0 40px 80px rgba(0,0,0,0.15)' }} 
             />
-            <div style={{ position: 'absolute', top: '-20px', right: '-20px', backgroundColor: colors.orange, color: '#fff', padding: '20px', borderRadius: '20px', fontWeight: 800, fontSize: '0.9rem', boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}>
+            <div style={{ position: 'absolute', top: '-20px', right: '-20px', backgroundColor: landing.orange, color: landing.white, padding: '20px', borderRadius: radii.md, fontWeight: 800, fontSize: '0.9rem', boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}>
               QUALIDADE <br /> PREMIUM
             </div>
           </motion.div>
@@ -208,12 +202,12 @@ const LandingPage = () => {
       </section>
 
       {/* Agendamento Section */}
-      <section id="agendar" style={{ padding: '100px 20px', backgroundColor: colors.green, color: '#fff', position: 'relative', overflow: 'hidden' }}>
+      <section id="agendar" style={{ padding: '100px 20px', backgroundColor: landing.green, color: landing.white, position: 'relative', overflow: 'hidden' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '80px', alignItems: 'center' }}>
             <div>
-              <span style={{ color: colors.orangeLight, fontWeight: 800, fontSize: '0.8rem', letterSpacing: '3px', textTransform: 'uppercase' }}>Agendamento</span>
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.8rem', color: '#fff', fontWeight: 900, marginBottom: '20px' }}>Pronta para ver o mundo melhor?</h2>
+              <span style={{ color: landing.orangeLight, fontWeight: 800, fontSize: '0.8rem', letterSpacing: '3px', textTransform: 'uppercase' }}>Agendamento</span>
+              <h2 style={{ fontFamily: fonts.heading, fontSize: '2.8rem', color: landing.white, fontWeight: 900, marginBottom: '20px' }}>Pronta para ver o mundo melhor?</h2>
               <p style={{ marginBottom: '30px', opacity: 0.9 }}>Preencha os dados e nossa equipe entrará em contato via WhatsApp para confirmar o melhor horário para você.</p>
               <div style={{ display: 'grid', gap: '20px' }}>
                 <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
@@ -226,26 +220,26 @@ const LandingPage = () => {
                 </div>
               </div>
             </div>
-            <div style={{ backgroundColor: '#fff', padding: '50px', borderRadius: '30px', color: '#1A2E1C', boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
-              <h3 style={{ fontSize: '1.8rem', marginBottom: '25px', color: colors.green, fontWeight: 800 }}>Agendar Visita</h3>
+            <div style={{ backgroundColor: landing.white, padding: '50px', borderRadius: radii.xl, color: landing.text, boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
+              <h3 style={{ fontSize: '1.8rem', marginBottom: '25px', color: landing.green, fontWeight: 800 }}>Agendar Visita</h3>
               <form style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#5A7A62', textTransform: 'uppercase' }}>Nome</label>
-                  <input type="text" placeholder="Seu nome completo" style={{ width: '100%', padding: '15px', borderRadius: '12px', border: '1px solid #E9ECEF', background: '#F8F9FA' }} />
+                  <label style={{ fontSize: '0.75rem', fontWeight: 800, color: landing.textMuted, textTransform: 'uppercase' }}>Nome</label>
+                  <input type="text" placeholder="Seu nome completo" style={{ width: '100%', padding: '15px', borderRadius: radii.sm, border: '1px solid #E9ECEF', background: landing.gray }} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#5A7A62', textTransform: 'uppercase' }}>WhatsApp</label>
-                  <input type="tel" placeholder="(00) 90000-0000" style={{ width: '100%', padding: '15px', borderRadius: '12px', border: '1px solid #E9ECEF', background: '#F8F9FA' }} />
+                  <label style={{ fontSize: '0.75rem', fontWeight: 800, color: landing.textMuted, textTransform: 'uppercase' }}>WhatsApp</label>
+                  <input type="tel" placeholder="(00) 90000-0000" style={{ width: '100%', padding: '15px', borderRadius: radii.sm, border: '1px solid #E9ECEF', background: landing.gray }} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#5A7A62', textTransform: 'uppercase' }}>Qual o seu interesse?</label>
-                  <select style={{ width: '100%', padding: '15px', borderRadius: '12px', border: '1px solid #E9ECEF', background: '#F8F9FA' }}>
+                  <label style={{ fontSize: '0.75rem', fontWeight: 800, color: landing.textMuted, textTransform: 'uppercase' }}>Qual o seu interesse?</label>
+                  <select style={{ width: '100%', padding: '15px', borderRadius: radii.sm, border: '1px solid #E9ECEF', background: landing.gray }}>
                     <option>Exame de Vista</option>
                     <option>Novas Armações</option>
                     <option>Lentes de Contato</option>
                   </select>
                 </div>
-                <button type="submit" style={{ width: '100%', padding: '20px', background: colors.orange, color: '#fff', border: 'none', borderRadius: '12px', fontWeight: 800, fontSize: '1rem', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '1px' }}>Solicitar Agendamento</button>
+                <button type="submit" style={{ width: '100%', padding: '20px', background: landing.orange, color: landing.white, border: 'none', borderRadius: radii.sm, fontWeight: 800, fontSize: '1rem', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '1px' }}>Solicitar Agendamento</button>
               </form>
             </div>
           </div>
@@ -255,11 +249,11 @@ const LandingPage = () => {
       {/* Marcas Section */}
       <section id="grifes" style={{ padding: '100px 20px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
-          <span style={{ color: colors.orange, fontWeight: 800, fontSize: '0.8rem', letterSpacing: '3px', textTransform: 'uppercase' }}>Coleções</span>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.8rem', color: colors.green, fontWeight: 900, marginBottom: '40px' }}>As melhores marcas do mundo</h2>
+          <span style={{ color: landing.orange, fontWeight: 800, fontSize: '0.8rem', letterSpacing: '3px', textTransform: 'uppercase' }}>Coleções</span>
+          <h2 style={{ fontFamily: fonts.heading, fontSize: '2.8rem', color: landing.green, fontWeight: 900, marginBottom: '40px' }}>As melhores marcas do mundo</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px' }}>
             {brands.map((brand) => (
-              <div key={brand} style={{ background: '#F8F9FA', padding: '15px 35px', borderRadius: '15px', fontWeight: 800, color: colors.green, border: '1px solid transparent', fontSize: '1rem' }}>
+              <div key={brand} style={{ background: landing.gray, padding: '15px 35px', borderRadius: radii.sm, fontWeight: 800, color: landing.green, border: '1px solid transparent', fontSize: '1rem' }}>
                 {brand}
               </div>
             ))}
@@ -268,22 +262,22 @@ const LandingPage = () => {
       </section>
 
       {/* Depoimentos Section */}
-      <section style={{ padding: '100px 20px', backgroundColor: '#F8F9FA' }}>
+      <section style={{ padding: '100px 20px', backgroundColor: landing.gray }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-            <span style={{ color: colors.orange, fontWeight: 800, fontSize: '0.8rem', letterSpacing: '3px', textTransform: 'uppercase' }}>Depoimentos</span>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.8rem', color: colors.green, fontWeight: 900 }}>O que dizem nossas clientes</h2>
+            <span style={{ color: landing.orange, fontWeight: 800, fontSize: '0.8rem', letterSpacing: '3px', textTransform: 'uppercase' }}>Depoimentos</span>
+            <h2 style={{ fontFamily: fonts.heading, fontSize: '2.8rem', color: landing.green, fontWeight: 900 }}>O que dizem nossas clientes</h2>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
             {reviews.map((review, i) => (
-              <div key={i} style={{ background: '#fff', padding: '40px', borderRadius: '25px', position: 'relative', boxShadow: '0 5px 15px rgba(0,0,0,0.02)' }}>
-                <div style={{ color: colors.orange, marginBottom: '20px', fontSize: '0.8rem' }}>
+              <div key={i} style={{ background: landing.white, padding: '40px', borderRadius: radii.lg, position: 'relative', boxShadow: '0 5px 15px rgba(0,0,0,0.02)' }}>
+                <div style={{ color: landing.orange, marginBottom: '20px', fontSize: '0.8rem' }}>
                   {[...Array(5)].map((_, j) => <Star key={j} size={14} fill="currentColor" style={{ display: 'inline' }} />)}
                 </div>
-                <p style={{ fontSize: '1rem', color: '#1A2E1C', marginBottom: '25px', lineHeight: 1.8, fontStyle: 'italic' }}>"{review.text}"</p>
+                <p style={{ fontSize: '1rem', color: landing.text, marginBottom: '25px', lineHeight: 1.8, fontStyle: 'italic' }}>"{review.text}"</p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                  <div style={{ fontWeight: 800, fontSize: '0.9rem', color: colors.green }}>{review.name}</div>
-                  <div style={{ fontSize: '0.75rem', color: '#5A7A62' }}>{review.time}</div>
+                  <div style={{ fontWeight: 800, fontSize: '0.9rem', color: landing.green }}>{review.name}</div>
+                  <div style={{ fontSize: '0.75rem', color: landing.textMuted }}>{review.time}</div>
                 </div>
               </div>
             ))}
@@ -295,26 +289,26 @@ const LandingPage = () => {
       <section id="unidade" style={{ padding: '100px 20px' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '40px' }} className="unidade-grid">
-            <div style={{ width: '100%', height: '400px', background: '#E9ECEF', borderRadius: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
+            <div style={{ width: '100%', height: '400px', background: '#E9ECEF', borderRadius: radii.xl, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
               <img src="https://i.imgur.com/8Km9tLL.png" alt="Localização" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.3, filter: 'grayscale(1)' }} />
-              <div style={{ position: 'absolute', bottom: '20px', left: '20px', padding: '20px', background: '#fff', borderRadius: '15px', boxShadow: '0 15px 35px rgba(0,0,0,0.1)', fontSize: '0.8rem', fontWeight: 700 }}>
-                <MapPin size={16} color={colors.orange} style={{ marginRight: '10px' }} />
+              <div style={{ position: 'absolute', bottom: '20px', left: '20px', padding: '20px', background: landing.white, borderRadius: radii.sm, boxShadow: '0 15px 35px rgba(0,0,0,0.1)', fontSize: '0.8rem', fontWeight: 700 }}>
+                <MapPin size={16} color={landing.orange} style={{ marginRight: '10px' }} />
                 Rua das Óticas, 123 - Centro
               </div>
             </div>
-            <div style={{ background: colors.green, color: '#fff', padding: '50px', borderRadius: '30px' }}>
+            <div style={{ background: landing.green, color: landing.white, padding: '50px', borderRadius: radii.xl }}>
               <h3 style={{ fontSize: '1.8rem', marginBottom: '30px', fontWeight: 800 }}>Horário Local</h3>
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                 <span style={{ opacity: 0.8 }}>Segunda a Sexta</span>
-                <span style={{ fontWeight: 700, color: colors.orangeLight }}>08:00 - 18:00</span>
+                <span style={{ fontWeight: 700, color: landing.orangeLight }}>08:00 - 18:00</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                 <span style={{ opacity: 0.8 }}>Sábado</span>
-                <span style={{ fontWeight: 700, color: colors.orangeLight }}>08:00 - 12:00</span>
+                <span style={{ fontWeight: 700, color: landing.orangeLight }}>08:00 - 12:00</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '15px 0' }}>
                 <span style={{ opacity: 0.8 }}>Domingo</span>
-                <span style={{ fontWeight: 700, color: colors.orangeLight }}>Fechado</span>
+                <span style={{ fontWeight: 700, color: landing.orangeLight }}>Fechado</span>
               </div>
               <div style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)', fontSize: '0.9rem' }}>
                 <p style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}><Phone size={16} /> (00) 3333-4444</p>
@@ -326,9 +320,9 @@ const LandingPage = () => {
       </section>
 
       {/* Footer */}
-      <footer style={{ background: '#05140B', padding: '80px 20px', color: '#fff', textAlign: 'center' }}>
+      <footer style={{ background: '#05140B', padding: '80px 20px', color: landing.white, textAlign: 'center' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <span style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', fontWeight: 900, marginBottom: '15px', display: 'block' }}>DI LORENZO</span>
+          <span style={{ fontFamily: fonts.heading, fontSize: '2rem', fontWeight: 900, marginBottom: '15px', display: 'block' }}>DI LORENZO</span>
           <p style={{ opacity: 0.6 }}>Especialistas em saúde visual e estilo desde 2011.</p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', margin: '30px 0' }}>
             <a href="#" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.8rem' }}>Política de Privacidade</a>
@@ -336,7 +330,7 @@ const LandingPage = () => {
           </div>
           <div style={{ fontSize: '0.75rem', opacity: 0.4, marginTop: '40px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '40px' }}>
             &copy; 2026 Ótica Di Lorenzo. Todos os direitos reservados.<br />
-            Tecnologia <strong style={{ color: colors.orangeLight }}>VisaoPost</strong> por Maycon Bruno
+            Tecnologia <strong style={{ color: landing.orangeLight }}>VisaoPost</strong> por Maycon Bruno
           </div>
         </div>
       </footer>

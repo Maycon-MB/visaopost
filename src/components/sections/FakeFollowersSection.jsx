@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { colors } from '../../styles/theme';
 
 const bad = [
   'Contas falsas que nunca compram nada',
@@ -21,7 +22,7 @@ const good = [
 export default function FakeFollowersSection() {
   return (
     <section id="seguidores" style={{
-      background: 'transparent', padding: '120px 20px',
+      background: 'transparent', padding: '140px 20px',
     }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
@@ -47,13 +48,13 @@ export default function FakeFollowersSection() {
               </ul>
             </div>
             {/* GOOD */}
-            <div style={{ background: 'rgba(0,200,83,0.08)', border: '1px solid rgba(0,200,83,0.3)', borderRadius: '16px', padding: '28px' }}>
+            <div style={{ background: '#F0FFF4', border: '1px solid rgba(0,200,83,0.2)', borderRadius: '16px', padding: '28px' }}>
               <h3 style={{ color: '#25D366', fontSize: '1.1rem', fontWeight: 700, marginBottom: '20px' }}>
                 ✓ Crescimento orgânico real
               </h3>
               <ul style={{ listStyle: 'none', padding: 0 }}>
                 {good.map((item, i) => (
-                  <li key={i} style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.95rem', padding: '9px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: '10px' }}>
+                  <li key={i} style={{ color: 'rgba(0,0,0,0.7)', fontSize: '0.95rem', padding: '9px 0', borderBottom: '1px solid rgba(0,0,0,0.06)', display: 'flex', gap: '10px' }}>
                     <span style={{ color: '#25D366', flexShrink: 0 }}>✓</span> {item}
                   </li>
                 ))}
@@ -61,14 +62,37 @@ export default function FakeFollowersSection() {
             </div>
           </div>
 
-          <div style={{ background: 'rgba(255,59,48,0.1)', border: '1px solid rgba(255,59,48,0.3)', borderRadius: '12px', padding: '20px 24px', display: 'flex', gap: '16px' }}>
-            <span style={{ fontSize: '1.5rem', flexShrink: 0 }}>⚠️</span>
-            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '0.9rem', lineHeight: 1.7 }}>
-              Em 2024, o Instagram removeu <strong style={{ color: '#FF6B6B' }}>mais de 6 bilhões de contas falsas</strong> globalmente.
-              Perfis flagrados tiveram redução de até <strong style={{ color: '#FF6B6B' }}>70% no alcance orgânico permanentemente</strong>.
-              O risco não é perder os seguidores comprados — é perder o perfil inteiro.
-            </p>
-          </div>
+          <section id="fake" style={{ padding: '140px 20px', maxWidth: '1100px', margin: '0 auto', background: 'transparent' }}>
+            <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} style={{
+              background: 'rgba(255, 59, 48, 0.03)', border: '1px solid rgba(255, 59, 48, 0.1)',
+              padding: '60px', borderRadius: '40px', textAlign: 'center', position: 'relative', overflow: 'hidden'
+            }}>
+              <div style={{ position: 'absolute', top: '20px', right: '20px', opacity: 0.1 }}>
+                <AlertTriangle size={120} color="#ff3b30" />
+              </div>
+
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '8px',
+                  background: 'rgba(255, 59, 48, 0.1)', color: '#ff3b30',
+                  padding: '8px 16px', borderRadius: '50px', fontSize: '0.8rem',
+                  fontWeight: '800', marginBottom: '24px', textTransform: 'uppercase'
+                }}>
+                  <ShieldAlert size={14} /> Alerta Meta 2026
+                </div>
+
+                <h2 style={{ fontSize: '2.8rem', fontFamily: "'Playfair Display', serif", marginBottom: '24px', color: '#1A2E1C' }}>
+                  O fim da era dos <span style={{ color: '#ff3b30' }}>seguidores comprados</span>
+                </h2>
+
+                <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '1.2rem', maxWidth: '800px', margin: '0 auto 40px', lineHeight: 1.7 }}>
+                  A Meta anunciou o maior "expurgo" de contas inativas da história para 2026. Perfis que utilizam bots perderão autoridade e podem ser banidos permanentemente. 
+                  Óticas que compraram seguidores estão vendo seus números despencarem e, pior, perdendo o acesso às contas permanentemente. 
+                  <strong> Não arrisque o futuro da sua empresa em uma estratégia que está morrendo.</strong>
+                </p>
+              </div>
+            </motion.div>
+          </section>
         </motion.div>
       </div>
     </section>

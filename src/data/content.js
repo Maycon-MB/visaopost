@@ -9,6 +9,7 @@ export const plans = [
     setup: '800',
     description:
       'Foco em visibilidade constante. Ideal para óticas que precisam de um Instagram profissional e ativo sem esforço manual.',
+    maintenance: 'Mantém sua ótica ativa 24h com posts inteligentes e suporte técnico para qualquer ajuste rápido.',
     features: [
       '20 posts/mês no Instagram',
       'Identidade visual exclusiva',
@@ -23,6 +24,7 @@ export const plans = [
     setup: '1.000',
     description:
       'Transforma seguidores em clientes reais. Inclui uma Landing Page de alta conversão e presença otimizada no Google.',
+    maintenance: 'Custeia a infraestrutura da sua Landing Page e a otimização mensal para você dominar as buscas locais no Google.',
     features: [
       '30 posts/mês no Instagram',
       'Landing Page Premium',
@@ -37,6 +39,7 @@ export const plans = [
     setup: '1.500',
     description:
       'O Ciclo Completo. Automação total de vendas, agendamento de exames e fidelização com Lembrete de Retorno.',
+    maintenance: 'Garante o funcionamento dos servidores de WhatsApp e a consultoria de ROI para escalar seu faturamento no automático.',
     features: [
       'Bot WhatsApp de Agendamento',
       'Lembrete de Retorno (1 Ano)',

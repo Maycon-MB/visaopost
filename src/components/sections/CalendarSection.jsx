@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-
-const colors = { gold: '#D4880A', goldLight: '#F5A623', textMuted: 'rgba(255,255,255,0.7)' };
+import { colors } from '../../styles/theme';
 
 const dates = [
   { date: '14 Fev', name: 'Valentine\'s Day', desc: 'Post de óculos românticos e promoção especial para casais.' },
@@ -16,22 +15,22 @@ const dates = [
 
 export default function CalendarSection() {
   return (
-    <section id="calendario" style={{ padding: '120px 20px', maxWidth: '1100px', margin: '0 auto', background: 'transparent' }}>
+    <section id="calendario" style={{ padding: '140px 20px', maxWidth: '1100px', margin: '0 auto', background: '#FDFCF8' }}>
       <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-        <h2 style={{ fontSize: '2.8rem', marginBottom: '16px', fontFamily: "'Playfair Display', serif", color: 'white' }}>
+        <h2 style={{ fontSize: '2.8rem', marginBottom: '16px', fontFamily: "'Playfair Display', serif", color: '#1A2E1C' }}>
           Calendário <span style={{ color: colors.gold }}>estratégico</span> incluso
         </h2>
-        <p style={{ color: colors.textMuted, fontSize: '1.1rem', marginBottom: '48px' }}>
+        <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '1.1rem', marginBottom: '48px' }}>
           Nunca mais perca uma data importante. O sistema prepara as campanhas com antecedência automaticamente.
         </p>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '16px' }}>
           {dates.map((d, i) => (
-            <motion.div key={i} whileHover={{ y: -4, boxShadow: '0 12px 32px rgba(212,136,10,0.2)' }}
+            <motion.div key={i} whileHover={{ y: -4, boxShadow: '0 12px 32px rgba(0,0,0,0.05)' }}
               style={{
-                background: 'rgba(255,255,255,0.03)', borderRadius: '14px', padding: '22px',
-                border: '1px solid rgba(255,255,255,0.05)',
-                borderTop: `3px solid ${colors.gold}`, boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                background: 'white', borderRadius: '14px', padding: '22px',
+                border: '1px solid rgba(0,0,0,0.05)',
+                borderTop: `3px solid ${colors.gold}`, boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
               }}>
               <div style={{
                 display: 'inline-block', background: 'rgba(212,136,10,0.1)',
