@@ -181,7 +181,7 @@ def build_email(img_path: Path) -> str:
     <tr>
       <td style="background:#F0F4F8;padding:16px 24px;border-top:1px solid #E2EBF4;">
         <p style="margin:0;font-size:11px;color:#AAB8C2;text-align:center;line-height:1.6;">
-          Gerado automaticamente por <strong style="color:#5B8FA8;">VisaoPost</strong>
+          Gerado automaticamente por <strong style="color:#5B8FA8;">Projeto</strong>
           &nbsp;&bull;&nbsp; Este e-mail expira em 2 horas
           <br>Voce esta recebendo porque sua conta esta ativa no sistema.
         </p>
@@ -203,7 +203,7 @@ def send(html: str, img_path: Path):
     #     image/jpeg (Content-ID: post_image)
     outer = MIMEMultipart("mixed")
     outer["Subject"] = f"[Aprovar Agora] Novo post pronto - {BRAND['name']} - Hoje 18h"
-    outer["From"]    = f"VisaoPost <{GMAIL_USER}>"
+    outer["From"]    = f"Projeto <{GMAIL_USER}>"
     outer["To"]      = DEST_EMAIL
 
     related = MIMEMultipart("related")

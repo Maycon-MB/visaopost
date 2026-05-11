@@ -13,7 +13,7 @@ export default function Footer() {
 
         <div style={{ textAlign: 'center', opacity: 0.6 }}>
           <p style={{ color: colors.textMuted, fontSize: '0.8rem' }}>
-            © 2026 VisaoPost — Todos os direitos reservados.
+            © 2026 Projeto — Todos os direitos reservados.
           </p>
         </div>
       </div>

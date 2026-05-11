@@ -1,9 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import LandingPage from './components/LandingPage'
 import PresentationPage from './components/PresentationPage'
 
 function App() {
-  const [view, setView] = useState('landing') // landing ou presentation
+  // Inicia na view correta com base no hash da URL
+  const [view, setView] = useState(() => {
+    const hash = window.location.hash
+    // Aceita tanto #proposta quanto #apresentacao para evitar confusão
+    return (hash === '#proposta' || hash === '#apresentacao') ? 'presentation' : 'landing'
+  })
+
+  // Sincroniza a URL com o estado da view para permitir links diretos
+  useEffect(() => {
+    if (view === 'presentation') {
+      if (window.location.hash !== '#apresentacao') {
+        window.location.hash = '#apresentacao'
+      }
+    } else {
+      if (window.location.hash !== '') {
+        // Remove o hash de forma limpa
+        window.history.pushState("", document.title, window.location.pathname + window.location.search);
+      }
+    }
+  }, [view])
 
   return (
     <div className="App">

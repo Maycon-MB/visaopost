@@ -1,14 +1,14 @@
-# VisaoPost 👓✨
+# Projeto 👓✨
 
 > **A tecnologia que óticas usam para dominar o mercado local.**
 > Uma plataforma SaaS completa de automação de marketing: Posts com IA, Landing Pages, Bot de WhatsApp e Sistema de Recall Automático.
 
-🔗 **Acesse a Apresentação:** [maycon-mb.github.io/visaopost](https://maycon-mb.github.io/visaopost/)
+🔗 **Acesse a Apresentação:** [maycon-mb.github.io/Projeto](https://maycon-mb.github.io/Projeto/)
 
 ---
 
 ## 🚀 O Diferencial
-O VisaoPost não é apenas um agendador de posts. É um ecossistema focado no **Ciclo de Vendas Óptico**:
+O Projeto não é apenas um agendador de posts. É um ecossistema focado no **Ciclo de Vendas Óptico**:
 1. **Atração**: Posts inteligentes e contextuais (baseados no clima e tendências) gerados por IA.
 2. **Conversão**: Landing Pages de alta performance integradas ao Google Meu Negócio.
 3. **Fidelização (Recall)**: Sistema que identifica clientes que não renovam o exame há 1 ano e envia convites automáticos via WhatsApp.

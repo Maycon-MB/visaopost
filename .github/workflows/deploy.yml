@@ -1,4 +1,4 @@
-# Deploy VisaoPost to GitHub Pages
+# Deploy Projeto to GitHub Pages
 name: Deploy to GitHub Pages
 
 on:

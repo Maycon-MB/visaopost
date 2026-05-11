@@ -1,5 +1,5 @@
 // ─── src/data/content.js ───────────────────────────────────────────
-// Centralised content constants for the VisaoPost React app.
+// Centralised content constants for the Projeto React app.
 // Move any copy that might change frequently here so components stay lean.
 
 export const plans = [
@@ -26,6 +26,7 @@ export const plans = [
       'Transforma seguidores em clientes reais. Inclui uma Landing Page de alta conversão e presença otimizada no Google.',
     maintenance: 'Custeia a infraestrutura da sua Landing Page e a otimização mensal para você dominar as buscas locais no Google.',
     features: [
+      'Tudo do Presença Digital +',
       '30 posts/mês no Instagram',
       'Landing Page Premium',
       'Google Meu Negócio (SEO)',
@@ -41,6 +42,7 @@ export const plans = [
       'O Ciclo Completo. Automação total de vendas, agendamento de exames e fidelização com Lembrete de Retorno.',
     maintenance: 'Garante o funcionamento dos servidores de WhatsApp e a consultoria de ROI para escalar seu faturamento no automático.',
     features: [
+      'Tudo do Vendas Ativas +',
       'Bot WhatsApp de Agendamento',
       'Lembrete de Retorno (1 Ano)',
       'QR Code de Balcão Integrado',

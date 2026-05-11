@@ -1,14 +1,14 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { colors, fonts, radii } from '../styles/theme'
-import { 
-  Eye, 
-  Crown, 
-  UserCheck, 
-  Calendar, 
-  MapPin, 
-  Phone, 
-  Instagram, 
+import {
+  Eye,
+  Crown,
+  UserCheck,
+  Calendar,
+  MapPin,
+  Phone,
+  Instagram,
   Star,
   ArrowRight,
   Clock,
@@ -36,21 +36,21 @@ const LandingPage = () => {
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ 
-              width: '40px', height: '40px', borderRadius: '50%', border: `2px solid ${landing.orange}`, 
-              overflow: 'hidden', backgroundColor: landing.orange, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: '900', fontSize: '14px' 
+            <div style={{
+              width: '40px', height: '40px', borderRadius: '50%', border: `2px solid ${landing.orange}`,
+              overflow: 'hidden', backgroundColor: landing.orange, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: '900', fontSize: '14px'
             }}>
-              <img 
-                src="otica_logo.jpg" 
-                alt="Logo" 
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+              <img
+                src="otica_logo.jpg"
+                alt="Logo"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 onError={(e) => { e.target.style.display = 'none'; }}
               />
               DL
             </div>
             <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#fff', letterSpacing: '1px' }}>DI LORENZO</span>
           </div>
-          
+
           <div style={{ display: 'flex', gap: '30px' }} className="nav-links-container">
             {[
               { label: 'Experiência', id: 'experiencia' },
@@ -88,14 +88,14 @@ const LandingPage = () => {
         }} />
 
         <div style={{ maxWidth: '850px', padding: '0 20px' }}>
-          <motion.span 
+          <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             style={{ color: landing.orange, background: 'rgba(212, 136, 10, 0.1)', padding: '5px 15px', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 800, letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '20px', display: 'inline-block', border: `1px solid ${landing.orange}` }}
           >
             Tradição & Estilo em um só lugar
           </motion.span>
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -103,7 +103,7 @@ const LandingPage = () => {
           >
             Visão que Transforma seu Olhar
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
@@ -136,14 +136,14 @@ const LandingPage = () => {
             <h2 style={{ fontFamily: fonts.heading, fontSize: '2.8rem', color: landing.green, fontWeight: 900 }}>Por que a Di Lorenzo?</h2>
             <p style={{ color: landing.textMuted, fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>Combinamos 15 anos de história com o que há de mais moderno no mercado óptico mundial.</p>
           </div>
-          
+
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
             {[
               { icon: Eye, title: 'Saúde em Foco', desc: 'Consultórios equipados com tecnologia alemã para um diagnóstico preciso e confortável do seu grau.' },
               { icon: Crown, title: 'Grifes Exclusivas', desc: 'Ray-Ban, Prada, Oakley e muito mais. Modelos que você só encontra aqui na região.' },
               { icon: UserCheck, title: 'Visagismo', desc: 'Consultoria personalizada para encontrar a armação que melhor se adapta ao formato do seu rosto.' }
             ].map((item, i) => (
-              <motion.div 
+              <motion.div
                 key={i}
                 whileHover={{ y: -10 }}
                 style={{ padding: '40px', borderRadius: radii.lg, backgroundColor: landing.gray, borderBottom: `5px solid ${landing.orange}`, transition: '0.4s' }}
@@ -160,7 +160,7 @@ const LandingPage = () => {
       {/* Seção Impacto Visual - Óculos de Luxo */}
       <section style={{ padding: '100px 20px', backgroundColor: '#fff', overflow: 'hidden' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '60px' }}>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -183,16 +183,16 @@ const LandingPage = () => {
               </div>
             </div>
           </motion.div>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             style={{ flex: '1.2', minWidth: '350px', position: 'relative' }}
           >
-            <img 
-              src="/oculos_luxo_close_1778271030465.png" 
-              alt="Detalhe Óculos" 
-              style={{ width: '100%', borderRadius: radii.card, boxShadow: '0 40px 80px rgba(0,0,0,0.15)' }} 
+            <img
+              src="/oculos_luxo_close_1778271030465.png"
+              alt="Detalhe Óculos"
+              style={{ width: '100%', borderRadius: radii.card, boxShadow: '0 40px 80px rgba(0,0,0,0.15)' }}
             />
             <div style={{ position: 'absolute', top: '-20px', right: '-20px', backgroundColor: landing.orange, color: landing.white, padding: '20px', borderRadius: radii.md, fontWeight: 800, fontSize: '0.9rem', boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}>
               QUALIDADE <br /> PREMIUM
@@ -330,7 +330,7 @@ const LandingPage = () => {
           </div>
           <div style={{ fontSize: '0.75rem', opacity: 0.4, marginTop: '40px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '40px' }}>
             &copy; 2026 Ótica Di Lorenzo. Todos os direitos reservados.<br />
-            Tecnologia <strong style={{ color: landing.orangeLight }}>VisaoPost</strong> por Maycon Bruno
+            Tecnologia <strong style={{ color: landing.orangeLight }}>Projeto</strong> por Maycon Bruno
           </div>
         </div>
       </footer>

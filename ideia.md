@@ -1,4 +1,4 @@
-# VisaoPost — Ideia e Visão do Produto
+# Projeto — Ideia e Visão do Produto
 
 ## O que é
 

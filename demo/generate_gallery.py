@@ -305,7 +305,7 @@ def load_env():
 
 def send_gallery(images, env):
     outer = MIMEMultipart("mixed")
-    outer["Subject"] = "VisaoPost — 4 posts para Otica Di Lorenzo"
+    outer["Subject"] = "Projeto — 4 posts para Otica Di Lorenzo"
     outer["From"]    = env["GMAIL_USER"]
     outer["To"]      = env["DEST_EMAIL"]
 
@@ -335,12 +335,12 @@ def send_gallery(images, env):
                 text-transform:uppercase;margin:0 0 8px;">automacao de instagram</p>
       <h1 style="color:#fff;font-size:24px;margin:0 0 8px;">Otica Di Lorenzo</h1>
       <p style="color:rgba(255,255,255,0.6);font-size:13px;margin:0;">
-        4 exemplos de posts gerados automaticamente pelo VisaoPost
+        4 exemplos de posts gerados automaticamente pelo Projeto
       </p>
     </div>
     {cards}
     <p style="text-align:center;color:#333;font-size:11px;padding-top:8px;">
-      VisaoPost · automacao de Instagram para pequenos negocios
+      Projeto · automacao de Instagram para pequenos negocios
     </p>
   </div>
 </body></html>"""

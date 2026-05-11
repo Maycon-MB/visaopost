@@ -1,4 +1,4 @@
-# VisaoPost — Mandatos Técnicos
+# Projeto — Mandatos Técnicos
 
 ## Contexto
 SaaS B2B de automação de Instagram para pequenos negócios. Piloto: Ótica Di Lorenzo.

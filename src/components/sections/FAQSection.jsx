@@ -6,7 +6,7 @@ import { ChevronDown, Plus, Minus } from 'lucide-react';
 const faqs = [
   {
     q: 'Preciso baixar algum aplicativo novo?',
-    a: 'Não. O VisaoPost foi desenhado para "fricção zero". Você recebe as prévias por e-mail ou WhatsApp e aprova com um toque. Todo o trabalho pesado acontece nos nossos servidores.'
+    a: 'Não. O Projeto foi desenhado para "fricção zero". Você recebe as prévias por e-mail ou WhatsApp e aprova com um toque. Todo o trabalho pesado acontece nos nossos servidores.'
   },
   {
     q: 'Os posts vão ter a cara da minha ótica?',
@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: 'E se eu quiser postar algo por conta própria?',
-    a: 'Seu Instagram continua sendo seu. Você pode postar stories, reels ou fotos extras quando quiser. O VisaoPost garante que sua conta nunca fique vazia e sempre tenha conteúdo profissional.'
+    a: 'Seu Instagram continua sendo seu. Você pode postar stories, reels ou fotos extras quando quiser. O Projeto garante que sua conta nunca fique vazia e sempre tenha conteúdo profissional.'
   }
 ];
 
@@ -33,36 +33,36 @@ export default function FAQSection() {
     <section id="faq" style={{ padding: '140px 20px', background: 'transparent' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-          <h2 style={{ fontSize: '3rem', fontFamily: "'Playfair Display', serif", marginBottom: '20px', color: '#1A2E1C' }}>
+          <h2 style={{ fontSize: '3rem', fontFamily: "'Playfair Display', serif", marginBottom: '20px', color: 'white' }}>
             Dúvidas <span style={{ color: colors.gold }}>Frequentes</span>
           </h2>
-          <p style={{ color: 'rgba(0,0,0,0.5)', fontSize: '1.2rem' }}>
+          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1.2rem' }}>
             Tudo o que você precisa saber para começar agora.
           </p>
         </div>
 
         <div style={{ display: 'grid', gap: '16px' }}>
           {faqs.map((faq, i) => (
-            <div key={i} style={{ 
-              background: 'white', 
+            <div key={i} style={{
+              background: 'rgba(255, 255, 255, 0.03)',
               borderRadius: '16px',
-              border: `1px solid ${openIndex === i ? colors.gold : 'rgba(0,0,0,0.05)'}`,
+              border: `1px solid ${openIndex === i ? colors.gold : 'rgba(255,255,255,0.1)'}`,
               overflow: 'hidden',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.02)',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
               transition: '0.3s'
             }}>
-              <button 
+              <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 style={{
                   width: '100%', padding: '24px', display: 'flex', justifyContent: 'space-between',
                   alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer',
-                  textAlign: 'left', color: '#1A2E1C'
+                  textAlign: 'left', color: 'white'
                 }}
               >
                 <span style={{ fontSize: '1.1rem', fontWeight: 600 }}>{faq.q}</span>
                 {openIndex === i ? <Minus size={20} color={colors.gold} /> : <Plus size={20} color={colors.gold} />}
               </button>
-              
+
               <AnimatePresence>
                 {openIndex === i && (
                   <motion.div
@@ -71,9 +71,9 @@ export default function FAQSection() {
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <div style={{ 
-                      padding: '0 24px 24px', 
-                      color: 'rgba(255,255,255,0.6)', 
+                    <div style={{
+                      padding: '0 24px 24px',
+                      color: 'rgba(255,255,255,0.6)',
                       lineHeight: 1.6,
                       fontSize: '0.95rem'
                     }}>

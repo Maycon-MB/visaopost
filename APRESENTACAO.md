@@ -1,4 +1,4 @@
-# VisaoPost — Plataforma Inteligente de Crescimento para Instagram
+# Projeto — Plataforma Inteligente de Crescimento para Instagram
 
 > *Não é só automação. É uma equipe de marketing digital que trabalha 24h por R$197/mês.*
 
@@ -170,4 +170,4 @@ Com 20 clientes mistos = R$ 5.000+ MRR
 
 ---
 
-*VisaoPost — Conteúdo que aparece todo dia. Crescimento que se acumula todo mês.*
+*Projeto — Conteúdo que aparece todo dia. Crescimento que se acumula todo mês.*
