@@ -13,7 +13,7 @@ export const plans = [
     features: [
       '20 posts/mês no Instagram',
       'Identidade visual exclusiva',
-      'Posts baseados no clima',
+      'Estratégia de conteúdo inteligente',
       'Aprovação via celular',
     ],
     featured: false,
@@ -29,6 +29,7 @@ export const plans = [
       'Tudo do Presença Digital +',
       '30 posts/mês no Instagram',
       'Landing Page Premium',
+      'Lembrete de Retorno (Recall)',
       'Google Meu Negócio (SEO)',
       'Scripts para Reels de Autoridade',
     ],
@@ -44,7 +45,7 @@ export const plans = [
     features: [
       'Tudo do Vendas Ativas +',
       'Bot WhatsApp de Agendamento',
-      'Lembrete de Retorno (1 Ano)',
+      'Catálogo Digital Domiciliar',
       'QR Code de Balcão Integrado',
       'Relatório de Vendas Mensal',
     ],
@@ -78,8 +79,8 @@ export const innovationIdeas = [
     badge: 'Faturamento',
   },
   {
-    title: 'Posts baseados no clima',
-    desc: 'Dia de sol forte? Post de solar. Semana fria? Post de armações de grau. Conteúdo contextual em tempo real.',
+    title: 'Posts Contextuais',
+    desc: 'Conteúdo inteligente que se adapta ao momento e tendências do mercado. Sua ótica sempre atualizada e relevante.',
     iconName: 'Sun',
     badge: 'Inovação',
   },
@@ -133,14 +134,14 @@ export const whatsappFeatures = [
 ];
 
 export const landingBrands = [
-  'RAY-BAN',
-  'OAKLEY',
-  'PRADA',
-  'VOGUE',
-  'CARRERA',
-  'EMPORIO ARMANI',
-  'GRAZI',
-  'GUCCI',
+  'GRIFES INTERNACIONAIS',
+  'MODELOS EXCLUSIVOS',
+  'ALTO PADRÃO',
+  'DESIGN PREMIUM',
+  'QUALIDADE ALEMÃ',
+  'MODA EUROPEIA',
+  'ESTILO ATEMPORAL',
+  'CURADORIA LUXO',
 ];
 
 export const landingReviews = [

@@ -12,11 +12,13 @@ import {
   Star,
   ArrowRight,
   Clock,
-  MessageCircle
+  MessageCircle,
+  ExternalLink
 } from 'lucide-react'
+import CatalogSection from './sections/CatalogSection'
 
 const LandingPage = () => {
-  const brands = ['RAY-BAN', 'OAKLEY', 'PRADA', 'VOGUE', 'CARRERA', 'EMPORIO ARMANI', 'GRAZI', 'GUCCI']
+  const brands = ['GRIFES INTERNACIONAIS', 'MODELOS EXCLUSIVOS', 'ALTO PADRÃO', 'DESIGN PREMIUM', 'QUALIDADE ALEMÃ', 'MODA EUROPEIA']
 
   const reviews = [
     { name: 'Ana Beatriz', text: 'O atendimento visagista mudou minha autoestima! Encontrei óculos que realmente combinam comigo.', time: 'Cliente há 3 anos' },
@@ -139,8 +141,8 @@ const LandingPage = () => {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
             {[
-              { icon: Eye, title: 'Saúde em Foco', desc: 'Consultórios equipados com tecnologia alemã para um diagnóstico preciso e confortável do seu grau.' },
-              { icon: Crown, title: 'Grifes Exclusivas', desc: 'Ray-Ban, Prada, Oakley e muito mais. Modelos que você só encontra aqui na região.' },
+              { icon: Eye, title: 'Saúde em Foco', desc: 'Consultórios equipados com tecnologia de ponta para um diagnóstico preciso e confortável do seu grau.' },
+              { icon: Crown, title: 'Grifes Exclusivas', desc: 'As melhores marcas do mercado. Modelos que você só encontra aqui na região.' },
               { icon: UserCheck, title: 'Visagismo', desc: 'Consultoria personalizada para encontrar a armação que melhor se adapta ao formato do seu rosto.' }
             ].map((item, i) => (
               <motion.div
@@ -201,6 +203,8 @@ const LandingPage = () => {
         </div>
       </section>
 
+      <CatalogSection />
+
       {/* Agendamento Section */}
       <section id="agendar" style={{ padding: '100px 20px', backgroundColor: landing.green, color: landing.white, position: 'relative', overflow: 'hidden' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -208,7 +212,7 @@ const LandingPage = () => {
             <div>
               <span style={{ color: landing.orangeLight, fontWeight: 800, fontSize: '0.8rem', letterSpacing: '3px', textTransform: 'uppercase' }}>Agendamento</span>
               <h2 style={{ fontFamily: fonts.heading, fontSize: '2.8rem', color: landing.white, fontWeight: 900, marginBottom: '20px' }}>Pronta para ver o mundo melhor?</h2>
-              <p style={{ marginBottom: '30px', opacity: 0.9 }}>Preencha os dados e nossa equipe entrará em contato via WhatsApp para confirmar o melhor horário para você.</p>
+              <p style={{ marginBottom: '30px', opacity: 0.9 }}>Preencha os dados abaixo e adicione o agendamento ao seu calendário. Nossa equipe entrará em contato para confirmar sua visita.</p>
               <div style={{ display: 'grid', gap: '20px' }}>
                 <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
                   <div style={{ width: '40px', height: '40px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Clock size={18} /></div>
@@ -222,7 +226,17 @@ const LandingPage = () => {
             </div>
             <div style={{ backgroundColor: landing.white, padding: '50px', borderRadius: radii.xl, color: landing.text, boxShadow: '0 20px 40px rgba(0,0,0,0.2)' }}>
               <h3 style={{ fontSize: '1.8rem', marginBottom: '25px', color: landing.green, fontWeight: 800 }}>Agendar Visita</h3>
-              <form style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const nome = e.target[0].value;
+                  const interest = e.target[2].value;
+                  const text = encodeURIComponent(`Consulta: ${interest} - ${nome}`);
+                  const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&details=Agendamento realizado via VisaoPost. Favor confirmar horário com a ótica.`;
+                  window.open(url, '_blank');
+                }}
+                style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}
+              >
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <label style={{ fontSize: '0.75rem', fontWeight: 800, color: landing.textMuted, textTransform: 'uppercase' }}>Nome</label>
                   <input type="text" placeholder="Seu nome completo" style={{ width: '100%', padding: '15px', borderRadius: radii.sm, border: '1px solid #E9ECEF', background: landing.gray }} />
@@ -239,7 +253,9 @@ const LandingPage = () => {
                     <option>Lentes de Contato</option>
                   </select>
                 </div>
-                <button type="submit" style={{ width: '100%', padding: '20px', background: landing.orange, color: landing.white, border: 'none', borderRadius: radii.sm, fontWeight: 800, fontSize: '1rem', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '1px' }}>Solicitar Agendamento</button>
+                <button type="submit" style={{ width: '100%', padding: '20px', background: landing.orange, color: landing.white, border: 'none', borderRadius: radii.sm, fontWeight: 800, fontSize: '1rem', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '1px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+                  <ExternalLink size={20} /> Abrir no Google Agenda
+                </button>
               </form>
             </div>
           </div>

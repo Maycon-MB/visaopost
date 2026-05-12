@@ -63,16 +63,16 @@ const PresentationPage = () => {
 
   const postTemplates = [
     {
-      tag: 'PRADA',
+      tag: 'LUXO',
       location: 'Ótica Di Lorenzo - Premium Store',
       img: './stylish_person_glasses_1778289098822.png',
-      desc: 'A nova coleção Prada acaba de chegar. Sofisticação e precisão técnica em cada detalhe. ✨ #PradaEyewear #Luxury'
+      desc: 'A nova coleção de grifes internacionais acaba de chegar. Sofisticação e precisão técnica em cada detalhe. ✨ #LuxuryEyewear #Estilo'
     },
     {
-      tag: 'RAY-BAN',
-      location: 'Village Mall - Rio de Janeiro',
+      tag: 'SOLAR',
+      location: 'Coleção Verão 2026',
       img: './rayban_sunglasses_beach_1778289078548.png',
-      desc: 'Os clássicos nunca morrem. Aproveite nossa Special Week com 20% OFF. 😎 #RayBan #ClassicStyle'
+      desc: 'Os clássicos que nunca saem de moda. Aproveite nossa Special Week com 20% OFF em modelos selecionados. 😎 #Sunglasses #Summer'
     },
     {
       tag: 'SAÚDE',
