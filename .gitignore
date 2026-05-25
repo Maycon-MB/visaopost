@@ -1,12 +1,43 @@
+# Env
 .env
+.env.local
+.env.*.local
+!.env.example
+
+# Python
 *.pyc
+*.pyo
 __pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+*.egg-info/
+
+# Node
+node_modules/
+pwa/node_modules/
+pwa/dist/
+landing/node_modules/
+landing/dist/
+dist/
+
+# Build artefacts
 demo/post.jpg
 demo/post_*.jpg
 demo/approval.html
 demo/_logo_b64.txt
-.claude/
-.vercel
-node_modules
-dist
+
+# Editor / OS
 .DS_Store
+.vscode/
+.idea/
+
+# Vercel (legacy)
+.vercel
+
+# Claude
+.claude/
