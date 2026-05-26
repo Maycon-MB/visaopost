@@ -23,13 +23,15 @@ pwa/node_modules/
 pwa/dist/
 landing/node_modules/
 landing/dist/
+legacy/pwa-institutional/node_modules/
+legacy/pwa-institutional/dist/
 dist/
 
 # Build artefacts
-demo/post.jpg
-demo/post_*.jpg
-demo/approval.html
-demo/_logo_b64.txt
+legacy/demo/post.jpg
+legacy/demo/post_*.jpg
+legacy/demo/approval.html
+legacy/demo/_logo_b64.txt
 backend/tmp/
 
 # Editor / OS
