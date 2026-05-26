@@ -18,3 +18,7 @@ plugins = ["pydantic.mypy"]
 [tool.pytest.ini_options]
 pythonpath = ["."]
 asyncio_mode = "auto"
+markers = [
+    "slow: testes que sobem Chromium (~3s+). Pular com -m 'not slow'.",
+    "db: testes que tocam Postgres real. Pular com -m 'not db'.",
+]

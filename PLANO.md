@@ -10,6 +10,27 @@
 ✅ **Fase 0a** concluída — contas Gemini + Resend criadas, chaves em `backend/.env` (Bitwarden tem backup).
 ✅ **Fase 1** concluída — repo reorganizado (`backend/`, `pwa/`, `landing/`), FastAPI + Docker + CI prontos.
 ✅ **Fase 2** concluída + validada (2026-05-26) — schema aplicado no Postgres 16 nativo (porta 5433), seed 35 datas calendário 2026, tenant Di Lorenzo inserido, pool asyncpg conecta, `/health/db` retorna `{"status":"ok","tenants":1,"holidays":35}`. Bumps em `requirements.txt`: asyncpg 0.29.0 → 0.30.0 + pillow 10.4.0 → 11.0.0 (wheels Python 3.13).
+✅ **Fase 3** concluída + validada (2026-05-26) — pipeline render IA→JPEG funcionando:
+  - `app/services/template_generator.py` — Gemini `gemini-flash-latest` gera HTML+CSS 1080x1080 (sem `gemini-2.0-flash` pois quota free tier = 0).
+  - `app/services/renderer.py` — Playwright Chromium async → JPEG q90.
+  - `app/services/nano_banana.py` — esqueleto `gemini-2.5-flash-image` pra editar foto óculos (bloqueado: cliente ainda não entregou fotos da Fase 9).
+  - `app/api/dev.py` — `GET /dev/preview/{theme}?return_html=true|false` + `/dev/health/services`. Router só carrega se `APP_ENV=dev`.
+  - `scripts/smoke_fase3.py` — 5 temas (visao_mundial, natal, pascoa, carnaval, black_friday) → 5/5 JPEGs 80-91KB com tipografia premium, paleta Di Lorenzo correta, SVG inline de óculos, CTA.
+  - Guard contra HTML truncado: `max_output_tokens=16384` + 1 retry se faltar `</body>`.
+  - Outputs em `backend/tmp/fase3/` (gitignored).
+
+✅ **Hardening pós-Fase 3** concluído (2026-05-26) — 3 dívidas críticas pagas antes de avançar pra Fase 4:
+  - **Tipos Pydantic compartilhados** em `app/models/brand.py`: `BrandColors` (valida hex regex, normaliza uppercase, `frozen=True`), `BrandKit` (agrega name + handle + voice + colors), `ThemeContext` (theme + mood + holiday_name + product_image_data_uri), `Holiday` (row tipada de holidays_br).
+  - **Repository pattern** em `app/db/repositories/`: `tenants.get_brand_kit(slug)` valida brand colors no boot; `holidays.get_holiday_by_date(date)` (path pra Fase 4 orquestrador) + `holidays.find_holiday_by_theme(theme)` determinístico via `ORDER BY date`. `asyncpg.Record` nunca atravessa camadas.
+  - **`template_generator` refatorado** em pipeline `build_prompt → call_model → extract_html → is_complete_html`. `ModelClient` Protocol pra DI. `_GeminiClient` é só uma das implementações. Teste injeta `FakeClient` sem mock global.
+  - **`api/dev.py` enxuto** — usa repositories + tipos. Sem JSON parse inline.
+  - **Test suite 24 testes:**
+    - 18 fast (`not slow and not db`): `test_brand_models` (5), `test_template_generator` (8) cobre retry/truncation/fences, `test_dev_endpoint` (4) com TestClient + tudo mockado, `test_health` (1).
+    - 4 db (`-m db`): `test_repositories` em `app/db/repositories`. Pula se DB offline (`pytest.skip`).
+    - 2 slow (`-m slow`): `test_renderer` valida assinatura JPEG real do Playwright.
+  - `pyproject.toml` declara markers `slow` + `db`. CI roda só fast por padrão.
+  - **Smoke regression pós-refactor** — 5/5 temas regerados via `scripts/smoke_fase3.py` (78-108KB cada), todos `attempts=1 finish_reason=STOP`.
+  - **CLAUDE.md reescrito** — sem nomes próprios ("Jack o Estripador", "Regra de Beyoncé") + seção `Convenções de código` reforçada com repositories/tipos/Protocol DI + seção `Como testar` adicionada.
 
 ### Decisão de ambiente dev (2026-05-26)
 
@@ -32,7 +53,7 @@ Maycon **NÃO** vai instalar Docker Desktop no PC. Razões:
 
 Em produção (Fase 8), TUDO vira Docker no VPS Hostinger via Docker Compose. GitHub Actions deploya. Dev local sem Docker NÃO impede prod com Docker — `docker-compose.prod.yml` é arquivo separado, descrito na Fase 8.
 
-⏭️ **Próximo:** Fase 3 (Gemini gera HTML do post + Playwright renderiza JPEG 1080x1080 + Nano Banana edita foto óculos).
+⏭️ **Próximo:** Fase 4 (calendar.py → tema/feriado por data + caption.py Gemini → legenda+hashtags + post_generator.py orquestra calendar → caption → template_generator → renderer → grava em `posts`).
 
 ---
 
@@ -410,15 +431,28 @@ curl http://localhost:8000/health/db
 
 **Sinal de pronto Fase 2:** `/health/db` retorna `holidays_count >= 37` e `tenants_count >= 1`.
 
-### Fase 3 — Render de imagem por IA (2-3 dias)
-- [ ] `services/template_generator.py` — Gemini gera HTML completo do post
-  - Input: brand kit, tema do dia, foto do produto, paleta
-  - Output: HTML + CSS pronto para Playwright
-- [ ] `services/renderer.py` — Playwright headless: HTML string → JPEG 1080x1080 q90
-- [ ] `services/nano_banana.py` — edita foto produto com Gemini 2.5 Flash Image
-- [ ] Endpoint dev `GET /dev/preview/{theme}` retorna JPEG renderizado
-- [ ] Brand kit Di Lorenzo hardcoded em `seed_tenant_dilorenzo.sql` (cores, logo já em `docs/`)
-- [ ] Teste: gerar 5 posts diferentes (Dia da Visão, Black Friday, Dia das Mães, etc.)
+### Fase 3 — Render de imagem por IA (2-3 dias) ✅ CONCLUÍDA (2026-05-26)
+- [x] `services/template_generator.py` — Gemini `gemini-flash-latest` gera HTML completo do post (input: `BrandKit` + `ThemeContext`. Output: HTML+CSS inline pronto p/ Playwright)
+- [x] `services/renderer.py` — Playwright Chromium async → JPEG 1080x1080 q90
+- [x] `services/nano_banana.py` — esqueleto `gemini-2.5-flash-image` pronto. Bloqueado por foto cliente (Fase 9)
+- [x] Endpoint dev `GET /dev/preview/{theme}` retorna JPEG (`?return_html=true` p/ debug)
+- [x] Brand kit Di Lorenzo já no seed 0003 (verde #0D3322 + dourado #D4AF37 + voz)
+- [x] Smoke `scripts/smoke_fase3.py`: 5/5 temas OK (visao_mundial, natal, pascoa, carnaval, black_friday), JPEGs 78-108KB
+
+**Hardening pós-Fase 3 (mesma data):**
+- [x] Pydantic models: `BrandColors`, `BrandKit`, `ThemeContext`, `Holiday` em `app/models/brand.py` (todos `frozen=True`, hex validado por regex)
+- [x] Repository pattern: `app/db/repositories/tenants.py` + `app/db/repositories/holidays.py`
+- [x] `template_generator` quebrado em pipeline puro + `ModelClient` Protocol (DI)
+- [x] Test suite 24 testes (18 fast 1.3s + 4 db 1.1s + 2 slow 3.5s)
+- [x] Markers `slow` + `db` em `pyproject.toml`
+- [x] CLAUDE.md reescrito limpo
+
+**Aprendizados Fase 3:**
+- `gemini-2.0-flash` deu quota=0 no free tier (2026). Migrado p/ `gemini-flash-latest`.
+- Tempo médio: ~25s/post (Gemini ~20s + Playwright ~1s + boot Chromium ~3s).
+- Risco: tokens insuficientes truncavam HTML. Mitigação: `max_output_tokens=16384` + retry se `</body>` ausente.
+- `genai.configure()` é global state — DI via Protocol contorna pra multi-tenant futuro com chaves distintas.
+- pytest-asyncio + pool DB singleton dá "Future attached to different loop" se fixture é module-scoped. Solução: fixture per-function que `init_pool/close_pool`.
 
 ### Fase 4 — Geração de conteúdo (1 dia)
 - [ ] `services/calendar.py` — dado uma data, retorna tema/feriado/mood
