@@ -18,8 +18,10 @@ Arquitetura multi-tenant desde o início. Stack consolidada num único VPS Hosti
 - Landing pública multi-tenant: Astro 5 + React (islands) + Tailwind CSS
 
 ### Banco e cache
-- PostgreSQL 17 no próprio VPS (NÃO Supabase, consolidação)
-- Redis no próprio VPS
+- **Produção (VPS):** PostgreSQL 17. NÃO usar Supabase (consolidação).
+- **Dev local:** PostgreSQL 16+ aceitável. Schema usa só recursos nativos desde Postgres 13 (`gen_random_uuid`, `jsonb`, arrays, `gin`, partial index, triggers plpgsql). Maycon tem PG 14 + 16 instalados Windows → usa o 16 nativo em dev.
+- **Produção (VPS):** Redis 7.
+- **Dev local:** Redis necessário a partir da Fase 5 (fila RQ). Antes disso (Fases 2-4), backend roda sem Redis.
 - Backup: `pg_dump` cron diário → Backblaze B2 free 10GB
 
 ### IA
@@ -34,10 +36,9 @@ Arquitetura multi-tenant desde o início. Stack consolidada num único VPS Hosti
 - DNS: Cloudflare grátis com proxy ativado (SSL + DDoS + cache)
 
 ### Deploy
-- Docker + Docker Compose
-- VPS Hostinger Ubuntu 24.04
-- Nginx + Certbot Let's Encrypt
-- GitHub Actions deploy auto via SSH (estilo Paramiko)
+- **Produção:** Docker + Docker Compose no VPS Hostinger Ubuntu 24.04, Nginx + Certbot Let's Encrypt, GitHub Actions deploy auto via SSH (estilo Paramiko).
+- **Dev local:** sem Docker obrigatório. Estratégia padrão = Postgres 16 nativo + Python venv. Codespaces é alternativa cloud quando ambiente cliente travar (Playwright em RAM apertada, multi-PC, etc.). Docker Desktop local é último recurso (consome 4-8GB RAM idle no WSL2, repete setup em cada PC).
+- Ver `PLANO.md` Fase 2 (rota dev nativa) e Fase 8 (migração para VPS).
 
 ## Convenções de código
 - Todo query filtra por `tenant_id` — sem exceção

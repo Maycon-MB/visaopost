@@ -5,13 +5,34 @@
 
 ---
 
-## Status Atual (2026-05-25)
+## Status Atual (2026-05-26)
 
 ✅ **Fase 0a** concluída — contas Gemini + Resend criadas, chaves em `backend/.env` (Bitwarden tem backup).
 ✅ **Fase 1** concluída — repo reorganizado (`backend/`, `pwa/`, `landing/`), FastAPI + Docker + CI prontos.
-✅ **Fase 2** concluída (código) — schema SQL + seed calendário 2026 + pool asyncpg + `/health/db`.
-🚧 **Bloqueio:** teste manual `docker compose up` pendente — Docker Desktop precisa ser instalado.
-⏭️ **Próximo:** Fase 3 (Gemini gera HTML do post + Playwright renderiza JPEG 1080x1080).
+✅ **Fase 2** concluída + validada (2026-05-26) — schema aplicado no Postgres 16 nativo (porta 5433), seed 35 datas calendário 2026, tenant Di Lorenzo inserido, pool asyncpg conecta, `/health/db` retorna `{"status":"ok","tenants":1,"holidays":35}`. Bumps em `requirements.txt`: asyncpg 0.29.0 → 0.30.0 + pillow 10.4.0 → 11.0.0 (wheels Python 3.13).
+
+### Decisão de ambiente dev (2026-05-26)
+
+Maycon **NÃO** vai instalar Docker Desktop no PC. Razões:
+- 2 PCs (alternância) → setup duplicado
+- Docker Desktop consome 4-8GB RAM idle no WSL2 → estrangula Playwright na Fase 3+
+- Já tem Postgres 14 + 16 nativo Windows + pgAdmin4 funcionando
+- Schema do projeto usa só recursos nativos desde Postgres 13 → roda no 16 sem mudança
+
+**Rota dev escolhida (zero Docker até Fase 5):**
+
+| Fase | Componente | Onde roda em dev |
+|---|---|---|
+| 2 | Postgres + schema | Postgres 16 nativo Win (já instalado) |
+| 3 | Playwright + Chromium | Python venv + `playwright install chromium` |
+| 4 | Gemini API | venv + chamadas HTTP (zero infra) |
+| 5 | RQ + Redis | **AQUI** decide: Codespaces OU WSL2 Redis OU fakeredis |
+| 6 | Resend email | venv + HTTP (zero infra) |
+| 7 | Landing Astro | `npm run dev` local |
+
+Em produção (Fase 8), TUDO vira Docker no VPS Hostinger via Docker Compose. GitHub Actions deploya. Dev local sem Docker NÃO impede prod com Docker — `docker-compose.prod.yml` é arquivo separado, descrito na Fase 8.
+
+⏭️ **Próximo:** Fase 3 (Gemini gera HTML do post + Playwright renderiza JPEG 1080x1080 + Nano Banana edita foto óculos).
 
 ---
 
@@ -333,13 +354,61 @@ Dono faz 2 cliques por dia. Resto é automático.
 - [x] `backend/app/logging.py` (structlog JSON)
 - [x] `backend/tests/test_health.py`
 
-### Fase 2 — Banco local (meio dia) ✅ CONCLUÍDA (código pronto, pendente teste manual com Docker)
+### Fase 2 — Banco local (meio dia) ✅ CONCLUÍDA (código pronto, pendente teste manual no Postgres 16 nativo)
 - [x] Migration `0001_initial.sql` — schema completo: tenants, assets, posts, clients, holidays_br, conversations, metrics_instagram + índices + trigger updated_at
-- [x] Migration `0002_seed_calendar_br.sql` — 37 datas 2026 (feriados nacionais, datas óticas, comemorativos, sazonais)
+- [x] Migration `0002_seed_calendar_br.sql` — 35 datas 2026 (feriados nacionais, datas óticas, comemorativos, sazonais)
 - [x] Migration `0003_seed_tenant_dilorenzo.sql` — tenant piloto Di Lorenzo (brand kit placeholder)
 - [x] `backend/app/db/pool.py` — pool asyncpg singleton + helpers `acquire()`, `init_pool()`, `close_pool()`
 - [x] Endpoint `/health/db` retorna versão pg + contagens
-- [ ] Teste manual `docker compose up` — **bloqueado: Docker Desktop não instalado no PC**
+- [x] Teste manual no Postgres 16 nativo Windows — `/health/db` retornou `tenants=1, holidays=35` em 2026-05-26 ✅
+
+#### Passo a passo teste Fase 2 (rota Postgres nativo Win)
+
+**Pré-requisitos:** Postgres 16 rodando (`Get-Service postgresql-x64-16` mostra `Running`), pgAdmin4 instalado, Python 3.13 instalado.
+
+```powershell
+# 1. Cria database visaopost no Postgres 16 (via psql ou pgAdmin GUI)
+# Via psql:
+psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE visaopost;"
+psql -U postgres -h localhost -p 5432 -c "CREATE USER visaopost WITH PASSWORD 'visaopost_dev';"
+psql -U postgres -h localhost -p 5432 -c "GRANT ALL PRIVILEGES ON DATABASE visaopost TO visaopost;"
+
+# 2. Aplica migrations em ordem
+cd backend
+psql -U visaopost -h localhost -d visaopost -f app/db/migrations/0001_initial.sql
+psql -U visaopost -h localhost -d visaopost -f app/db/migrations/0002_seed_calendar_br.sql
+psql -U visaopost -h localhost -d visaopost -f app/db/migrations/0003_seed_tenant_dilorenzo.sql
+
+# 3. Verifica conteúdo
+psql -U visaopost -h localhost -d visaopost -c "\dt"
+psql -U visaopost -h localhost -d visaopost -c "SELECT count(*) FROM holidays_br;"  # esperado ~37
+psql -U visaopost -h localhost -d visaopost -c "SELECT slug, plan FROM tenants;"     # esperado dilorenzo / premium
+
+# 4. Sobe backend (venv)
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+copy .env.example .env
+# Edita .env: DATABASE_URL=postgresql://visaopost:visaopost_dev@localhost:5432/visaopost
+#             GEMINI_API_KEY=<do Bitwarden>
+#             RESEND_API_KEY=<do Bitwarden>
+uvicorn app.main:app --reload
+
+# 5. Testa endpoint (outro PowerShell)
+curl http://localhost:8000/health
+curl http://localhost:8000/health/db
+# /health/db deve retornar version PG16.x + tenants_count=1 + holidays_count=37
+```
+
+**Alternativa via pgAdmin4 GUI (sem psql CLI):**
+1. Abre pgAdmin4 → conecta servidor Postgres 16 local
+2. Click direito em "Databases" → Create → Database → nome `visaopost` → owner `postgres`
+3. Click direito no database `visaopost` → Query Tool
+4. Abre arquivo `backend/app/db/migrations/0001_initial.sql` → executa (botão F5)
+5. Repete pra 0002 e 0003
+6. Continua a partir do passo 4 acima (venv + uvicorn)
+
+**Sinal de pronto Fase 2:** `/health/db` retorna `holidays_count >= 37` e `tenants_count >= 1`.
 
 ### Fase 3 — Render de imagem por IA (2-3 dias)
 - [ ] `services/template_generator.py` — Gemini gera HTML completo do post
@@ -406,15 +475,64 @@ Dono faz 2 cliques por dia. Resto é automático.
 - [ ] Atualiza sozinho via GitHub Actions cron (Fase 5)
 
 ### Fase 8 — Deploy produção [VPS] (1 dia, após cliente confirmar)
-- [ ] `docker-compose.prod.yml` (postgres com volume, nginx, certbot)
-- [ ] Nginx config: proxy `/api`, serve estáticos, SSL Let's Encrypt
-- [ ] Provisionar VPS Hostinger (Ubuntu 24.04, Docker, firewall ufw)
-- [ ] GitHub Actions workflow: push main → SSH → pull → `docker compose up -d`
-- [ ] Cron backup `pg_dump` diário → Backblaze B2 (rclone)
-- [ ] Healthcheck `/health` + cron monitora + alerta WhatsApp em caso de falha
-- [ ] Migrar GitHub Pages → subdomínio próprio (Cloudflare)
-- [ ] Desativar cron GitHub Actions de demo (RQ assume)
-- [ ] Teste: derrubar VPS e verificar restore do backup
+
+#### 8.1 Provisionar VPS Hostinger
+- [ ] Contratar VPS KVM 2+ na Hostinger (~R$30/mês). Ubuntu 24.04 LTS.
+- [ ] SSH inicial: `ssh root@<ip>` (senha vem por email)
+- [ ] Criar user não-root: `adduser deploy && usermod -aG sudo deploy`
+- [ ] Adicionar chave SSH pública do Maycon em `/home/deploy/.ssh/authorized_keys`
+- [ ] Desabilitar login root via senha (`/etc/ssh/sshd_config`: `PermitRootLogin no`, `PasswordAuthentication no`)
+- [ ] Firewall: `ufw allow OpenSSH && ufw allow 80 && ufw allow 443 && ufw enable`
+- [ ] Instalar Docker + Docker Compose: `curl -fsSL get.docker.com | sh && usermod -aG docker deploy`
+
+#### 8.2 Setup arquivos produção
+- [ ] Criar `docker-compose.prod.yml` (já tem `docker-compose.yml` dev como base):
+  - Service `postgres`: imagem `postgres:17-alpine`, volume nomeado pra persistência, healthcheck
+  - Service `redis`: imagem `redis:7-alpine`, volume nomeado, persistência AOF
+  - Service `backend`: build `backend/Dockerfile`, depends_on postgres/redis (com healthcheck), restart unless-stopped
+  - Service `worker`: mesmo Dockerfile, command `rq worker`, depends_on redis
+  - Service `nginx`: imagem `nginx:alpine`, volumes: configs + certs Let's Encrypt + builds estáticos PWA/landing
+- [ ] `nginx/prod.conf`: proxy `/api` → backend:8000, serve `/app/*` (PWA build), serve `/{slug}/*` (landing build), SSL via Let's Encrypt
+- [ ] Migração Postgres dev→prod: `pg_dump` do Postgres 16 nativo Win + `pg_restore` no container Postgres 17. Schema é compatível up. Seeds são reaplicáveis (idempotência via `ON CONFLICT DO NOTHING` em seed scripts — adicionar se não tem)
+- [ ] Certbot Let's Encrypt via container `certbot/certbot`, renovação cron
+
+#### 8.3 Deploy automático via GitHub Actions
+- [ ] Secret `SSH_PRIVATE_KEY` no GitHub repo settings
+- [ ] Secret `VPS_HOST`, `VPS_USER` (deploy)
+- [ ] Secret `.env` produção (cria via GitHub Secrets como GEMINI_API_KEY etc.)
+- [ ] Workflow `.github/workflows/deploy.yml`:
+  ```yaml
+  on: push (branch main)
+  steps:
+    - checkout
+    - ssh deploy@vps: git pull && docker compose -f docker-compose.prod.yml up -d --build
+  ```
+- [ ] Healthcheck pós-deploy: curl `https://api.visaopost.com.br/health` retorna 200
+
+#### 8.4 Backup + monitoramento
+- [ ] Conta Backblaze B2 (free 10GB)
+- [ ] `rclone` configurado no VPS apontando bucket B2
+- [ ] Cron VPS: `0 3 * * * pg_dump | gzip | rclone rcat b2:visaopost-backups/$(date +\%F).sql.gz`
+- [ ] Cron retenção: deletar backups >30 dias
+- [ ] Cron healthcheck: a cada 5min, curl `/health`. Se falha 3x consecutivas → dispara webhook WhatsApp Cloud API pro Maycon
+
+#### 8.5 Migração GitHub Pages → VPS
+- [ ] Comprar domínio `visaopost.com.br` no Registro.br
+- [ ] Cloudflare: adicionar zona, mover nameservers
+- [ ] DNS Cloudflare: A `@` → IP VPS, A `dilorenzo` → IP VPS, A `api` → IP VPS
+- [ ] Cloudflare proxy ON (laranja)
+- [ ] Build landing/PWA → copia pro VPS via deploy workflow
+- [ ] Desativa GitHub Actions cron `daily-post.yml` (RQ no VPS assume)
+- [ ] Atualiza `pwa/.env.production` apontando `VITE_API_URL=https://api.visaopost.com.br`
+
+#### 8.6 Teste DR (disaster recovery)
+- [ ] Derruba container Postgres no VPS
+- [ ] Sobe novo Postgres do zero
+- [ ] `rclone copy` último backup B2 → restore via `pg_restore`
+- [ ] Verifica `/health/db` volta a contar tenants/holidays
+- [ ] Documenta tempo total (RTO target: <30min)
+
+**Sinal de pronto Fase 8:** push em main → 5min depois deploy ativo + healthcheck verde + backup do dia no B2.
 
 ### Fase 9 — BLOQUEADO PELO CLIENTE
 Precisa o cliente entregar:
