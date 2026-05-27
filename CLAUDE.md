@@ -81,25 +81,19 @@ Arquitetura multi-tenant desde o primeiro commit. Stack consolidada num único V
 ## Estrutura de pastas
 ```
 automacao_instagram/
-├── backend/
-│   ├── app/
-│   │   ├── api/                endpoints FastAPI
-│   │   ├── services/           lógica de negócio (gemini, instagram, whatsapp, render)
-│   │   ├── models/             tipos Pydantic compartilhados
-│   │   ├── db/
-│   │   │   ├── migrations/     SQL versionado
-│   │   │   ├── repositories/   queries SQL puras tipadas
-│   │   │   └── pool.py
-│   │   ├── workers/            jobs RQ
-│   │   └── main.py
-│   ├── scripts/                smoke tests CLI (rodam fora do pytest)
+├── backend/                    ATIVO — SaaS produto (FastAPI + Gemini + Playwright)
+│   ├── app/{api,services,models,workers,main.py}
+│   ├── app/db/{migrations,repositories,pool.py}
+│   ├── scripts/                smoke tests CLI
 │   ├── tests/                  pytest (markers: slow, db)
 │   └── requirements.txt
-├── pwa/                        React + Vite + Bootstrap
-├── landing/                    Astro + Tailwind
-├── nginx/                      configs prod
+├── pitch/                      Apresentação institucional (React+Vite) — canal ATIVO de venda. Ver pitch/README.md.
+├── docs/                       Build live do pitch/ — GitHub Pages: https://maycon-mb.github.io/visaopost/
+├── legacy/                     Protótipo Python descontinuado.
+├── pwa/                        (Fase 6) PWA aprovação cliente — React+Vite+Bootstrap 5. NÃO confundir com pitch/.
+├── landing/                    (Fase 7) Landing multi-tenant — Astro+Tailwind
+├── nginx/                      (Fase 8) configs prod
 ├── docker-compose.yml          dev local opcional
-├── docker-compose.prod.yml     VPS
 └── .github/workflows/          CI + deploy
 ```
 
