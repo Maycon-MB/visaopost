@@ -1,23 +1,37 @@
-"""Endpoints DEV — bypass auth, só pra teste manual local Fase 3.
+"""Endpoints DEV — bypass auth, só pra teste manual local Fase 3+.
 
 Router só carrega quando APP_ENV=dev (ver main.py).
 """
 
 from __future__ import annotations
 
+from datetime import date as DateType
+from pathlib import Path
+
 from fastapi import APIRouter, HTTPException, Query
-from fastapi.responses import HTMLResponse, Response
+from fastapi.responses import FileResponse, HTMLResponse, Response
+from pydantic import BaseModel, Field
 
 from app.config import get_settings
 from app.db.repositories.holidays import find_holiday_by_theme
 from app.db.repositories.tenants import get_brand_kit
 from app.logging import get_logger
 from app.models.brand import ThemeContext
+from app.services.post_generator import TenantNotFound, generate_post
 from app.services.renderer import render_html_to_jpeg
 from app.services.template_generator import generate_post_html
 
 router = APIRouter(prefix="/dev", tags=["dev"])
 logger = get_logger(__name__)
+
+POSTS_DIR = Path(__file__).resolve().parents[2] / "tmp" / "posts"
+
+
+class GeneratePostBody(BaseModel):
+    """Payload do endpoint dev de geração diária."""
+
+    tenant: str = Field(min_length=1, description="Slug do tenant em `tenants.slug`")
+    date: DateType = Field(description="Data alvo do post (ISO YYYY-MM-DD)")
 
 
 @router.get("/preview/{theme}", response_class=Response)
@@ -51,6 +65,52 @@ async def dev_preview_jpeg(
         media_type="image/jpeg",
         headers={"Cache-Control": "no-store"},
     )
+
+
+@router.post("/generate-post")
+async def dev_generate_post(body: GeneratePostBody) -> dict[str, object]:
+    """Gera post completo (copy + HTML + JPEG) e persiste em `posts`.
+
+    Body: `{"tenant": "dilorenzo", "date": "2026-06-01"}`.
+    Retorna: `{post_id, theme, mood, holiday_name, image_url, caption_preview}`.
+    """
+    try:
+        post = await generate_post(
+            tenant_slug=body.tenant,
+            target_date=body.date,
+            output_dir=POSTS_DIR,
+        )
+    except TenantNotFound as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+    logger.info(
+        "dev.generate_post.ok",
+        tenant=body.tenant,
+        date=body.date.isoformat(),
+        post_id=str(post.id),
+        theme=post.theme,
+    )
+
+    return {
+        "post_id": str(post.id),
+        "theme": post.theme,
+        "mood": post.mood,
+        "holiday_name": post.holiday_name,
+        "image_url": post.image_url,
+        "caption_preview": post.caption[:120],
+        "hashtags": post.hashtags,
+        "cta": post.cta,
+    }
+
+
+@router.get("/posts/{post_id}.jpg", response_class=FileResponse)
+async def dev_serve_post_jpeg(post_id: str) -> FileResponse:
+    """Serve JPEG salvo localmente em `backend/tmp/posts/`. Dev-only."""
+    safe_id = post_id.replace("/", "").replace("\\", "")
+    file_path = POSTS_DIR / f"{safe_id}.jpg"
+    if not file_path.is_file():
+        raise HTTPException(status_code=404, detail=f"jpeg '{safe_id}' não encontrado")
+    return FileResponse(file_path, media_type="image/jpeg")
 
 
 @router.get("/health/services")

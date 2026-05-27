@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from uuid import UUID
 
 from app.db.pool import acquire
 from app.models.brand import BrandColors, BrandKit
@@ -46,3 +47,13 @@ async def get_brand_kit(slug: str) -> BrandKit | None:
         brand_voice=row["brand_voice"] or "",
         colors=colors,
     )
+
+
+async def get_tenant_id_by_slug(slug: str) -> UUID | None:
+    """Resolve slug → UUID do tenant ativo. None se não existe ou inativo."""
+    async with acquire() as conn:
+        row = await conn.fetchrow(
+            "SELECT id FROM tenants WHERE slug = $1 AND is_active = true",
+            slug,
+        )
+    return row["id"] if row else None

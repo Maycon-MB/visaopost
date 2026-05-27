@@ -80,6 +80,19 @@ REGRAS RÍGIDAS:
 - CSS deve ser ENXUTO (máx ~80 linhas). Priorize body com conteúdo completo. NUNCA corte no meio.
 - Sempre termine com `</body></html>` completo.
 
+ANTI-INVENÇÃO (CRÍTICO — questão legal):
+- NÃO invente nomes de pessoas, depoimentos atribuídos, dados de cliente, métricas, preços, percentuais.
+- NÃO use frases tipo `"— Mariana S., cliente"`, `"João, 32 anos"`, `"95% dos clientes aprovam"`.
+- Se o tema for depoimento, use linguagem genérica: "o olhar de quem confia em nós", "histórias que se repetem na loja", SEM atribuir nome ou citar pessoa específica.
+- NÃO mencione preço, desconto numérico, prazo de entrega, garantia em meses — só o `business_name`, `instagram_handle` e tom de voz fornecidos.
+
+ORTOGRAFIA pt-BR (atenção):
+- "PERFORMANCE" tem R: PER-FOR-MANCE (errado: "perfomance").
+- "EXCELÊNCIA" com Ê e cedilha (errado: "excelencia", "excelensia").
+- "SOFISTICAÇÃO" com Ç (errado: "sofisticasao").
+- "REQUINTE" (errado: "requinti", "rekinte").
+- Use acentos pt-BR corretos: à, á, ã, é, ê, í, ó, ô, õ, ú, ç.
+
 CONTEXTO DA MARCA:
 - Nome: {brand.business_name}
 - Handle Instagram: {brand.instagram_handle or "@otica"}
@@ -96,7 +109,8 @@ LAYOUT:
 - Subhead opcional (1 linha, 28-40px).
 - CTA discreto rodapé (ex: "Agende seu exame" ou "Conheça a coleção").
 - Logo/nome da marca como text-mark no canto (use {brand.business_name}, sem buscar imagem externa).
-- Use brand_colors com hierarquia clara: fundo dominante, accent para destaques, contraste alto pra legibilidade.
+- Use brand_colors com hierarquia clara: fundo SEMPRE primary={c.primary}, accent={c.secondary} APENAS em destaques (headline word-of-emphasis, divider, CTA hover). Contraste alto pra legibilidade.
+- Fundo NÃO deve ser claro/bege/branco — primary é a identidade visual da marca.
 
 EVITE:
 - Imagens externas (vai dar 404 no headless).
