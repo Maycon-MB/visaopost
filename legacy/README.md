@@ -14,15 +14,12 @@ Mantido aqui porque:
 | `demo/` | Scripts Python soltos (Pillow puro, sem Playwright/Gemini). Geraram os primeiros mockups de post + página de aprovação estática. | Não. Substituído por `backend/app/services/` (Fase 3). |
 | `pwa-institutional/` | React 18 + Vite + Framer Motion + Vanilla CSS. Apresentação institucional do produto (não é o PWA de aprovação da Fase 6, que será React + Vite + Bootstrap 5). | Builda em `../docs/` que é servido pelo GitHub Pages. Rebuild manual via `npm run build`. |
 
-## Itens relacionados que ficaram na raiz
+## Apresentação ao vivo
 
-Permanecem na raiz do repo porque são referências de design ainda úteis em pitches:
+`../docs/` é o output buildado de `pwa-institutional/`, servido pelo GitHub Pages em
+**https://maycon-mb.github.io/visaopost/** — é a apresentação atual mostrada a leads.
 
-- `../apresentacao.html` — apresentação standalone usada pra mostrar o produto a leads.
-- `../landing_dilorenzo.html` — landing mockup Di Lorenzo, prova-de-conceito visual.
-- `../docs/` — output buildado de `pwa-institutional/`. Servido pelo GitHub Pages.
-
-Quando a Fase 7 (landing Astro multi-tenant) estiver pronta, esses arquivos podem ser arquivados também.
+Quando a Fase 7 (landing Astro multi-tenant) entrar no ar com domínio próprio, essa apresentação pode ser arquivada também.
 
 ## Como rodar (se realmente precisar)
 

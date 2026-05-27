@@ -41,9 +41,7 @@ automacao_instagram/
 ├── legacy/                  Protótipo pré-Fase 1. Material de venda + referência de design.
 │   ├── demo/                Scripts Pillow puros (descontinuados)
 │   └── pwa-institutional/   React institucional usado pra fechar Di Lorenzo
-├── docs/                    Build de legacy/pwa-institutional/ — servido pelo GitHub Pages
-├── apresentacao.html        Apresentação standalone usada em pitches
-├── landing_dilorenzo.html   Landing mockup Di Lorenzo
+├── docs/                    Apresentação live — build de legacy/pwa-institutional/, servido pelo GitHub Pages em https://maycon-mb.github.io/visaopost/
 ├── CLAUDE.md                Mandatos técnicos (ler 1º)
 ├── PLANO.md                 Roadmap e status detalhado por fase
 ├── docker-compose.yml       Stack dev local (Postgres + Redis + backend + worker)
