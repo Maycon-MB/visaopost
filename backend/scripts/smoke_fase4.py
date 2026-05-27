@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import sys
 import time
 from datetime import date, timedelta
@@ -20,6 +21,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+# Pydantic Settings procura `.env` no CWD. Smoke deve rodar a partir de backend/
+# (mesma raiz onde mora o .env), independente de onde foi invocado.
+os.chdir(ROOT)
 
 from app.db.pool import close_pool, init_pool  # noqa: E402
 from app.services.post_generator import generate_post  # noqa: E402
