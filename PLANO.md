@@ -63,7 +63,16 @@ Dois modos:
 
 ## Fase 6 — Email aprovação + PWA do dono
 
-PWA mobile-first em `pwa/` (React 18 + Vite + Bootstrap 5). Service worker + manifest (instalável). Build → `pwa/dist/` → GitHub Pages em `/app` (Fase 8 migra pra VPS). Auth via JWT magic link (sem senha).
+PWA mobile/tablet first em `pwa/` (React 18 + Vite + Bootstrap 5). Service worker + manifest (instalável). Build → `pwa/dist/` → GitHub Pages em `/app` (Fase 8 migra pra VPS). Auth via JWT magic link (sem senha).
+
+**Critérios mobile/tablet first (não negociáveis):**
+- Touch targets ≥ 44×44px (Apple) / 48dp (Google). Botão "aprovar" tem que ser impossível de errar com dedo.
+- Breakpoints Bootstrap: celular (<576px) mostra essencial; tablet (≥768px) adiciona colunas/seções; desktop é bônus.
+- Lighthouse mobile ≥ 95 (Performance + Accessibility + Best Practices).
+- Bundle JS+CSS gzipped < 200KB. Imagens com `loading="lazy"`.
+- Offline-first: service worker cacheia post pendente + tela aprovação. Sem net → consegue aprovar; sync depois.
+- Email Resend renderiza bem em Gmail mobile + iOS Mail (tabela aninhada, max-width 600px, fontes ≥ 14px).
+- Sem hover-only, sem fixed positioning agressivo (URL bar Safari iOS quebra).
 
 **Aprovação de post:**
 - [ ] `services/email.py` (Resend), `services/jwt.py` (magic link 24h).
