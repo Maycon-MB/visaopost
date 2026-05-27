@@ -29,7 +29,7 @@ Detalhes completos em [PLANO.md](PLANO.md).
 - **IA:** `gemini-flash-latest` (texto), `gemini-2.5-flash-image` (Nano Banana, edita foto óculos)
 - **Deploy (Fase 8):** Docker Compose no VPS Hostinger Ubuntu 24.04, Nginx + Let's Encrypt, GitHub Actions
 
-Mandatos técnicos completos em [CLAUDE.md](CLAUDE.md).
+Mandatos técnicos completos em [CLAUDE.md](CLAUDE.md). Ferramentas de IA que não leem `CLAUDE.md` automaticamente: [AGENTS.md](AGENTS.md) é o pointer de entrada.
 
 ---
 
