@@ -23,8 +23,8 @@ pwa/node_modules/
 pwa/dist/
 landing/node_modules/
 landing/dist/
-legacy/pwa-institutional/node_modules/
-legacy/pwa-institutional/dist/
+pitch/node_modules/
+pitch/dist/
 dist/
 
 # Build artefacts

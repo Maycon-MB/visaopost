@@ -1,37 +1,22 @@
 # legacy/
 
-Protótipo anterior à Fase 1 do projeto SaaS. **Não rodar em produção. Não referenciar a partir do código novo em `backend/`.**
+Protótipo Python descontinuado, anterior à Fase 1 do SaaS. **Não rodar em produção. Não referenciar a partir do código novo em `backend/`.**
 
-Mantido aqui porque:
-
-1. **Material de venda / pitch a clientes futuros** — apresentações HTML e React institucional usados pra fechar Di Lorenzo.
-2. **Referência de design** — paleta, voz, tom visual que cativaram o cliente. Servem de inspiração quando a Fase 6 (PWA de aprovação) e Fase 7 (landing Astro) forem construídas.
+Mantido aqui pra histórico de design da geração de posts — geração de imagem via Pillow puro, antes da migração pra Playwright + Gemini.
 
 ## Conteúdo
 
-| Pasta / arquivo | O que é | Vivo? |
+| Pasta | O que é | Status |
 |---|---|---|
-| `demo/` | Scripts Python soltos (Pillow puro, sem Playwright/Gemini). Geraram os primeiros mockups de post + página de aprovação estática. | Não. Substituído por `backend/app/services/` (Fase 3). |
-| `pwa-institutional/` | React 18 + Vite + Framer Motion + Vanilla CSS. Apresentação institucional do produto (não é o PWA de aprovação da Fase 6, que será React + Vite + Bootstrap 5). | Builda em `../docs/` que é servido pelo GitHub Pages. Rebuild manual via `npm run build`. |
+| `demo/` | Scripts Python soltos (Pillow puro). Geraram os primeiros mockups de post + página de aprovação estática + agendamento `.bat`. | Não roda. Substituído por `backend/app/services/` (Fase 3). |
 
-## Apresentação ao vivo
+## Apresentação institucional
 
-`../docs/` é o output buildado de `pwa-institutional/`, servido pelo GitHub Pages em
-**https://maycon-mb.github.io/visaopost/** — é a apresentação atual mostrada a leads.
+A apresentação React que costumava ficar aqui em `legacy/pwa-institutional/` foi promovida pra `../pitch/` — é canal ativo de venda, não legado. Live: https://maycon-mb.github.io/visaopost/.
 
-Quando a Fase 7 (landing Astro multi-tenant) entrar no ar com domínio próprio, essa apresentação pode ser arquivada também.
-
-## Como rodar (se realmente precisar)
+## Se realmente precisar rodar
 
 ```powershell
-# Apresentação institucional React (legacy)
-cd legacy/pwa-institutional
-npm install
-npm run dev                # dev server local
-npm run build              # gera dist/ — copiar manual pra ../../docs/ se quiser publicar
-                           # (vite.config.js não tem outDir configurado pra docs/)
-
-# Scripts demo Pillow
 cd legacy/demo
 python generate_post.py
 ```

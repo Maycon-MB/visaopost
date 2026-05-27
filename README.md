@@ -37,18 +37,18 @@ Mandatos técnicos completos em [CLAUDE.md](CLAUDE.md).
 
 ```
 automacao_instagram/
-├── backend/                 ATIVO — FastAPI + asyncpg + Playwright + Gemini (Fase 1-3 done)
-├── legacy/                  Protótipo pré-Fase 1. Material de venda + referência de design.
-│   ├── demo/                Scripts Pillow puros (descontinuados)
-│   └── pwa-institutional/   React institucional usado pra fechar Di Lorenzo
-├── docs/                    Apresentação live — build de legacy/pwa-institutional/, servido pelo GitHub Pages em https://maycon-mb.github.io/visaopost/
-├── CLAUDE.md                Mandatos técnicos (ler 1º)
-├── PLANO.md                 Roadmap e status detalhado por fase
-├── docker-compose.yml       Stack dev local (Postgres + Redis + backend + worker)
-└── .github/workflows/       CI + futuro deploy SSH
+├── backend/        ATIVO — FastAPI + asyncpg + Playwright + Gemini (Fase 1-3 done)
+├── pitch/          Apresentação institucional (React + Vite). Canal ativo de venda.
+├── docs/           Build live do pitch/ — servido pelo GitHub Pages em
+│                   https://maycon-mb.github.io/visaopost/
+├── legacy/         Protótipo Python pré-Fase 1 (scripts Pillow puros, descontinuados).
+├── CLAUDE.md       Mandatos técnicos (ler 1º)
+├── PLANO.md        Roadmap e status detalhado por fase
+├── docker-compose.yml      Stack dev local (Postgres + Redis + backend + worker)
+└── .github/workflows/      CI + futuro deploy SSH
 ```
 
-Estruturas que ainda não existem (criadas em fases futuras): `pwa/` (Fase 6), `landing/` (Fase 7), `nginx/` (Fase 8).
+Estruturas que ainda não existem (criadas em fases futuras): `pwa/` (Fase 6, PWA de aprovação), `landing/` (Fase 7, landing Astro multi-tenant), `nginx/` (Fase 8, configs produção).
 
 ---
 
@@ -89,15 +89,25 @@ cd backend
 .\.venv\Scripts\python.exe scripts\smoke_fase3.py                  # 5 temas Gemini → JPEG
 ```
 
-### Material de venda (legacy)
+### Apresentação institucional (pitch)
 
-GitHub Pages serve `docs/`. Pra rebuild manual:
+Editar e publicar a apresentação live (https://maycon-mb.github.io/visaopost/):
 
 ```powershell
-cd legacy/pwa-institutional
-npm install
-npm run build   # gera dist/ — copiar manualmente pra ../../docs/ se quiser publicar
+cd pitch
+npm install                  # 1ª vez
+npm run dev                  # preview local em http://localhost:5175/visaopost/
+npm run build                # gera ../docs/ direto (vite.config.js já aponta pra lá)
+
+cd ..
+git add docs/ pitch/
+git commit -m "design: <descrição>"
+git push                     # GitHub Pages atualiza em ~1min
 ```
+
+Detalhes (estrutura, customização por prospect, snapshots): [pitch/README.md](pitch/README.md).
+
+Tag `pitch-v1-dilorenzo` marca a versão que fechou o cliente atual — útil pra rollback.
 
 ---
 
