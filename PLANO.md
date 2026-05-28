@@ -113,13 +113,13 @@ Lista canônica. Toda fase abaixo entrega um pedaço disto. Nada do pitch pode f
 | 10 | Google Meu Negócio (SEO + posts → GMB) | 7 (SEO) + 10d (sync GMB) |
 | 11 | Scripts pra Reels de Autoridade (gerador de roteiros) | 10e |
 | 12 | Bot WhatsApp de Agendamento (FAQ + agenda exame) | 10a |
-| 13 | Catálogo Digital Domiciliar (vendedor leva tablet/PDF na casa do cliente) | 6c (tela `/catalogo` no PWA) + export PDF |
+| 13 | Catálogo Digital — dono sobe fotos pelo admin, aparece no site público pros clientes finais | 6f admin upload + 7a landing exibe |
 | 14 | QR Code de Balcão Integrado (adesivo → opt-in recall) | 7b (rota pública `/recall/qr/{tenant}`) |
 | 15 | Relatório de Vendas Mensal PDF | 10f |
 | 16 | Atendente Virtual 24h (manutenção bot WA) | operacional (Fase 11) |
 | 17 | Recuperação de Clientes 1+ ano | 10b (mesmo que recall) |
 | 18 | Consultoria de ROI mensal | operacional (Fase 11) |
-| 19 | Posts com personagem da marca recorrente (claim "3x alcance") | 9b (definir personagem) + 10h (Nano Banana edita) |
+| 19 | Posts com personagem da marca recorrente (claim "3x alcance") | **OPCIONAL** — Fase 10h (sugestão, cliente decide) |
 | 20 | Avaliações Google 5★ viram posts | 10i |
 | 21 | Posts contextuais (tendências mercado óptico) | 10j (scraper + Gemini) |
 | 22 | FAQ completo configurado no setup inicial (bot WA) | 9 + 10a |
@@ -176,13 +176,17 @@ PWA mobile/tablet first em `pwa/` (React 18 + Vite + Bootstrap 5). Service worke
 - [ ] Atividade recente: "post de hoje aguarda aprovação", "3 recalls responderam".
 - [ ] Estado vazio elegante enquanto tokens IG/WA não chegaram (Fase 9). Mostra contagem só do que dá pra ler do DB (clientes, posts gerados, recalls disparados).
 
-### Fase 6f — Tela `/catalogo` (Catálogo Digital Domiciliar — item 13 do pitch)
-- [ ] Tela navegável mobile-first: vendedor mostra no tablet/celular do cliente em visita domiciliar.
-- [ ] Categorias: Solar, Grau, Premium Luxo, Lentes Especiais (padrão pitch CatalogSection).
-- [ ] Cada produto: foto + nome + descrição + preço opcional + tag "favorito".
-- [ ] Botão "Pedir Visita Domiciliar" → abre WhatsApp da ótica com mensagem pré-formatada.
-- [ ] **Export PDF do catálogo** (jspdf ou print CSS) pra mandar via WhatsApp Business.
-- [ ] CRUD básico no PWA `/admin/catalogo` pro dono editar produtos.
+### Fase 6f — Admin `/produtos` (upload de fotos do catálogo — item 13 pitch)
+Dono sobe fotos dos produtos pelo painel admin. Aparecem no site público (Fase 7a) pros clientes finais verem.
+
+- [ ] Tela `/produtos` no PWA: grid com fotos atuais + botão "+ Adicionar produto".
+- [ ] Form upload: foto (drag-drop ou seletor), nome, categoria (Solar/Grau/Premium/Lentes), descrição curta, preço opcional, tags.
+- [ ] Edit inline: clica produto → modal com mesmos campos pra editar.
+- [ ] Delete com confirmação.
+- [ ] Reordenar via drag (define ordem que aparece no site público).
+- [ ] Backend: endpoints `GET/POST/PATCH/DELETE /api/products` + upload via UploadFile.
+- [ ] Storage: dev local em `backend/tmp/products/{tenant_id}/`. Fase 8 migra pra Backblaze B2.
+- [ ] Migration 0005: tabela `products (id, tenant_id, name, category, description, price_brl, image_url, tags, position, is_active, created_at)`.
 
 **Sinal de pronto Fase 6:** Maycon recebe email mockup, aprova no celular. Cliente fictício cadastrado via tela + CSV. Settings persiste. Dashboard mostra contagens reais (não-IG ainda). Catálogo navega + exporta PDF.
 
@@ -190,8 +194,9 @@ PWA mobile/tablet first em `pwa/` (React 18 + Vite + Bootstrap 5). Service worke
 
 ## Fase 7 — Landing pública + galeria + QR Code de Balcão
 
-### Fase 7a — Landing Astro multi-tenant (item 8 pitch)
-- [ ] Astro em `landing/`. Template multi-tenant (hero, sobre, catálogo de coleções, WhatsApp, mapa). Dados em `landing/data/<slug>.json`.
+### Fase 7a — Landing Astro multi-tenant (itens 8 + 13 pitch)
+- [ ] Astro em `landing/`. Template multi-tenant (hero, sobre, **catálogo de produtos** alimentado por Fase 6f, WhatsApp, mapa). Dados em `landing/data/<slug>.json` + fetch da API `/api/products?tenant=X`.
+- [ ] Seção catálogo: grid de produtos com foto + nome + categoria + preço (se houver). Filtros por categoria. Click no produto → modal com descrição + botão "Quero esse, falar WhatsApp" (mensagem pré-preenchida).
 - [ ] **SEO completo:** meta tags + Schema.org JSON-LD (`LocalBusiness` + `Optician` + `Service`) + sitemap.xml + robots.txt.
 - [ ] **Google Meu Negócio (GMB):** integração inicial = JSON-LD compatível + structured data Reviews. Sync ativo de posts → GMB fica pra Fase 10d.
 - [ ] Build → GitHub Pages `/dilorenzo`. Fase 8 migra pra VPS `dilorenzo.visaopost.com.br`.
@@ -267,7 +272,7 @@ Cliente Di Lorenzo precisa entregar:
 - Paleta cores (primary, secondary, accent, text, background) em HEX.
 - Fontes preferidas (ou aceita system fonts).
 - Tom de voz (1 parágrafo descrevendo, + 3 exemplos de frases que ele já usa).
-- **Definição do personagem da marca** (item 19 pitch — "posts 3x mais alcance"). Pode ser: pessoa fictícia recorrente (avatar consistente), mascote, ou o próprio dono. Decidir nome + idade + estilo + cenários.
+- **Personagem da marca recorrente (OPCIONAL):** sugestão do pitch como diferencial. Cliente decide se quer ativar — se sim, define nome fictício + estilo + cenários + escolhe foto base.
 
 ### Assets visuais
 - 10-20 fotos de óculos alta qualidade (input principal pro Nano Banana editar nos posts).
@@ -342,11 +347,12 @@ Quebrada em sub-entregas porque cada uma é independente e pode subir em ondas p
 - [ ] Sentry ou similar pra erros backend.
 - [ ] Alerta WhatsApp pro Maycon: quota Gemini quase no limite, IG token quase expirando, falha publicação 3x seguidas.
 
-### Fase 10h — Personagem da marca recorrente (item 19 pitch — claim 3x alcance)
-- [ ] Definir personagem com cliente na Fase 9 (nome fictício, idade, estilo).
-- [ ] Selecionar 1 foto base que represente o personagem (pode ser stock licenciado ou gerar com Nano Banana inicial).
-- [ ] Pipeline edita personagem em cenários diferentes via Nano Banana respeitando a foto base.
-- [ ] Override em `theme.product_image_data_uri` quando tema favorece personagem (lifestyle, depoimento, ambiente).
+### Fase 10h — Personagem da marca recorrente (item 19 pitch — OPCIONAL, sugestão)
+Não obrigatório. Pitch menciona como diferencial ("3x alcance vs foto genérica"). Cliente decide se quer ativar.
+
+- [ ] Conversa com cliente: ele topa criar personagem ou prefere só fotos reais dos produtos.
+- [ ] Se SIM: definir personagem (nome fictício, idade, estilo), selecionar foto base, pipeline edita via Nano Banana em cenários.
+- [ ] Se NÃO: skip — fotos reais do catálogo (Fase 6f) + stock photos (já implementado Fase 5) cobrem.
 
 ### Fase 10i — Avaliações Google → posts (item 20 pitch)
 - [ ] Job semanal: lê reviews 5★ novos via Google Business Profile API.
