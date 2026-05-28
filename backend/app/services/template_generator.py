@@ -62,8 +62,19 @@ def build_prompt(brand: BrandKit, theme: ThemeContext) -> str:
     occasion = theme.holiday_name or theme.theme.replace("_", " ")
     mood_line = f"Mood: {theme.mood}." if theme.mood else ""
     product_block = (
-        f'Use esta foto de produto como hero: <img src="{theme.product_image_data_uri}">. '
-        "Componha o layout em torno dela com sombras suaves e contraste forte."
+        (
+            "FOTO HERO (OBRIGATÓRIO USAR): há uma foto de produto disponível. Use no HTML "
+            'como `<img src="__PRODUCT_PHOTO__" style="width:100%;height:100%;object-fit:cover;display:block">`. '
+            "O LITERAL `__PRODUCT_PHOTO__` será substituído depois — você NÃO precisa gerar nem copiar "
+            "URL/base64. Apenas use a string `__PRODUCT_PHOTO__` no atributo src.\n"
+            "A foto DOMINA 55-70% do frame. Texto fica sobre overlay com gradiente escuro pra legibilidade "
+            "OU em barra/painel sólido em primary/secondary num dos cantos.\n"
+            "Padrões aceitos: (a) full-bleed photo + bottom-band 30% altura com headline + CTA; "
+            "(b) photo 65% + painel lateral 35% com headline; "
+            "(c) full-bleed + gradient overlay 100% bottom→top + texto centralizado bottom.\n"
+            "Nunca esconda totalmente a foto sob texto. Brand colors entram em CTA, badge, divider, "
+            "contorno — não no fundo. NÃO use URL externa nem base64 inline — apenas `__PRODUCT_PHOTO__`."
+        )
         if theme.product_image_data_uri
         else "Sem foto de produto. Crie composição visual com formas geométricas, "
         "ícone de óculos minimalista em SVG inline, ou tipografia grande como protagonista."
@@ -112,8 +123,9 @@ LAYOUT:
 - Subhead opcional (1 linha, 28-40px).
 - CTA discreto rodapé (ex: "Agende seu exame" ou "Conheça a coleção").
 - Logo/nome da marca como text-mark no canto (use {brand.business_name}, sem buscar imagem externa).
-- Use brand_colors com hierarquia clara: fundo SEMPRE primary={c.primary}, accent={c.secondary} APENAS em destaques (headline word-of-emphasis, divider, CTA hover). Contraste alto pra legibilidade.
-- Fundo NÃO deve ser claro/bege/branco — primary é a identidade visual da marca.
+- Brand colors com hierarquia clara: accent={c.secondary} em destaques (headline word-of-emphasis, divider, CTA, badge). Contraste alto pra legibilidade.
+- SEM foto: fundo SEMPRE primary={c.primary} (identidade da marca, nunca branco/bege).
+- COM foto hero: a foto vira o fundo. Use primary={c.primary} apenas em painéis/bandas/CTA sobre a foto, NÃO como fundo geral.
 
 EVITE:
 - Imagens externas (vai dar 404 no headless).
@@ -181,12 +193,24 @@ def generate_post_html(
             f"(finish_reason={finish_reason}, chars={len(html)})"
         )
 
+    photo_injected = False
+    if theme.product_image_data_uri and "__PRODUCT_PHOTO__" in html:
+        html = html.replace("__PRODUCT_PHOTO__", theme.product_image_data_uri)
+        photo_injected = True
+    elif theme.product_image_data_uri:
+        logger.warning(
+            "template.photo_placeholder_missing",
+            attempt=attempt,
+            theme=theme.theme,
+        )
+
     meta = {
         "model": _MODEL_NAME,
         "theme": theme.theme,
         "mood": theme.mood,
         "holiday_name": theme.holiday_name,
         "has_product_image": theme.product_image_data_uri is not None,
+        "photo_injected": photo_injected,
         "prompt_chars": len(prompt),
         "html_chars": len(html),
         "attempts": attempt,

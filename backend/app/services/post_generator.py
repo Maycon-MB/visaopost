@@ -22,6 +22,7 @@ from app.models.post import Post
 from app.services.calendar import resolve_theme
 from app.services.caption import generate_post_copy
 from app.services.renderer import render_html_to_jpeg
+from app.services.stock_photos import pick_for_theme as pick_stock_photo
 from app.services.template_generator import generate_post_html
 
 logger = get_logger(__name__)
@@ -53,6 +54,14 @@ async def generate_post(
         raise TenantNotFound(f"tenant_id ausente para slug '{tenant_slug}'")
 
     theme_ctx = await resolve_theme(target_date)
+
+    stock_uri = pick_stock_photo(
+        target_date=target_date,
+        theme=theme_ctx.theme,
+        mood=theme_ctx.mood,
+    )
+    if stock_uri is not None:
+        theme_ctx = theme_ctx.model_copy(update={"product_image_data_uri": stock_uri})
 
     copy, copy_meta = generate_post_copy(brand=brand, theme=theme_ctx)
     html, html_meta = generate_post_html(brand=brand, theme=theme_ctx)

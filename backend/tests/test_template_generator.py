@@ -97,3 +97,30 @@ def test_generate_html_falha_apos_max_tentativas(
     with pytest.raises(RuntimeError, match="truncado"):
         generate_post_html(brand=brand_kit, theme=theme_natal, client=client)
     assert client.calls == 2
+
+
+_PHOTO_PLACEHOLDER_HTML = (
+    "<!DOCTYPE html><html><head><style>body{}</style></head>"
+    '<body><img src="__PRODUCT_PHOTO__"><h1>Hi</h1></body></html>'
+)
+
+
+def test_generate_html_substitui_placeholder_quando_ha_foto(brand_kit: BrandKit) -> None:
+    """Placeholder __PRODUCT_PHOTO__ vira o data URI real depois do retorno do Gemini."""
+    data_uri = "data:image/jpeg;base64,FAKEPAYLOAD"
+    theme = ThemeContext(theme="generic", product_image_data_uri=data_uri)
+    client = FakeClient([(_PHOTO_PLACEHOLDER_HTML, "STOP")])
+    html, meta = generate_post_html(brand=brand_kit, theme=theme, client=client)
+    assert "__PRODUCT_PHOTO__" not in html
+    assert data_uri in html
+    assert meta["photo_injected"] is True
+    assert meta["has_product_image"] is True
+
+
+def test_generate_html_loga_warning_se_placeholder_ausente(brand_kit: BrandKit) -> None:
+    """Foto fornecida mas Gemini esqueceu placeholder: meta.photo_injected=False."""
+    theme = ThemeContext(theme="generic", product_image_data_uri="data:image/jpeg;base64,X")
+    client = FakeClient([(FULL_HTML, "STOP")])  # sem placeholder
+    _html, meta = generate_post_html(brand=brand_kit, theme=theme, client=client)
+    assert meta["photo_injected"] is False
+    assert meta["has_product_image"] is True
