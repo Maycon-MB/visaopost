@@ -18,6 +18,7 @@ from app.db.repositories.tenants import get_brand_kit
 from app.logging import get_logger
 from app.models.brand import ThemeContext
 from app.services.post_generator import TenantNotFound, generate_post
+from app.services.queue import enqueue_daily_post, queue_status
 from app.services.renderer import render_html_to_jpeg
 from app.services.template_generator import generate_post_html
 
@@ -121,3 +122,34 @@ async def dev_health_services() -> dict[str, object]:
         "gemini_configured": bool(settings.gemini_api_key),
         "resend_configured": bool(settings.resend_api_key),
     }
+
+
+@router.post("/queue/enqueue-daily")
+async def dev_enqueue_daily(body: GeneratePostBody) -> dict[str, object]:
+    """Enfileira o job de geração diária em vez de rodar inline.
+
+    Body: `{"tenant": "dilorenzo", "date": "2026-06-01"}`. Exige Redis up.
+    """
+    try:
+        job = enqueue_daily_post(tenant_slug=body.tenant, target_date=body.date)
+    except Exception as exc:
+        logger.warning("dev.enqueue.redis_down", error=str(exc))
+        raise HTTPException(status_code=503, detail=f"redis unavailable: {exc}") from exc
+
+    logger.info(
+        "dev.enqueue.ok",
+        tenant=body.tenant,
+        date=body.date.isoformat(),
+        job_id=job.id,
+    )
+    return {"job_id": job.id, "queue": job.origin, "status": job.get_status()}
+
+
+@router.get("/queue/status")
+async def dev_queue_status() -> dict[str, object]:
+    """Snapshot RQ: counts por fila + amostra de jobs recentes. 503 se Redis down."""
+    try:
+        return queue_status()
+    except Exception as exc:
+        logger.warning("dev.queue_status.redis_down", error=str(exc))
+        raise HTTPException(status_code=503, detail=f"redis unavailable: {exc}") from exc
