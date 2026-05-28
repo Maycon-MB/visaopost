@@ -1,12 +1,12 @@
 # PLANO
 
-Roadmap de execução. Mandatos técnicos em [`CLAUDE.md`](CLAUDE.md). Visão geral em [`README.md`](README.md).
+Roadmap de execução. Mandatos técnicos em [`CLAUDE.md`](CLAUDE.md). Visão geral em [`README.md`](README.md). **Fonte da verdade do escopo prometido = [`pitch/`](pitch/src/data/content.js) + [`ValueDetailModal`](pitch/src/components/ValueDetailModal.jsx).** Tudo lá foi vendido pro cliente Di Lorenzo no plano **Piloto Automático (Premium)** = R$297/mês + R$1.500 setup.
 
 ---
 
 ## Status (2026-05-28)
 
-**Modo:** FREE TIER. Cliente Di Lorenzo pagou Premium mas ainda não confirmou início. Zero gasto com VPS/domínio até confirmação.
+**Modo:** FREE TIER. **Cliente Di Lorenzo fechou comigo hoje** (informal via WhatsApp, contrato + LGPD a formalizar). Zero gasto com VPS/domínio até estar tudo pronto local + ele entregar tokens (Fase 9).
 
 | Fase | Escopo | Status |
 |---|---|---|
@@ -15,7 +15,16 @@ Roadmap de execução. Mandatos técnicos em [`CLAUDE.md`](CLAUDE.md). Visão ge
 | 2 | Schema SQL + seed calendário BR + tenant Di Lorenzo | ✅ validado em Postgres 16 nativo Win |
 | 3 | Pipeline render IA→JPEG (Gemini + Playwright) | ✅ 5/5 temas, 24 testes, hardening (Pydantic models + repos + Protocol DI) |
 | 4 | `calendar.py` + `caption.py` + `post_generator.py` | ✅ done* (gate 30d migrado pra Fase 5) |
-| **5** | **Retry 429 Gemini + GH Actions cron demo + RQ infra + queue endpoints** | **⏭ ATIVA** |
+| 5 | Retry 429 Gemini + GH Actions cron demo + RQ infra + queue endpoints + stock photos | ✅ |
+| 6a | Backend PWA do dono (email + JWT + 14 endpoints + 28 tests) | ✅ |
+| **6b-f** | **PWA frontend: aprovar + clientes + settings + dashboard skeleton + catálogo** | **⏭ ATIVA** |
+| 7 | Landing Astro + galeria pública + QR Code de Balcão | pendente |
+| pré-0b | Contrato + LGPD formal (cliente já topou informal) | **em curso humano** |
+| 0b | Hostinger + domínio + Cloudflare + Backblaze B2 | aguarda Fase 6+7 done |
+| 8 | Deploy VPS produção | depende 0b |
+| 9 | Cliente entrega tokens + brand + FAQ + fotos + decisões | **gate cliente** |
+| 10a-j | Integração ondas (IG + bot WA + recall + scripts reels + GMB sync + relatório + personagem + reviews→posts + posts contextuais) | depende 9 |
+| 11 | Operacional contínuo (atualização + manutenção bot + consultoria ROI) | recorrente pós-handoff |
 | 6 | PWA do dono: aprovação + `/clientes` CRUD + `/settings` (horário, dias, instruções) | pendente |
 | 7 | Landing Astro multi-tenant + galeria preview dos posts | pendente |
 | pré-0b | Kickoff comercial: Onboarding Pack PDF + contrato + LGPD + reunião + assinatura | pendente |
@@ -86,7 +95,40 @@ Dois modos:
 
 ---
 
-## Fase 6 — Email aprovação + PWA do dono
+## Inventário do que foi prometido no pitch (Piloto Automático)
+
+Lista canônica. Toda fase abaixo entrega um pedaço disto. Nada do pitch pode ficar de fora.
+
+| # | Promessa | Fase responsável |
+|---|---|---|
+| 1 | 30 posts/mês Instagram (gerados + aprovados + publicados automaticamente) | 3 ✅ + 5 ✅ + 10a |
+| 2 | Identidade visual exclusiva (logo, paleta, fontes, tom) | 9 (cliente entrega) + 10c (tela `/brand`) |
+| 3 | Estratégia de conteúdo + calendário datas comemorativas BR | 2 ✅ + 4 ✅ |
+| 4 | Aprovação via celular (email + PWA) | 6 ✅ backend / 6b PWA |
+| 5 | Postagem automática horários ótimos | 5 ✅ + 10a |
+| 6 | Sua Vitrine Blindada (monitoring 24h conexão) | 10g status page + healthchecks |
+| 7 | Atualização constante (acompanhar mudanças algoritmo IG) | operacional (Fase 11) |
+| 8 | Landing Page Premium (site público da ótica) | 7 |
+| 9 | Lembrete de Retorno via WhatsApp (Recall 1+ ano) | 10b |
+| 10 | Google Meu Negócio (SEO + posts → GMB) | 7 (SEO) + 10d (sync GMB) |
+| 11 | Scripts pra Reels de Autoridade (gerador de roteiros) | 10e |
+| 12 | Bot WhatsApp de Agendamento (FAQ + agenda exame) | 10a |
+| 13 | Catálogo Digital Domiciliar (vendedor leva tablet/PDF na casa do cliente) | 6c (tela `/catalogo` no PWA) + export PDF |
+| 14 | QR Code de Balcão Integrado (adesivo → opt-in recall) | 7b (rota pública `/recall/qr/{tenant}`) |
+| 15 | Relatório de Vendas Mensal PDF | 10f |
+| 16 | Atendente Virtual 24h (manutenção bot WA) | operacional (Fase 11) |
+| 17 | Recuperação de Clientes 1+ ano | 10b (mesmo que recall) |
+| 18 | Consultoria de ROI mensal | operacional (Fase 11) |
+| 19 | Posts com personagem da marca recorrente (claim "3x alcance") | 9b (definir personagem) + 10h (Nano Banana edita) |
+| 20 | Avaliações Google 5★ viram posts | 10i |
+| 21 | Posts contextuais (tendências mercado óptico) | 10j (scraper + Gemini) |
+| 22 | FAQ completo configurado no setup inicial (bot WA) | 9 + 10a |
+| 23 | Visita Domiciliar agendamento (via bot ou tela) | 10a (bot encaminha) |
+| 24 | Dashboard métricas (alcance, likes, salvos, recalls, visitas site) | 6d skeleton + 10f real |
+
+---
+
+## Fase 6 — PWA do dono (admin completo)
 
 PWA mobile/tablet first em `pwa/` (React 18 + Vite + Bootstrap 5). Service worker + manifest (instalável). Build → `pwa/dist/` → GitHub Pages em `/app` (Fase 8 migra pra VPS). Auth via JWT magic link (sem senha).
 
@@ -99,38 +141,74 @@ PWA mobile/tablet first em `pwa/` (React 18 + Vite + Bootstrap 5). Service worke
 - Email Resend renderiza bem em Gmail mobile + iOS Mail (tabela aninhada, max-width 600px, fontes ≥ 14px).
 - Sem hover-only, sem fixed positioning agressivo (URL bar Safari iOS quebra).
 
-**Aprovação de post:**
-- [ ] `services/email.py` (Resend), `services/jwt.py` (magic link 24h).
-- [ ] Template email HTML responsivo (Jinja2).
-- [ ] Endpoints `GET/POST /api/posts/{token}` (approve / reject / regenerar).
-- [ ] PWA rota `/aprovar/:token`. Botões aprovar + rejeitar + "gera outro com feedback X".
-- [ ] Backend local + ngrok pra E2E sem VPS.
+### Fase 6a — Backend pronto ✅
+- [x] `services/email.py` (Resend), `services/jwt.py` (magic link 24h).
+- [x] Template email HTML responsivo (Jinja2) Gmail+iOS Mail compatible.
+- [x] Endpoints `GET/POST /api/posts/{token}` (approve / reject / regenerar).
+- [x] Endpoints REST `/api/clients` GET/POST/PATCH/DELETE + `/import` (CSV) + `/export.csv`.
+- [x] Endpoints `/api/settings` GET/PATCH.
+- [x] Migration 0004: `send_hour`, `publish_hour`, `active_weekdays jsonb`, `extra_instructions text`, `posts.approval_feedback`, `posts.regenerate_count`.
+- [x] 28 testes novos (jwt + models + email render).
 
-**Cadastro de clientes (`/clientes`) — independe de Instagram token, cliente pode usar dia 1:**
-- [ ] Endpoints REST: `GET/POST/PATCH/DELETE /api/clients` + `POST /api/clients/import` (CSV).
-- [ ] Tela `/clientes` no PWA: tabela com search + filtros (ativos, exame +12m, novos da semana).
+### Fase 6b — PWA `/aprovar/:token` (tela do email)
+- [ ] React 18 + Vite + Bootstrap 5 boot. Manifest + service worker pra instalar como app.
+- [ ] Rota `/aprovar/:token`. Mostra imagem post + caption + hashtags + CTA.
+- [ ] 3 botões touch-friendly ≥ 48dp: ✅ aprovar, ❌ rejeitar (com motivo opcional), 🔁 gerar outro (com feedback obrigatório).
+- [ ] Backend local + ngrok pra Resend mandar email com URL pública em E2E.
+
+### Fase 6c — Tela `/clientes` (independe Instagram token, cliente usa dia 1)
+- [ ] Tabela com search + filtros (ativos, exame +12m, novos da semana, opt-out).
 - [ ] Formulário cadastro single: nome, telefone WhatsApp, email opcional, data último exame, observações.
 - [ ] Import CSV: template baixável + upload + parser idempotente (UNIQUE tenant_id+phone já no schema).
 - [ ] Botões linha: marcar contatado / marcar exame feito / opt-out.
 - [ ] Export CSV (backup pro cliente).
-- [ ] Validação: telefone formato BR, último exame ≤ hoje.
 
-**Configurações básicas (`/settings`):**
-- [ ] Migration adiciona em `tenants`: `send_hour`, `publish_hour`, `active_weekdays jsonb`, `extra_instructions text`.
-- [ ] Tela `/settings`: horário envio email (default 06h), horário publicação (default 12h), dias ativos (default seg-sáb), instruções extras pro Gemini (campo livre).
-- [ ] Worker RQ (Fase 5) lê tenant em runtime — sem hardcoded.
+### Fase 6d — Tela `/settings` (configs do dono)
+- [ ] Horário envio email (default 06h), horário publicação (default 12h).
+- [ ] Dias ativos (default seg-sáb).
+- [ ] **Regras IA pra posts** (campo livre — "evita vermelho", "menciona promoção do mês").
+- [ ] **Regras IA pro bot WhatsApp** (FAQ texto livre — horário, preços, política, quando transferir pra humano). Conecta com Fase 10a.
 
-**Sinal de pronto:** Maycon recebe email mockup, aprova no celular. Cliente fictício cadastrado via tela + CSV. Settings persiste.
+### Fase 6e — Tela `/dashboard` (skeleton agora, dados reais na Fase 10f)
+- [ ] Cards: posts publicados/mês, alcance IG, clientes cadastrados, recalls enviados/respondidos, visitas no site.
+- [ ] Gráfico linha Recharts: posts × engajamento últimos 30 dias.
+- [ ] Gráfico barra: melhores posts (likes/salvos).
+- [ ] Atividade recente: "post de hoje aguarda aprovação", "3 recalls responderam".
+- [ ] Estado vazio elegante enquanto tokens IG/WA não chegaram (Fase 9). Mostra contagem só do que dá pra ler do DB (clientes, posts gerados, recalls disparados).
+
+### Fase 6f — Tela `/catalogo` (Catálogo Digital Domiciliar — item 13 do pitch)
+- [ ] Tela navegável mobile-first: vendedor mostra no tablet/celular do cliente em visita domiciliar.
+- [ ] Categorias: Solar, Grau, Premium Luxo, Lentes Especiais (padrão pitch CatalogSection).
+- [ ] Cada produto: foto + nome + descrição + preço opcional + tag "favorito".
+- [ ] Botão "Pedir Visita Domiciliar" → abre WhatsApp da ótica com mensagem pré-formatada.
+- [ ] **Export PDF do catálogo** (jspdf ou print CSS) pra mandar via WhatsApp Business.
+- [ ] CRUD básico no PWA `/admin/catalogo` pro dono editar produtos.
+
+**Sinal de pronto Fase 6:** Maycon recebe email mockup, aprova no celular. Cliente fictício cadastrado via tela + CSV. Settings persiste. Dashboard mostra contagens reais (não-IG ainda). Catálogo navega + exporta PDF.
 
 ---
 
-## Fase 7 — Landing pública + galeria preview
+## Fase 7 — Landing pública + galeria + QR Code de Balcão
 
-- [ ] Astro em `landing/`. Template multi-tenant (hero, produtos, sobre, WhatsApp, mapa). Dados em `landing/data/<slug>.json`.
-- [ ] SEO: meta tags + Schema.org JSON-LD (LocalBusiness + Optician) + sitemap.
-- [ ] Build → GitHub Pages `/dilorenzo`.
-- [ ] Galeria pública `/preview` com 30 posts gerados (Fase 5 alimenta).
-- [ ] Lighthouse 95+.
+### Fase 7a — Landing Astro multi-tenant (item 8 pitch)
+- [ ] Astro em `landing/`. Template multi-tenant (hero, sobre, catálogo de coleções, WhatsApp, mapa). Dados em `landing/data/<slug>.json`.
+- [ ] **SEO completo:** meta tags + Schema.org JSON-LD (`LocalBusiness` + `Optician` + `Service`) + sitemap.xml + robots.txt.
+- [ ] **Google Meu Negócio (GMB):** integração inicial = JSON-LD compatível + structured data Reviews. Sync ativo de posts → GMB fica pra Fase 10d.
+- [ ] Build → GitHub Pages `/dilorenzo`. Fase 8 migra pra VPS `dilorenzo.visaopost.com.br`.
+- [ ] Lighthouse mobile ≥ 95.
+
+### Fase 7b — Galeria pública dos posts
+- [ ] Rota `/preview` ou `/galeria` na landing. Mostra últimos 30 posts aprovados.
+- [ ] Pull de `previews/YYYY-MM-DD/*.jpg` que o cron alimenta (Fase 5). Pós-VPS: pull do DB direto.
+- [ ] Click no post abre lightbox + legenda + hashtags + data.
+
+### Fase 7c — QR Code de Balcão (item 14 pitch)
+- [ ] Rota pública `/recall/qr/{tenant_slug}` no backend. Recebe scan, mostra form opt-in: nome + telefone WhatsApp.
+- [ ] Cria row em `clients` com `metadata.source = "qr_balcao"` + envia template WA confirmação.
+- [ ] Endpoint `/api/qr/print?tenant=X` gera QR PNG + PDF A6 elegante pro dono imprimir e colar no balcão.
+- [ ] Estrutura JSON-LD: aparece como ação no Google Maps "Cadastrar no recall".
+
+**Sinal de pronto Fase 7:** Landing Di Lorenzo no GH Pages, Lighthouse 95+, galeria pública dos posts gerados, QR code imprimível funcional + form opt-in cadastra cliente real.
 
 ---
 
@@ -174,40 +252,129 @@ Outline. Detalhar passo-a-passo quando começar.
 
 ---
 
-## Fase 9 — BLOQUEADO PELO CLIENTE
+## Fase 9 — BLOQUEADO PELO CLIENTE (entrega de tokens + brand + decisões)
 
 Cliente Di Lorenzo precisa entregar:
-- Token Instagram Graph API (conta Business + Facebook Page vinculada).
-- Brand kit: logo PNG fundo transparente + paleta + fontes + tom de voz.
-- 10-20 fotos de óculos alta qualidade (input pro Nano Banana).
-- Decisão WhatsApp: Cloud API Meta (preferido) ou Twilio. Se Cloud API → Business Manager verificado + número dedicado + display name approval.
+
+### Tokens e credenciais
+- **Token Instagram Graph API** (conta Business + Facebook Page vinculada).
+- **Token WhatsApp Cloud API Meta** (Business Manager verificado + número dedicado + display name aprovado). Twilio é fallback se aprovação Meta travar.
+- **Email do dono** pra notificações.
+- **Telefone WhatsApp pessoal do dono** pra avisos de sistema (opcional).
+
+### Brand kit completo
+- Logo PNG fundo transparente + variações (claro/escuro).
+- Paleta cores (primary, secondary, accent, text, background) em HEX.
+- Fontes preferidas (ou aceita system fonts).
+- Tom de voz (1 parágrafo descrevendo, + 3 exemplos de frases que ele já usa).
+- **Definição do personagem da marca** (item 19 pitch — "posts 3x mais alcance"). Pode ser: pessoa fictícia recorrente (avatar consistente), mascote, ou o próprio dono. Decidir nome + idade + estilo + cenários.
+
+### Assets visuais
+- 10-20 fotos de óculos alta qualidade (input principal pro Nano Banana editar nos posts).
+- Foto da fachada / vitrine pra landing.
+- Foto do ambiente interno pra "Sobre Nós".
+- Foto do dono / equipe (opcional).
+
+### FAQ pro bot WhatsApp (item 22 pitch — "FAQ completo configurado no setup")
+- Horário de funcionamento (seg-sex / sáb / dom).
+- Preços (exame, ajuste, troca lente, conserto).
+- Convênios aceitos.
+- Política de garantia.
+- Tempo médio de entrega de óculos.
+- Quando transferir pra humano (perguntas de desconto fora do padrão, reclamação, etc.).
+
+### Catálogo de produtos (Fase 6f preencher)
+- Lista de coleções principais + 5-10 produtos destaque com foto + nome + preço opcional.
+
+### Decisões
+- Subdomínio grátis (`dilorenzo.visaopost.com.br`) vs domínio próprio (`oticadilorenzo.com.br`).
 - CSV/planilha clientes pra recall (nome, telefone, último exame).
-- Email do dono pra notificações.
-- Decisão de domínio (subdomínio vs próprio).
-- Aprovação do tom de voz (testar 5 posts gerados antes de virar produção).
+- Aprovação do tom de voz: testar 5 posts gerados, ele valida antes de virar produção.
 - Termo de uso de imagem dos produtos (LGPD).
+- Termo opt-in dos clientes pra recall WhatsApp (LGPD).
 
 ---
 
-## Fase 10 — Integração final + handoff profissional (depende Fase 9)
+## Fase 10 — Integrações finais + features Premium (depende Fase 9)
 
-**Integrações:**
-- [ ] `services/instagram.py` publicar via Graph API + webhook métricas.
-- [ ] Onboarding completo no PWA (upload logo, fotos, OAuth Instagram).
-- [ ] `/brand` no PWA — editar paleta, voz, fontes, logo (já tem campos no schema).
-- [ ] `/assets` no PWA — galeria de fotos óculos (CRUD + tags).
-- [ ] `/regras` no PWA — instruções extras pro Gemini (V1: campo texto livre. V2 depois com checkboxes).
-- [ ] Bot WhatsApp Cloud API: webhook + parser de intenção (Gemini) + respostas.
-- [ ] Recall WhatsApp: job semanal varre `clients`, dispara template Meta aprovado.
-- [ ] Dashboard métricas no PWA (Recharts) — alcance, likes, salvos.
-- [ ] Relatório mensal automático PDF (posts publicados + alcance total + recalls disparados) → email no dia 1 de cada mês.
+Quebrada em sub-entregas porque cada uma é independente e pode subir em ondas pro cliente.
 
-**Handoff profissional:**
-- [ ] **Treinamento dono**: call 30min mostrando PWA + vídeo Loom 5min de fallback ("como aprovar post no celular", "como cadastrar cliente").
+### Fase 10a — Instagram + Bot WhatsApp + Recall (núcleo Premium)
+- [ ] `services/instagram.py`: publica via Graph API. Container endpoint + media publish + agendamento.
+- [ ] Webhook IG: captura métricas (reach/impressions/likes/saves/comments/shares/profile_visits) pra `metrics_instagram`.
+- [ ] `services/whatsapp.py`: webhook Cloud API + parser intenção via Gemini + resposta automatizada.
+- [ ] Bot FAQ alimentado por `tenants.whatsapp_faq` (Fase 9 entrega).
+- [ ] Bot escala: pergunta complexa → encaminha pro humano com contexto.
+- [ ] **Bot agenda exame**: detecta intenção "quero agendar", coleta nome + telefone + dia preferido, cria evento + confirma.
+- [ ] **Recall WhatsApp 1+ ano** (itens 9 + 17 pitch): job semanal segunda 10h varre `clients WHERE last_exam_date < now() - interval '12 months' AND status='active'`. Dispara template Meta aprovado. Atualiza `last_contacted_at`. Opt-out após 3 ignored.
+- [ ] Onboarding completo no PWA (upload logo, fotos, OAuth Instagram, conexão WA).
+
+### Fase 10b — Telas admin PWA pós-tokens
+- [ ] `/brand` — editar paleta, voz, fontes, logo (schema já pronto Fase 2).
+- [ ] `/assets` — galeria fotos óculos (CRUD + tags). Tabela `assets` já pronta.
+- [ ] `/regras` — V2 com checkboxes (V1 já é texto livre na Fase 6d).
+- [ ] `/faq-bot` — editor do FAQ do bot WA (item 22 pitch).
+
+### Fase 10c — Status page (item 6 pitch "Vitrine Blindada")
+- [ ] `/status` público no backend: últimas 24h health + posts publicados + recalls disparados + uptime % mês.
+- [ ] Healthcheck cron 5min. 3 falhas seguidas → alerta WhatsApp pro Maycon.
+- [ ] Endpoint `/health/db`, `/health/redis`, `/health/gemini` (quota check).
+
+### Fase 10d — Google Meu Negócio sync (item 10 pitch — segunda parte)
+- [ ] `services/google_business.py` autentica via OAuth Google Business Profile API.
+- [ ] Após post aprovado e publicado no IG, faz cross-post pro GMB (texto + imagem).
+- [ ] Sincroniza reviews 5★ do GMB pra `assets.metadata` (input pra Fase 10i).
+
+### Fase 10e — Scripts pra Reels de Autoridade (item 11 pitch)
+- [ ] `services/reels_scripts.py` gera 4 roteiros/mês via Gemini. Cada roteiro: hook (3s), corpo (15-30s), CTA (5s).
+- [ ] Temas: "como escolher armação por formato de rosto", "diferença lente antirreflexo", "quando trocar de grau", etc.
+- [ ] Job mensal dia 1 → email pro dono com 4 roteiros + dicas de gravação.
+- [ ] Tela `/reels` no PWA pra ele ler/editar/arquivar.
+
+### Fase 10f — Relatório mensal PDF + Dashboard real (itens 15 + 24 pitch)
+- [ ] `services/monthly_report.py`: posts publicados, alcance total, top 3 posts, recalls disparados/respondidos, clientes novos, agendamentos via bot.
+- [ ] Gera PDF via Playwright (HTML → PDF) com identidade visual da marca.
+- [ ] Job cron dia 1 de cada mês → email pro dono com PDF anexo.
+- [ ] **Dashboard real** (Fase 6e skeleton ganha dados): pluga métricas IG + WA + GMB + site (Cloudflare Analytics ou Plausible).
+
+### Fase 10g — Monitoramento operacional (item 7 pitch)
+- [ ] Subscribe Instagram Platform Changelog.
+- [ ] Sentry ou similar pra erros backend.
+- [ ] Alerta WhatsApp pro Maycon: quota Gemini quase no limite, IG token quase expirando, falha publicação 3x seguidas.
+
+### Fase 10h — Personagem da marca recorrente (item 19 pitch — claim 3x alcance)
+- [ ] Definir personagem com cliente na Fase 9 (nome fictício, idade, estilo).
+- [ ] Selecionar 1 foto base que represente o personagem (pode ser stock licenciado ou gerar com Nano Banana inicial).
+- [ ] Pipeline edita personagem em cenários diferentes via Nano Banana respeitando a foto base.
+- [ ] Override em `theme.product_image_data_uri` quando tema favorece personagem (lifestyle, depoimento, ambiente).
+
+### Fase 10i — Avaliações Google → posts (item 20 pitch)
+- [ ] Job semanal: lê reviews 5★ novos via Google Business Profile API.
+- [ ] Filtra por sentimento positivo + ortografia mínima.
+- [ ] Gera template post "depoimento" via Gemini com a citação real + nome (com consentimento ou primeiro nome só).
+- [ ] Enfileira pra aprovação normal Fase 6.
+
+### Fase 10j — Posts contextuais por tendência (item 21 pitch)
+- [ ] Scraper RSS de blogs ópticos BR (CRO-SP, ABO, Vision Monday BR) — 1x/semana.
+- [ ] Gemini resume + propõe tema do dia caso seja relevante pra ótica do tenant.
+- [ ] Settings tem flag pra ativar/desativar.
+
+### Handoff profissional
+- [ ] **Treinamento dono**: call 30min mostrando PWA + vídeo Loom 5min de fallback ("como aprovar post no celular", "como cadastrar cliente", "como ler dashboard", "como editar FAQ bot").
 - [ ] **Canal de suporte**: WhatsApp dedicado Maycon ↔ cliente. SLA resposta 24h dia útil.
-- [ ] **Status page** simples: `/status` no backend retorna últimas 24h de health + posts publicados. Cliente acessa em `https://api.visaopost.com.br/status` (público read-only).
+- [ ] **Status page pública** (Fase 10c) — cliente confere uptime sem precisar perguntar.
 
-**Sinal de pronto:** cliente faz 1 ciclo completo sozinho (aprova post no celular → publica no Instagram → recebe WhatsApp confirmando) sem ajuda do Maycon.
+**Sinal de pronto Fase 10:** cliente faz 1 ciclo completo sozinho (aprova post no celular → publica no Instagram → recebe métricas → vê recall disparado → recebe relatório PDF mês) sem ajuda do Maycon.
+
+---
+
+## Fase 11 — Operacional contínuo (item 7, 16, 18 pitch — incluso no R$297/mês)
+
+Sem código novo, mas comprometido contratualmente. Maycon gasta ~4-6h/mês por cliente Premium.
+
+- [ ] **Atualização constante** (item 7) — acompanhar mudanças Instagram algoritmo, ajustar prompts Gemini, manter library de temas atualizada.
+- [ ] **Manutenção bot WhatsApp 24h** (item 16) — monitorar conversas, ajustar FAQ, retreinar prompt quando bot errar.
+- [ ] **Consultoria de ROI mensal** (item 18) — call 30-45min com cliente analisando relatório do mês, propondo 2-3 ajustes pro próximo (regras pro Gemini, recall pra subset de clientes, post temático). Documentado em `tenants.metadata.monthly_reviews`.
 
 ---
 
@@ -231,6 +398,20 @@ Depois: reunião com cliente → coleta Fase 9 → tenant real → 7 dias em pro
 
 ## Caminho até virar produção real
 
-Hoje → 4 → 5 (cron GH Actions) → 6 (PWA: aprovação + /clientes + /settings) → 7 (landing + galeria) → **pré-0b (reunião + contrato)** → 0b (VPS) → 8 (deploy) → 9 (cliente entrega tokens) → 10 (integração + handoff) → produção.
+Hoje → 4 ✅ → 5 ✅ (cron GH Actions) → 6a ✅ backend → **6b/c/d/e/f PWA** → 7 (landing + galeria + QR code) → **pré-0b (kickoff)** → 0b (VPS) → 8 (deploy) → 9 (cliente entrega tokens + brand + FAQ) → 10a-j (integração ondas) → 11 (operacional contínuo).
 
-**Fast-track sugerido:** assim que Fase 6 estiver rodando (`/aprovar` mockup + `/clientes` CRUD + `/settings`), agendar conversa com cliente já — mostra PWA real funcionando, pega WhatsApp dele, ele começa a cadastrar contatos (zero atrito, não depende Instagram token). Cliente ganha valor antes de assinar Fase 0b.
+**Cliente Di Lorenzo já fechou (2026-05-28).** pré-0b oficialmente done — contrato/LGPD ainda precisam ser formalizados por escrito.
+
+**Fast-track ativo:** Fase 6a backend done. Fase 6b PWA `/aprovar` é próxima entrega. Quando rodando, Maycon manda email mockup pro cliente ver no celular dele → cliente já vê o produto vivo + começa a juntar tokens.
+
+**Custo recorrente real do projeto (1 cliente Premium):**
+- Hostinger KVM 2 — R$30/mês
+- Domínio Registro.br — R$3,30/mês (R$40/ano)
+- Cloudflare — R$0 (free tier)
+- Backblaze B2 — R$0 (≤10GB)
+- Resend — R$0 (≤3k email/mês)
+- Gemini API paid — ~R$3/mês (estimado se passar do free tier)
+- WhatsApp Cloud API Meta — R$0 (≤1k conversas/mês)
+- **Total: ~R$36/mês = 12% da receita R$297**
+- **Margem bruta: 88% (R$261)**
+- VPS aguenta 5-10 tenants Premium no mesmo plano. Margem só sobe com escala.
