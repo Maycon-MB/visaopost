@@ -19,6 +19,7 @@ from app.config import get_settings
 from app.logging import get_logger
 from app.models.brand import BrandKit, ThemeContext
 from app.models.post import PostCopy
+from app.services._gemini_retry import call_with_backoff
 
 logger = get_logger(__name__)
 
@@ -53,7 +54,9 @@ class _GeminiJsonClient:
         )
 
     def generate(self, prompt: str) -> tuple[str, str | None]:
-        response = self._model.generate_content(prompt, generation_config=self._config)
+        response = call_with_backoff(
+            lambda: self._model.generate_content(prompt, generation_config=self._config)
+        )
         text = response.text or ""
         try:
             finish = response.candidates[0].finish_reason.name
