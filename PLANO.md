@@ -4,7 +4,7 @@ Roadmap de execução. Mandatos técnicos em [`CLAUDE.md`](CLAUDE.md). Visão ge
 
 ---
 
-## Status (2026-05-27)
+## Status (2026-05-28)
 
 **Modo:** FREE TIER. Cliente Di Lorenzo pagou Premium mas ainda não confirmou início. Zero gasto com VPS/domínio até confirmação.
 
@@ -14,8 +14,8 @@ Roadmap de execução. Mandatos técnicos em [`CLAUDE.md`](CLAUDE.md). Visão ge
 | 1 | Foundation (FastAPI, Docker, CI, structlog, /health) | ✅ |
 | 2 | Schema SQL + seed calendário BR + tenant Di Lorenzo | ✅ validado em Postgres 16 nativo Win |
 | 3 | Pipeline render IA→JPEG (Gemini + Playwright) | ✅ 5/5 temas, 24 testes, hardening (Pydantic models + repos + Protocol DI) |
-| **4** | **`calendar.py` + `caption.py` + `post_generator.py`** | **⏭ ATIVA** |
-| 5 | Fila RQ + cron diário (GitHub Actions enquanto não tem VPS) | pendente |
+| 4 | `calendar.py` + `caption.py` + `post_generator.py` | ✅ done* (gate 30d migrado pra Fase 5) |
+| **5** | **Retry 429 Gemini + GH Actions cron demo + RQ infra + queue endpoints** | **⏭ ATIVA** |
 | 6 | PWA do dono: aprovação + `/clientes` CRUD + `/settings` (horário, dias, instruções) | pendente |
 | 7 | Landing Astro multi-tenant + galeria preview dos posts | pendente |
 | pré-0b | Kickoff comercial: Onboarding Pack PDF + contrato + LGPD + reunião + assinatura | pendente |
@@ -54,22 +54,35 @@ Objetivo: pipeline diária que pega data → tema → caption + HTML → JPEG �
 
 ---
 
-## Fase 5 — Fila e agendamento
+## Fase 5 — Fila e agendamento (em curso)
 
 Dois modos:
 
 **Dev/demo (GitHub Actions cron, sem VPS):**
-- [ ] Workflow `.github/workflows/daily-post.yml` cron `0 9 * * *` (06h Brasília).
-- [ ] Job sobe Postgres + Python, roda `python -m backend.scripts.generate_demo_post`.
-- [ ] Commita JPEG + metadata.json em `previews/YYYY-MM-DD/`.
-- [ ] GitHub Pages serve `/previews/...`.
+- [x] Workflow `.github/workflows/daily-post.yml` cron `0 9 * * *` (06h Brasília) + `workflow_dispatch` manual.
+- [x] Job sobe Postgres 17 service, aplica migrations 0001-0003, instala Chromium Playwright, roda `python -m scripts.generate_demo_post`.
+- [x] Commita JPEG + metadata.json em `previews/YYYY-MM-DD/` (bot github-actions). `[skip ci]` no commit pra não retrigger.
+- [x] `scripts/build_previews_index.py` regenera `previews/index.html` (galeria estática, dark, cards 1:1, mobile-first). GitHub Pages serve `/previews/index.html`.
+- [ ] Secret `GEMINI_API_KEY` precisa estar em Settings → Secrets → Actions.
 
 **Produção (RQ + Redis no VPS, Fase 8):**
-- [ ] Worker RQ + RQ-scheduler. Job `generate_daily_post(tenant_id, date)` cron 06h. Job `publish_to_instagram(post_id)` cron 12h.
-- [ ] Retry + dead-letter queue. **Tratar `ResourceExhausted 429` Gemini com backoff exponencial** (free tier 20 req/dia, paid sem limite mas latência variável).
-- [ ] Endpoint dev `GET /dev/queue/status`.
+- [x] `app/workers/tasks.py` — job síncrono `generate_daily_post(tenant_slug, target_date_iso)` que faz `asyncio.run(generate_post(...))` e retorna dict serializável.
+- [x] `app/workers/worker.py` — entrypoint `python -m app.workers.worker` rodando `Worker(...).work(with_scheduler=True)`.
+- [x] `app/services/queue.py` — `get_queue`, `enqueue_daily_post` (job_id determinístico `daily-{tenant}-{date}`), `queue_status` snapshot por fila. Retry RQ nativo 3× com 60s + `JOB_TIMEOUT=300s` + `RESULT_TTL=7d`.
+- [x] Endpoints dev `POST /dev/queue/enqueue-daily` + `GET /dev/queue/status` (503 quando Redis down).
+- [x] **Backoff Gemini in-process:** `app/services/_gemini_retry.py` — `ResourceExhausted` (429), `ServiceUnavailable` (503), `DeadlineExceeded` (504), `InternalServerError` (500). Backoff exponencial `1→2→4→8→16s` + jitter 50%, max 5 tentativas. `call_with_backoff(fn, sleep=..., rng=...)` injetável pra teste determinístico. Wired em `caption.py` + `template_generator.py`.
+- [x] Tests fast: `test_gemini_retry` (7), `test_queue` (6 com fakeredis). **62 testes verde** (era 49 antes da Fase 5).
+- [x] Lint/format/typecheck: ruff + ruff format + mypy strict = 0 erro. Limpou 9 falhas legadas (UP017, UP035, F401, RUF002, no-any-return em `logging.py` + `main.py`).
+- [ ] Booting real do worker + dead-letter queue → Fase 8 quando VPS subir Redis.
 
-**Gate herdado da Fase 4:** Validação smoke 30d sem repetir tema, com retry funcional. RQ resolve nativamente o que travou Fase 4 (quota burst).
+**Gate herdado da Fase 4:** Smoke 30d sem repetir tema com retry funcional. **Pendente** — rodar manualmente com `backend/scripts/smoke_fase4.py` agora que `call_with_backoff` está plugado. Free tier 20/dia exige 3 dias OU paid 1-shot.
+
+**Aprendizados:**
+- IDE Pyright apontava todo `requirements.txt` como "not installed" — interpretador errado, ignorado. Pre-existing.
+- RQ 1.16.2 emite `DeprecationWarning` em `datetime.utcnow()` — espalha 42 warnings no pytest. Suprimir só quando migrar pra RQ 2.x (timezone-aware).
+- `redis.from_url` não tem stubs tipados → `cast(redis.Redis, ...)` + `# type: ignore[no-untyped-call]` é o caminho que sobra com `mypy --strict`.
+- Workflow cron commit precisa `permissions: contents: write` + bot identity pra `git push` não 403.
+- Job_id determinístico `daily-{tenant}-{date}` é o único guard contra duplicata: RQ não tem unique constraint nativa.
 
 ---
 
