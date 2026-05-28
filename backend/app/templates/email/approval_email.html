@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Aprove seu post</title>
+</head>
+<body style="margin:0;padding:0;background:#f4f4f5;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#18181b;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f4f4f5;padding:24px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:560px;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #e4e4e7;">
+          <tr>
+            <td style="padding:24px 28px 8px;">
+              <p style="margin:0;font-size:13px;color:#71717a;letter-spacing:0.04em;text-transform:uppercase;">{{ business_name }}</p>
+              <h1 style="margin:8px 0 4px;font-size:22px;line-height:1.25;color:#18181b;">Post de {{ scheduled_date }} pronto pra revisão</h1>
+              <p style="margin:0;font-size:14px;color:#52525b;">Tema: {{ theme }}</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 16px 8px;">
+              <img src="{{ image_url }}" alt="Preview do post" width="528" style="display:block;width:100%;max-width:528px;height:auto;border-radius:10px;border:1px solid #e4e4e7;">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:8px 28px 0;">
+              <p style="margin:8px 0 0;font-size:15px;line-height:1.5;color:#18181b;white-space:pre-wrap;">{{ caption_preview }}</p>
+              <p style="margin:12px 0 0;font-size:14px;color:#a16207;font-weight:600;">→ {{ cta }}</p>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:28px;">
+              <a href="{{ approval_url }}" style="display:inline-block;background:#18181b;color:#ffffff;padding:14px 28px;border-radius:999px;text-decoration:none;font-weight:600;font-size:16px;">Abrir e aprovar no celular</a>
+              <p style="margin:14px 0 0;font-size:12px;color:#71717a;">Link expira em 24 horas.</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 28px 24px;border-top:1px solid #e4e4e7;">
+              <p style="margin:18px 0 0;font-size:12px;color:#71717a;line-height:1.5;">
+                Se o botão não funcionar, copie este endereço no navegador do celular:<br>
+                <span style="color:#3f3f46;word-break:break-all;">{{ approval_url }}</span>
+              </p>
+            </td>
+          </tr>
+        </table>
+        <p style="margin:18px 0 0;font-size:11px;color:#a1a1aa;">VisaoPost · automação de Instagram pra óticas</p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

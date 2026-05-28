@@ -3,7 +3,10 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
 
+from app.api.clients import router as clients_router
 from app.api.dev import router as dev_router
+from app.api.posts import router as posts_router
+from app.api.settings import router as settings_router
 from app.config import get_settings
 from app.db.pool import acquire, close_pool, init_pool
 from app.logging import configure_logging, get_logger
@@ -30,6 +33,10 @@ app = FastAPI(
     version="0.1.0",
     lifespan=lifespan,
 )
+
+app.include_router(posts_router)
+app.include_router(clients_router)
+app.include_router(settings_router)
 
 if get_settings().app_env == "dev":
     app.include_router(dev_router)
