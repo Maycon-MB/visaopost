@@ -2,6 +2,7 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.clients import router as clients_router
 from app.api.dev import router as dev_router
@@ -34,11 +35,21 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+_settings = get_settings()
+_origins = [o.strip() for o in _settings.cors_origins.split(",") if o.strip()]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_origins,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+)
+
 app.include_router(posts_router)
 app.include_router(clients_router)
 app.include_router(settings_router)
 
-if get_settings().app_env == "dev":
+if _settings.app_env == "dev":
     app.include_router(dev_router)
 
 

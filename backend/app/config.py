@@ -10,6 +10,15 @@ class Settings(BaseSettings):
     app_env: str = Field(default="dev")
     log_level: str = Field(default="INFO")
 
+    frontend_url: str = Field(
+        default="http://localhost:5173",
+        description="URL pública do PWA — usada pra montar `approval_url` no email.",
+    )
+    cors_origins: str = Field(
+        default="http://localhost:5173,http://127.0.0.1:5173",
+        description="Lista CSV de origens liberadas pelo CORSMiddleware.",
+    )
+
     jwt_secret: str = Field(default="change-me")
     jwt_algorithm: str = Field(default="HS256")
     jwt_expires_hours: int = Field(default=24)

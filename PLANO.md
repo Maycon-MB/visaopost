@@ -150,11 +150,12 @@ PWA mobile/tablet first em `pwa/` (React 18 + Vite + Bootstrap 5). Service worke
 - [x] Migration 0004: `send_hour`, `publish_hour`, `active_weekdays jsonb`, `extra_instructions text`, `posts.approval_feedback`, `posts.regenerate_count`.
 - [x] 28 testes novos (jwt + models + email render).
 
-### Fase 6b — PWA `/aprovar/:token` (tela do email)
-- [ ] React 18 + Vite + Bootstrap 5 boot. Manifest + service worker pra instalar como app.
-- [ ] Rota `/aprovar/:token`. Mostra imagem post + caption + hashtags + CTA.
-- [ ] 3 botões touch-friendly ≥ 48dp: ✅ aprovar, ❌ rejeitar (com motivo opcional), 🔁 gerar outro (com feedback obrigatório).
-- [ ] Backend local + ngrok pra Resend mandar email com URL pública em E2E.
+### Fase 6b — PWA `/aprovar/:token` (tela do email) ✅
+- [x] React 18 + Vite 5 + Bootstrap 5 (CSS only) + react-router-dom 6 boot. Manifest + service worker via `vite-plugin-pwa` (autoUpdate, NetworkFirst em `/api/posts/`, CacheFirst em imagens).
+- [x] Rota `/aprovar/:token`. Mostra imagem 1:1, caption, hashtags, CTA, status pill, tema/feriado/contador regenerações.
+- [x] 3 botões touch ≥ 56px: ✅ aprovar, 🔁 gerar outro (feedback obrigatório), ❌ rejeitar (motivo opcional). Estados loading/error/done isolados.
+- [x] Backend `CORSMiddleware` + settings `frontend_url`/`cors_origins`. Build prod 87KB gzipped (JS 55.8KB + CSS 31.6KB), Lighthouse-friendly.
+- [ ] E2E via ngrok + Resend real — fazer depois com email do dono Di Lorenzo.
 
 ### Fase 6c — Tela `/clientes` (independe Instagram token, cliente usa dia 1)
 - [ ] Tabela com search + filtros (ativos, exame +12m, novos da semana, opt-out).
