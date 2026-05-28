@@ -6,7 +6,7 @@ Valida:
 - JPEG persistido em backend/tmp/posts/.
 - metadata.json com sumário (data, theme, mood, holiday_name, caption_preview).
 
-Consome cota Gemini (60 chamadas: 30 caption + 30 HTML) + sobe Chromium 30×.
+Consome cota Gemini (60 chamadas: 30 caption + 30 HTML) + sobe Chromium 30x.
 """
 
 from __future__ import annotations

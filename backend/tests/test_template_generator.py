@@ -34,15 +34,12 @@ class FakeClient:
 
 
 FULL_HTML = (
-    "<!DOCTYPE html><html><head><style>body{}</style></head>"
-    "<body><h1>Hi</h1></body></html>"
+    "<!DOCTYPE html><html><head><style>body{}</style></head>" "<body><h1>Hi</h1></body></html>"
 )
 TRUNCATED_HTML = "<!DOCTYPE html><html><head><style>body{color:re"
 
 
-def test_build_prompt_inclui_brand_e_tema(
-    brand_kit: BrandKit, theme_natal: ThemeContext
-) -> None:
+def test_build_prompt_inclui_brand_e_tema(brand_kit: BrandKit, theme_natal: ThemeContext) -> None:
     prompt = build_prompt(brand_kit, theme_natal)
     assert brand_kit.business_name in prompt
     assert brand_kit.colors.primary in prompt
@@ -85,9 +82,7 @@ def test_generate_html_success_primeira_tentativa(
     assert client.calls == 1
 
 
-def test_generate_html_retry_se_truncado(
-    brand_kit: BrandKit, theme_natal: ThemeContext
-) -> None:
+def test_generate_html_retry_se_truncado(brand_kit: BrandKit, theme_natal: ThemeContext) -> None:
     client = FakeClient([(TRUNCATED_HTML, "MAX_TOKENS"), (FULL_HTML, "STOP")])
     html, meta = generate_post_html(brand=brand_kit, theme=theme_natal, client=client)
     assert html == FULL_HTML

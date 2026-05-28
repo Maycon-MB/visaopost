@@ -1,3 +1,4 @@
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
@@ -9,7 +10,7 @@ from app.logging import configure_logging, get_logger
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     configure_logging()
     logger = get_logger(__name__)
     settings = get_settings()

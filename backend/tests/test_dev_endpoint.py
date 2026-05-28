@@ -5,7 +5,6 @@ Não toca DB real nem rede. Substitui repositories e services via monkeypatch.
 
 from __future__ import annotations
 
-from collections.abc import AsyncIterator
 from typing import Any
 
 import pytest
@@ -13,9 +12,7 @@ from fastapi.testclient import TestClient
 
 from app.models.brand import BrandColors, BrandKit, Holiday
 
-FAKE_HTML = (
-    "<!DOCTYPE html><html><head></head><body>Fake post</body></html>"
-)
+FAKE_HTML = "<!DOCTYPE html><html><head></head><body>Fake post</body></html>"
 FAKE_JPEG = b"\xff\xd8\xff\xe0fake-jpeg-payload-for-test"
 
 

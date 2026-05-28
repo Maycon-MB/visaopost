@@ -13,7 +13,7 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 _HASHTAG_RE = re.compile(r"^[a-z0-9_]{2,30}$")
-_MAX_CAPTION = 2200       # limite hard Instagram
+_MAX_CAPTION = 2200  # limite hard Instagram
 _MAX_CTA = 80
 _MIN_HASHTAGS = 5
 _MAX_HASHTAGS = 15
@@ -36,9 +36,7 @@ class PostCopy(BaseModel):
         for raw in tags:
             v = raw.strip().lstrip("#").lower()
             if not _HASHTAG_RE.match(v):
-                raise ValueError(
-                    f"hashtag inválida: {raw!r} (esperado [a-z0-9_]{{2,30}})"
-                )
+                raise ValueError(f"hashtag inválida: {raw!r} (esperado [a-z0-9_]{{2,30}})")
             if v in seen:
                 raise ValueError(f"hashtag duplicada: {v!r}")
             seen.add(v)

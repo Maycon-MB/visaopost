@@ -6,7 +6,7 @@ Requer seed 0003 aplicado (tenant dilorenzo). Cleanup deleta posts criados.
 from __future__ import annotations
 
 from collections.abc import AsyncIterator
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import asyncpg
 import pytest
@@ -54,7 +54,7 @@ async def test_create_post_persiste_e_retorna_pydantic(db: None) -> None:
     tenant_id = await get_tenant_id_by_slug("dilorenzo")
     assert tenant_id is not None
 
-    scheduled = datetime(2026, 6, 1, 12, 0, tzinfo=timezone.utc)
+    scheduled = datetime(2026, 6, 1, 12, 0, tzinfo=UTC)
     post = await create_post(
         tenant_id=tenant_id,
         scheduled_at=scheduled,
@@ -84,7 +84,7 @@ async def test_create_post_persiste_cta_em_metadata_jsonb(db: None) -> None:
 
     post = await create_post(
         tenant_id=tenant_id,
-        scheduled_at=datetime(2026, 6, 2, 12, 0, tzinfo=timezone.utc),
+        scheduled_at=datetime(2026, 6, 2, 12, 0, tzinfo=UTC),
         theme="__test_theme_fase4__",
         caption="Outra caption longa o bastante para passar no validador.",
         hashtags=["teste", "fase_4", "meta_cta"],
@@ -101,6 +101,7 @@ async def test_create_post_persiste_cta_em_metadata_jsonb(db: None) -> None:
     metadata = row["metadata"]
     if isinstance(metadata, str):
         import json
+
         metadata = json.loads(metadata)
     assert metadata["cta"] == "Conheça a coleção"
     assert metadata["holiday_name"] == "Carnaval"
@@ -113,7 +114,7 @@ async def test_create_post_rejeita_status_invalido(db: None) -> None:
     with pytest.raises(ValueError, match="status inválido"):
         await create_post(
             tenant_id=tenant_id,
-            scheduled_at=datetime(2026, 6, 3, 12, 0, tzinfo=timezone.utc),
+            scheduled_at=datetime(2026, 6, 3, 12, 0, tzinfo=UTC),
             theme="__test_theme_fase4__",
             caption="Caption longa pra passar no validador Pydantic.",
             hashtags=["a1", "b2", "c3"],

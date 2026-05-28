@@ -37,7 +37,9 @@ def patched_pipeline(
         captured["resolved_date"] = target
         return ThemeContext(theme="estilo_aviador", mood="aspiracional")
 
-    def fake_generate_copy(*, brand: BrandKit, theme: ThemeContext) -> tuple[PostCopy, dict[str, Any]]:
+    def fake_generate_copy(
+        *, brand: BrandKit, theme: ThemeContext
+    ) -> tuple[PostCopy, dict[str, Any]]:
         captured["copy_theme"] = theme.theme
         copy = PostCopy(
             caption="Caption suficientemente longa para passar no validador Pydantic v2.",

@@ -14,7 +14,9 @@ class Settings(BaseSettings):
     jwt_algorithm: str = Field(default="HS256")
     jwt_expires_hours: int = Field(default=24)
 
-    database_url: str = Field(default="postgresql://visaopost:visaopost_dev@postgres:5432/visaopost")
+    database_url: str = Field(
+        default="postgresql://visaopost:visaopost_dev@postgres:5432/visaopost"
+    )
     redis_url: str = Field(default="redis://redis:6379/0")
 
     gemini_api_key: str = Field(default="")
