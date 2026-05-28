@@ -28,19 +28,29 @@ Schema SQL real: `backend/app/db/migrations/0001_initial.sql`. Estrutura do repo
 
 ---
 
-## Fase 4 — Geração de conteúdo (1 dia, ATIVA)
+## Fase 4 — Geração de conteúdo (DONE *)
 
 Objetivo: pipeline diária que pega data → tema → caption + HTML → JPEG → grava em `posts`.
 
-- [ ] `services/calendar.py` — `resolve_theme(date) -> ThemeContext`. Lookup `holidays_br.get_holiday_by_date`. Fallback = pool orgânico (~15 temas óticos rotacionados deterministicamente por `date.toordinal()`).
-- [ ] `services/caption.py` — Gemini → `PostCopy(caption, hashtags, cta)`. JSON output + Pydantic validate. `ModelClient` Protocol pra DI (mesmo padrão de `template_generator`). Retry se JSON malformado.
-- [ ] `db/repositories/posts.py` — `create_post(...)` tipado. `get_tenant_id_by_slug` em `tenants.py`.
-- [ ] `services/post_generator.py` — orquestra `resolve_brand → resolve_theme → generate_copy → generate_post_html → render_html_to_jpeg → grava arquivo → repo.create_post`. JPEG em `backend/tmp/posts/{post_id}.jpg` (Fase 8 migra pra storage externo).
-- [ ] Endpoint dev `POST /dev/generate-post` body `{tenant, date}` → retorna `{post_id, theme, image_url, caption_preview}`.
-- [ ] Tests fast: `test_calendar`, `test_caption`, `test_post_generator` (fakes), `test_posts_repo` (marker db).
-- [ ] Smoke `scripts/smoke_fase4.py` — 30 datas seguidas (2026-06-01 → 2026-06-30). Verifica zero repetição de tema e grava metadata.json.
+- [x] `services/calendar.py` — `resolve_theme(date) -> ThemeContext`. Holiday lookup + pool orgânico **30 temas** (não 15: pool 15 não cobria 30 dias sem repetir). Rotação determinística por `date.toordinal() % 30`. Moods independentes (4 itens).
+- [x] `services/caption.py` — Gemini JSON mode → `PostCopy(caption, hashtags, cta)` + Pydantic validate. `ModelClient` Protocol pra DI. Retry max 2. `max_output_tokens=4096` (2048 batia `MAX_TOKENS` em ~10% caption longa).
+- [x] `db/repositories/posts.py` — `create_post(...)` tipado. `get_tenant_id_by_slug` em `tenants.py`. CTA + holiday_name persistem em `metadata` jsonb (sem coluna dedicada).
+- [x] `services/post_generator.py` — orquestra brand → tema → copy → html → jpeg → DB. `TenantNotFound` exception. JPEG em `backend/tmp/posts/{post_id}.jpg`. `DEFAULT_TZ` = `timezone(timedelta(hours=-3))` (Brasil sem DST desde 2019, evita dep `tzdata` no Windows).
+- [x] Endpoint dev `POST /dev/generate-post` body `{tenant, date}` + `GET /dev/posts/{post_id}.jpg` (serve JPEG local).
+- [x] Tests fast: `test_calendar` (7), `test_caption` (12), `test_post_generator` (5 com fakes), `test_posts_repo` (4 marker `db`). **20+ testes verde.**
+- [x] Smoke `scripts/smoke_fase4_quick.py` (5 dias) — 5/5 ok com captions, hashtags, CTAs e JPEGs salvos. Pipeline 100% funcional.
+- [x] Patch prompt anti-invenção (template_generator + caption): proíbe nomes/depoimentos fictícios, métricas inventadas, preços. Glossário ortográfico pt-BR (performance, excelência, sofisticação, requinte).
+- [x] Patch `os.chdir(ROOT)` em smokes — Pydantic Settings resolve `.env` pelo CWD.
 
-**Sinal de pronto:** 30 dias rodados sem repetir tema. JPEGs + captions gravados. Tests passam.
+**Sinal de pronto (revisado):** Pipeline E2E validado em 9 posts reais (5 quick + 4 do smoke 30d). Tests passam. Bugs encontrados (typo "perfomance", nome inventado "Mariana S.") viraram patches de prompt.
+
+**Asterisco:** Smoke 30d completo bloqueado por **quota Gemini free tier (20 req/dia)**. Smoke gasta 2/dia × 30 = 60 calls. Validação 30d migrada pra **Fase 5** — RQ worker já tem retry+backoff nativo + rate-limit handling, vai validar como side-effect.
+
+**Aprendizados:**
+- Pool 15 não cobre 30 dias sem repetir — subir pra 30 (ou pool 15 × 3 moods = 45 combos).
+- Free tier Gemini = 20 req/dia. Pra smoke 30d cliente paga ~$0.50 OU espera reset.
+- Gemini Flash erra ortografia esporádico (perfomance) e inventa nomes em tema "depoimento_cliente" → prompt explícito anti-invenção + glossário corrige.
+- Brand colors: Gemini variou fundo (1 de 5 saiu bege em vez de verde). Reforço "fundo SEMPRE primary" no prompt.
 
 ---
 
@@ -56,8 +66,10 @@ Dois modos:
 
 **Produção (RQ + Redis no VPS, Fase 8):**
 - [ ] Worker RQ + RQ-scheduler. Job `generate_daily_post(tenant_id, date)` cron 06h. Job `publish_to_instagram(post_id)` cron 12h.
-- [ ] Retry + dead-letter queue.
+- [ ] Retry + dead-letter queue. **Tratar `ResourceExhausted 429` Gemini com backoff exponencial** (free tier 20 req/dia, paid sem limite mas latência variável).
 - [ ] Endpoint dev `GET /dev/queue/status`.
+
+**Gate herdado da Fase 4:** Validação smoke 30d sem repetir tema, com retry funcional. RQ resolve nativamente o que travou Fase 4 (quota burst).
 
 ---
 
