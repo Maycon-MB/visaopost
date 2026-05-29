@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth-context.jsx';
 
 const NAV = [
   { to: '/admin', label: 'Visão Geral', icon: '◐' },
@@ -9,8 +10,7 @@ const NAV = [
   { to: '/admin/settings', label: 'Configurações', icon: '⚙' },
 ];
 
-// Placeholder até o AuthContext (onda auth). Hoje: dono fixo.
-const OWNER = { name: 'Marcelo', business: 'Ótica Di Lorenzo', role: 'Proprietário' };
+const ROLE_LABEL = { owner: 'Proprietário', staff: 'Equipe' };
 
 function Chevron() {
   return (
@@ -39,8 +39,8 @@ export function BrandLogo({ onDark = false }) {
   );
 }
 
-function Sidebar({ open, collapsed, onClose, onLogout, onToggleCollapse }) {
-  const initial = OWNER.name.trim().charAt(0).toUpperCase();
+function Sidebar({ open, collapsed, onClose, onLogout, onToggleCollapse, owner }) {
+  const initial = (owner.name || '?').trim().charAt(0).toUpperCase();
   return (
     <aside className={`sidebar-v2 ${open ? 'open' : ''}`}>
       <div className="sidebar-head">
@@ -71,8 +71,8 @@ function Sidebar({ open, collapsed, onClose, onLogout, onToggleCollapse }) {
         <div className="user-card">
           <span className="user-avatar">{initial}</span>
           <span className="user-meta">
-            <div className="u-name">{OWNER.name}</div>
-            <div className="u-role">{OWNER.role} · {OWNER.business}</div>
+            <div className="u-name">{owner.name}</div>
+            <div className="u-role">{owner.role} · {owner.business}</div>
           </span>
         </div>
         <button className="sidebar-logout" onClick={onLogout} title="Sair">
@@ -86,8 +86,15 @@ function Sidebar({ open, collapsed, onClose, onLogout, onToggleCollapse }) {
 export default function AppShell() {
   const loc = useLocation();
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
   const [drawer, setDrawer] = useState(false);
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem('dl_sidebar_collapsed') === '1');
+
+  const owner = {
+    name: user?.name || 'Conta',
+    role: ROLE_LABEL[user?.role] || 'Acesso',
+    business: 'Ótica Di Lorenzo',
+  };
 
   // Fecha o drawer ao trocar de rota.
   useEffect(() => { setDrawer(false); }, [loc.pathname]);
@@ -105,7 +112,7 @@ export default function AppShell() {
     });
   };
 
-  const onLogout = () => navigate('/'); // rewire pro AuthContext na onda auth
+  const onLogout = () => { signOut(); navigate('/login', { replace: true }); };
 
   return (
     <div className={`app-frame ${collapsed ? 'collapsed' : ''}`}>
@@ -123,6 +130,7 @@ export default function AppShell() {
         onClose={() => setDrawer(false)}
         onLogout={onLogout}
         onToggleCollapse={toggleCollapse}
+        owner={owner}
       />
 
       <main className="app-main enter" key={loc.pathname}>

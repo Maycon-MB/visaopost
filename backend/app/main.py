@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.auth import router as auth_router
 from app.api.clients import router as clients_router
 from app.api.dev import router as dev_router
 from app.api.posts import router as posts_router
@@ -45,6 +46,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth_router)
 app.include_router(posts_router)
 app.include_router(clients_router)
 app.include_router(settings_router)

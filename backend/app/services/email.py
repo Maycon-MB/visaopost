@@ -104,3 +104,40 @@ def send_approval_email(
     )
     subject = f"[{business_name}] Post de {scheduled_date} aguarda sua aprovação"
     return actual_client.send(to=to, subject=subject, html=html)
+
+
+def send_password_reset_email(
+    *,
+    to: str,
+    reset_url: str,
+    name: str,
+    business_name: str,
+    expires_minutes: int,
+    client: EmailClient | None = None,
+) -> str:
+    """Manda o link de redefinição de senha do painel."""
+    settings = get_settings()
+    actual_client = client or _ResendClient(settings.resend_api_key, settings.resend_from_email)
+    html = f"""\
+<!doctype html><html><body style="margin:0;background:#f6f7f3;font-family:Arial,Helvetica,sans-serif;color:#16201a">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#fff;border:1px solid #e3e8df;border-radius:14px;overflow:hidden">
+        <tr><td style="background:#0d3322;padding:22px 28px;color:#fff;font-size:18px;font-weight:bold">{business_name}</td></tr>
+        <tr><td style="padding:28px">
+          <p style="margin:0 0 14px;font-size:16px">Olá, {name}.</p>
+          <p style="margin:0 0 22px;font-size:14px;line-height:1.6;color:#4d564e">
+            Recebemos um pedido pra redefinir a senha do seu painel. Clique no botão abaixo.
+            O link vale por {expires_minutes} minutos.
+          </p>
+          <p style="margin:0 0 24px"><a href="{reset_url}" style="background:#1a5c3d;color:#fff;text-decoration:none;padding:14px 26px;border-radius:999px;font-size:15px;font-weight:bold;display:inline-block">Criar nova senha</a></p>
+          <p style="margin:0;font-size:12.5px;color:#818a80;line-height:1.6">
+            Se não foi você, pode ignorar este email — sua senha continua a mesma.
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>"""
+    subject = f"[{business_name}] Redefinir sua senha"
+    return actual_client.send(to=to, subject=subject, html=html)

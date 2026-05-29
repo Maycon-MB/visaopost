@@ -60,6 +60,22 @@ async def get_tenant_id_by_slug(slug: str) -> UUID | None:
     return row["id"] if row else None
 
 
+async def get_tenant_access(tenant_id: UUID) -> tuple[bool, str, str] | None:
+    """(is_active, subscription_status, business_name) pra checar acesso no login.
+
+    None se o tenant não existe. Login bloqueia se inativo ou assinatura
+    suspensa/cancelada (inadimplência/cancelamento de contrato).
+    """
+    async with acquire() as conn:
+        row = await conn.fetchrow(
+            "SELECT is_active, subscription_status, business_name FROM tenants WHERE id = $1",
+            tenant_id,
+        )
+    if row is None:
+        return None
+    return row["is_active"], row["subscription_status"], row["business_name"]
+
+
 def _coerce_weekdays(raw: object) -> list[int]:
     """jsonb pode vir como list[int] ou string JSON. Normaliza pra list[int]."""
     if isinstance(raw, str):

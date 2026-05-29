@@ -6,7 +6,7 @@ import {
   deleteClient,
   markContacted,
   importClientsCsv,
-  clientsExportUrl,
+  downloadClientsCsv,
 } from '../api.js';
 
 const STATUS_LABEL = { active: 'ativo', opted_out: 'fora do recall', converted: 'cliente fiel' };
@@ -170,9 +170,9 @@ export default function Clientes() {
           <p className="dash-sub">Quem entra no recall, quem volta sempre, quem precisa de um chamado.</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <a href={clientsExportUrl()} className="btn-touch btn-ghost-atelier" style={{ minHeight: 44, padding: '0 14px', fontSize: 13 }}>
-            ⤒ Exportar
-          </a>
+          <button className="btn-touch btn-ghost-atelier" style={{ minHeight: 44, padding: '0 14px', fontSize: 13 }} onClick={() => downloadClientsCsv().catch(() => toast('Erro ao exportar', 'error'))}>
+            Exportar
+          </button>
           <button className="btn-touch btn-ghost-atelier" style={{ minHeight: 44, padding: '0 14px', fontSize: 13 }} onClick={() => fileRef.current?.click()}>
             ⤓ Importar CSV
           </button>

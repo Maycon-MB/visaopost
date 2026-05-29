@@ -22,6 +22,8 @@ class Settings(BaseSettings):
     jwt_secret: str = Field(default="change-me")
     jwt_algorithm: str = Field(default="HS256")
     jwt_expires_hours: int = Field(default=24)
+    session_expires_hours: int = Field(default=168, description="TTL do token de sessão do painel (7 dias).")
+    reset_expires_minutes: int = Field(default=60, description="TTL do link de redefinição de senha.")
 
     database_url: str = Field(
         default="postgresql://visaopost:visaopost_dev@postgres:5432/visaopost"

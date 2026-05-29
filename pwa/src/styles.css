@@ -1168,6 +1168,38 @@ h1, h2, h3, h4 {
 .lp-feat .d { font-size: 12.5px; color: var(--ink-mute); line-height: 1.45; }
 .lp-foot { padding: 20px 22px; border-top: 1px solid var(--hairline); text-align: center; color: var(--ink-mute); font-size: 12.5px; }
 
+/* ───────────────────────── Telas de login ───────────────────────── */
+.auth-wrap {
+  min-height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(120% 80% at 85% -10%, rgba(196,136,26,0.10), transparent 55%),
+    radial-gradient(90% 70% at -10% 110%, rgba(26,92,61,0.10), transparent 55%),
+    var(--ivory);
+}
+.auth-card {
+  width: 100%; max-width: 400px;
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: 18px; padding: 32px 30px;
+  box-shadow: 0 30px 60px -34px rgba(13,51,34,0.45);
+}
+.auth-brand { display: flex; justify-content: center; margin-bottom: 24px; }
+.auth-title {
+  font-family: var(--font-display); font-weight: 400; font-variation-settings: 'opsz' 40;
+  font-size: 26px; letter-spacing: -0.02em; color: var(--ink); text-align: center; margin-bottom: 4px;
+}
+.auth-sub { text-align: center; color: var(--ink-mute); font-size: 14px; margin-bottom: 26px; }
+.auth-field { margin-bottom: 16px; }
+.auth-card .btn-touch { width: 100%; }
+.auth-links { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; font-size: 13px; }
+.auth-links a { color: var(--ink-soft); font-weight: 500; }
+.auth-links a:hover { color: var(--primary); }
+.auth-ok {
+  background: rgba(26,92,61,0.08); border: 1px solid rgba(26,92,61,0.2);
+  border-radius: 12px; padding: 16px 18px; font-size: 14px; color: var(--primary-deep); line-height: 1.5;
+}
+
 /* ───────────────────────── Dashboard pro ───────────────────────── */
 .dash-head {
   display: flex; align-items: flex-end; justify-content: space-between;

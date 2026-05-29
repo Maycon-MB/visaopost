@@ -1,7 +1,10 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route, Link, Navigate } from 'react-router-dom';
+import { Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
 import Approve from './pages/Approve.jsx';
+import Login from './pages/Login.jsx';
 import { BrandLogo } from './components/AppShell.jsx';
+import { useAuth } from './auth-context.jsx';
+import { DEMO } from './config.js';
 
 const AppShell = lazy(() => import('./components/AppShell.jsx'));
 const Dashboard = lazy(() => import('./pages/Dashboard.jsx'));
@@ -9,6 +12,16 @@ const Clientes = lazy(() => import('./pages/Clientes.jsx'));
 const Produtos = lazy(() => import('./pages/Produtos.jsx'));
 const Settings = lazy(() => import('./pages/Settings.jsx'));
 const Aprovacoes = lazy(() => import('./pages/Aprovacoes.jsx'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword.jsx'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword.jsx'));
+
+function ProtectedRoute({ children }) {
+  const { user, loading } = useAuth();
+  const loc = useLocation();
+  if (loading) return <Loading />;
+  if (!user) return <Navigate to="/login" replace state={{ from: loc.pathname }} />;
+  return children;
+}
 
 function Loading() {
   return (
@@ -81,9 +94,12 @@ export default function App() {
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={DEMO ? <Navigate to="/admin" replace /> : <Landing />} />
+        <Route path="/login" element={DEMO ? <Navigate to="/admin" replace /> : <Login />} />
+        <Route path="/esqueci-senha" element={<ForgotPassword />} />
+        <Route path="/redefinir-senha" element={<ResetPassword />} />
         <Route path="/aprovar/:token" element={<Approve />} />
-        <Route path="/admin" element={<AppShell />}>
+        <Route path="/admin" element={<ProtectedRoute><AppShell /></ProtectedRoute>}>
           <Route index element={<Dashboard />} />
           <Route path="aprovacoes" element={<Aprovacoes />} />
           <Route path="clientes" element={<Clientes />} />
