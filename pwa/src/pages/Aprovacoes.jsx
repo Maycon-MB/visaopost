@@ -20,9 +20,8 @@ export default function Aprovacoes() {
     <>
       <div className="page-header">
         <div>
-          <div className="eyebrow"><span className="eyebrow-num">02</span> Aprovações</div>
-          <h1 className="page-title">Posts <em className="text-italic-serif" style={{ color: 'var(--champagne)' }}>recentes</em></h1>
-          <p className="page-sub">Aprove pelo email ou direto aqui. Histórico dos últimos 30 dias.</p>
+          <h1 className="dash-hello">Aprovações</h1>
+          <p className="dash-sub">Aprove pelo email ou aqui mesmo. Histórico dos últimos 30 dias.</p>
         </div>
       </div>
 
@@ -58,8 +57,8 @@ export default function Aprovacoes() {
         </table>
       </div>
 
-      <p className="muted" style={{ marginTop: 24, fontSize: 13, textAlign: 'center' }}>
-        <span className="ornament">✻</span> Tokens reais da Fase 6a já no backend. Lista virá do banco quando ligarmos.
+      <p className="muted" style={{ marginTop: 20, fontSize: 12.5 }}>
+        Lista de exemplo. Vira a fila real do banco quando ligarmos a publicação.
       </p>
     </>
   );

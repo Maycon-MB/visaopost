@@ -8,7 +8,7 @@ export default defineConfig({
   base: '/visaopost/',
   build: {
     outDir: '../docs',
-    emptyOutDir: true,
+    emptyOutDir: false,
   },
   server: {
     port: 5175,

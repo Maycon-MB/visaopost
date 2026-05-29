@@ -118,8 +118,8 @@ export default function Approve() {
       <div className="shell">
         <header className="brand-bar">
           <div className="brand-mark">
-            <span className="brand-mark-name">VisãoPost</span>
-            <span className="brand-mark-tag">— atelier digital</span>
+            <span className="brand-mark-name">Di Lorenzo</span>
+            <span className="brand-mark-tag">— Ótica</span>
           </div>
         </header>
         <main className="main"><Spinner label="abrindo o post" /></main>
@@ -148,8 +148,8 @@ export default function Approve() {
       <div className="shell">
         <header className="brand-bar">
           <div className="brand-mark">
-            <span className="brand-mark-name">VisãoPost</span>
-            <span className="brand-mark-tag">— atelier digital</span>
+            <span className="brand-mark-name">Di Lorenzo</span>
+            <span className="brand-mark-tag">— Ótica</span>
           </div>
         </header>
         <main className="main">

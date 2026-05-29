@@ -1,80 +1,133 @@
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 const NAV = [
-  { to: '/admin', label: 'Visão Geral', num: '01', icon: '◐', mobileLabel: 'Visão' },
-  { to: '/admin/aprovacoes', label: 'Aprovações', num: '02', icon: '✓', mobileLabel: 'Aprovar' },
-  { to: '/admin/clientes', label: 'Clientes', num: '03', icon: '◇', mobileLabel: 'Clientes' },
-  { to: '/admin/produtos', label: 'Catálogo', num: '04', icon: '◫', mobileLabel: 'Catálogo' },
-  { to: '/admin/settings', label: 'Configurações', num: '05', icon: '⚙', mobileLabel: 'Ajustes' },
+  { to: '/admin', label: 'Visão Geral', icon: '◐' },
+  { to: '/admin/aprovacoes', label: 'Aprovações', icon: '✓' },
+  { to: '/admin/clientes', label: 'Clientes', icon: '◇' },
+  { to: '/admin/produtos', label: 'Catálogo', icon: '◫' },
+  { to: '/admin/settings', label: 'Configurações', icon: '⚙' },
 ];
 
-function BrandBar() {
+// Placeholder até o AuthContext (onda auth). Hoje: dono fixo.
+const OWNER = { name: 'Marcelo', business: 'Ótica Di Lorenzo', role: 'Proprietário' };
+
+function Chevron() {
   return (
-    <header className="brand-bar">
-      <div className="brand-mark">
-        <span className="brand-mark-name">VisãoPost</span>
-        <span className="brand-mark-tag">— atelier digital</span>
-      </div>
-      <span className="eyebrow muted">Ótica Di Lorenzo</span>
-    </header>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M15 6l-6 6 6 6" />
+    </svg>
+  );
+}
+function LogoutIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden style={{ width: 16, height: 16 }}>
+      <path d="M15 17l5-5-5-5" /><path d="M20 12H9" /><path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3" />
+    </svg>
   );
 }
 
-function Sidebar() {
+export function BrandLogo({ onDark = false }) {
   return (
-    <aside className="sidebar">
-      <div className="eyebrow" style={{ marginBottom: 14 }}>Painel</div>
-      <nav className="sidebar-nav">
+    <span className={`brand-logo ${onDark ? 'on-dark' : ''}`}>
+      <span className={`brand-seal ${onDark ? 'on-dark' : ''}`}>DL</span>
+      <span className="brand-words">
+        <span className="name">Di <em>Lorenzo</em></span>
+        <span className="kicker">@oticadilorenzo</span>
+      </span>
+    </span>
+  );
+}
+
+function Sidebar({ open, collapsed, onClose, onLogout, onToggleCollapse }) {
+  const initial = OWNER.name.trim().charAt(0).toUpperCase();
+  return (
+    <aside className={`sidebar-v2 ${open ? 'open' : ''}`}>
+      <div className="sidebar-head">
+        <BrandLogo onDark />
+        <button className="sidebar-collapse" onClick={onToggleCollapse} aria-label={collapsed ? 'Expandir menu' : 'Retrair menu'} title={collapsed ? 'Expandir menu' : 'Retrair menu'}>
+          <Chevron />
+        </button>
+      </div>
+
+      <div className="sidebar-eyebrow">Menu</div>
+      <nav className="sidebar-nav-v2">
         {NAV.map((n) => (
           <NavLink
             key={n.to}
             to={n.to}
             end={n.to === '/admin'}
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+            onClick={onClose}
+            title={n.label}
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
           >
-            <span className="nav-num">{n.num}</span>
+            <span className="nav-ic" aria-hidden>{n.icon}</span>
             <span>{n.label}</span>
           </NavLink>
         ))}
       </nav>
-      <hr className="hairline" style={{ margin: '28px 0 18px' }} />
-      <div className="eyebrow" style={{ marginBottom: 8 }}>Plano</div>
-      <div className="text-italic-serif" style={{ color: 'var(--ink-soft)', fontSize: 14 }}>
-        Piloto Automático <span className="ornament">·</span> Premium
-      </div>
-      <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>R$ 297 / mês</div>
-    </aside>
-  );
-}
 
-function BottomNav() {
-  return (
-    <nav className="bottom-nav shell-nav-mobile" aria-label="Navegação">
-      {NAV.map((n) => (
-        <NavLink
-          key={n.to}
-          to={n.to}
-          end={n.to === '/admin'}
-          className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}
-        >
-          <span className="bottom-nav-icon" aria-hidden>{n.icon}</span>
-          <span>{n.mobileLabel}</span>
-        </NavLink>
-      ))}
-    </nav>
+      <div className="sidebar-foot">
+        <div className="user-card">
+          <span className="user-avatar">{initial}</span>
+          <span className="user-meta">
+            <div className="u-name">{OWNER.name}</div>
+            <div className="u-role">{OWNER.role} · {OWNER.business}</div>
+          </span>
+        </div>
+        <button className="sidebar-logout" onClick={onLogout} title="Sair">
+          <LogoutIcon /> <span className="logout-text">Sair com segurança</span>
+        </button>
+      </div>
+    </aside>
   );
 }
 
 export default function AppShell() {
   const loc = useLocation();
+  const navigate = useNavigate();
+  const [drawer, setDrawer] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => localStorage.getItem('dl_sidebar_collapsed') === '1');
+
+  // Fecha o drawer ao trocar de rota.
+  useEffect(() => { setDrawer(false); }, [loc.pathname]);
+
+  // Trava scroll do body com drawer aberto (mobile).
+  useEffect(() => {
+    document.body.style.overflow = drawer ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [drawer]);
+
+  const toggleCollapse = () => {
+    setCollapsed((c) => {
+      localStorage.setItem('dl_sidebar_collapsed', c ? '0' : '1');
+      return !c;
+    });
+  };
+
+  const onLogout = () => navigate('/'); // rewire pro AuthContext na onda auth
+
   return (
-    <div className="shell" key={loc.pathname}>
-      <BrandBar />
-      <Sidebar />
-      <main className="main enter">
+    <div className={`app-frame ${collapsed ? 'collapsed' : ''}`}>
+      <header className="topbar">
+        <button className="hamburger" aria-label="Abrir menu" aria-expanded={drawer} onClick={() => setDrawer(true)}>
+          <span /><span /><span />
+        </button>
+        <BrandLogo />
+      </header>
+
+      {drawer && <div className="drawer-overlay" onClick={() => setDrawer(false)} />}
+      <Sidebar
+        open={drawer}
+        collapsed={collapsed}
+        onClose={() => setDrawer(false)}
+        onLogout={onLogout}
+        onToggleCollapse={toggleCollapse}
+      />
+
+      <main className="app-main enter" key={loc.pathname}>
         <Outlet />
       </main>
-      <BottomNav />
     </div>
   );
 }

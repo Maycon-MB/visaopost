@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
 import Approve from './pages/Approve.jsx';
+import { BrandLogo } from './components/AppShell.jsx';
 
 const AppShell = lazy(() => import('./components/AppShell.jsx'));
 const Dashboard = lazy(() => import('./pages/Dashboard.jsx'));
@@ -20,37 +21,46 @@ function Loading() {
 
 function Landing() {
   return (
-    <div className="shell">
-      <header className="brand-bar">
-        <div className="brand-mark">
-          <span className="brand-mark-name">VisãoPost</span>
-          <span className="brand-mark-tag">— atelier digital</span>
-        </div>
+    <div className="lp">
+      <header className="lp-bar">
+        <BrandLogo />
+        <Link to="/login" className="lp-login">Entrar no painel →</Link>
       </header>
-      <main className="main enter" style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center' }}>
-        <div className="eyebrow" style={{ marginBottom: 18 }}>
-          <span className="eyebrow-num">01</span> Plataforma do dono
+
+      <main className="lp-hero enter">
+        <div>
+          <div className="lp-kicker">Conteúdo todo dia pra sua ótica</div>
+          <h1 className="lp-title">
+            A presença da sua ótica,<br />
+            <em>cuidada nos detalhes.</em>
+          </h1>
+          <p className="lp-lede">
+            Posts pensados pra sua marca, aprovados num toque e publicados na hora certa.
+            Marcelo aprova do celular — a gente cuida do resto.
+          </p>
+          <div className="lp-cta">
+            <Link to="/login" className="btn-touch btn-primary-atelier">Entrar no painel</Link>
+            <Link to="/aprovar/demo" className="btn-touch btn-ghost-atelier">Ver demo de aprovação</Link>
+          </div>
         </div>
-        <h1 className="display-1" style={{ fontSize: 'clamp(40px, 7vw, 72px)', marginBottom: 16 }}>
-          O conteúdo da sua ótica,<br />
-          <em className="text-italic-serif" style={{ color: 'var(--champagne)' }}>cuidado todo dia.</em>
-        </h1>
-        <p className="page-sub" style={{ fontSize: 17, marginBottom: 32 }}>
-          Aprove no celular. Vamos cuidar do resto.
-        </p>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
-          <Link to="/aprovar/demo" className="btn-touch btn-primary-atelier">
-            Ver demo de aprovação
-          </Link>
-          <Link to="/admin" className="btn-touch btn-ghost-atelier">
-            Entrar no painel
-          </Link>
+
+        <div className="lp-aside enter enter-1">
+          <div className="lp-card">
+            <div className="lp-quote">“Cada armação conta uma história. O conteúdo da Di Lorenzo precisa contar a mesma.”</div>
+            <div className="eyebrow muted">Ótica Di Lorenzo · @oticadilorenzo</div>
+          </div>
+          <div className="lp-feats">
+            <div className="lp-feat"><div className="n">i.</div><div className="t">Aprovar no celular</div><div className="d">Um toque, sem complicação.</div></div>
+            <div className="lp-feat"><div className="n">ii.</div><div className="t">Recall WhatsApp</div><div className="d">Clientes voltam na hora.</div></div>
+            <div className="lp-feat"><div className="n">iii.</div><div className="t">Catálogo no site</div><div className="d">Sua vitrine sempre viva.</div></div>
+            <div className="lp-feat"><div className="n">iv.</div><div className="t">Tudo num lugar</div><div className="d">Clientes, posts e métricas.</div></div>
+          </div>
         </div>
-        <hr className="hairline" style={{ margin: '48px auto', maxWidth: 200 }} />
-        <p className="muted" style={{ fontSize: 13 }}>
-          <span className="ornament">✻</span> Piloto Automático — Premium R$ 297 / mês
-        </p>
       </main>
+
+      <footer className="lp-foot">
+        <span className="ornament">✻</span> Ótica Di Lorenzo — painel do proprietário
+      </footer>
     </div>
   );
 }
