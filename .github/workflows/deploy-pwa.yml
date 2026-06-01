@@ -27,9 +27,11 @@ jobs:
 
       - run: npm run build
         env:
-          VITE_BASE: /visaopost/
+          VITE_BASE: /visaopost/app/
 
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: pwa/dist
+          destination_dir: app
+          keep_files: true
