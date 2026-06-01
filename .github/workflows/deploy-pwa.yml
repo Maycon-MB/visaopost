@@ -28,6 +28,7 @@ jobs:
       - run: npm run build
         env:
           VITE_BASE: /visaopost/app/
+          VITE_DEMO: '1'
 
       - uses: peaceiris/actions-gh-pages@v4
         with:
