@@ -11,9 +11,6 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: pwa
     steps:
       - uses: actions/checkout@v4
 
@@ -23,16 +20,26 @@ jobs:
           cache: npm
           cache-dependency-path: pwa/package-lock.json
 
-      - run: npm ci
+      - name: Install
+        run: npm ci
+        working-directory: pwa
 
-      - run: npm run build
+      - name: Build
+        run: npm run build
+        working-directory: pwa
         env:
           VITE_BASE: /visaopost/app/
           VITE_DEMO: '1'
 
-      - uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: pwa/dist
-          destination_dir: app
-          keep_files: true
+      - name: Sync to docs/app/
+        run: |
+          mkdir -p docs/app
+          rsync -a --delete pwa/dist/ docs/app/
+
+      - name: Commit docs/
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/app/
+          git diff --cached --quiet || git commit -m "deploy: atualiza docs/app/ [skip ci]"
+          git push
