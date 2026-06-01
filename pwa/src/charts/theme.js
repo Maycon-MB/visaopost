@@ -83,14 +83,14 @@ export function lineSeries(name, data, color = TOKENS.primary) {
     symbolSize: 6,
     showSymbol: false,
     itemStyle: { color, borderColor: TOKENS.surface, borderWidth: 2 },
-    lineStyle: { width: 2.5, color },
+    lineStyle: { width: 1.75, color },
     emphasis: { focus: 'series', scale: 1.2 },
     areaStyle: {
       color: {
         type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
         colorStops: [
-          { offset: 0, color: rgba(0.14) },
-          { offset: 1, color: rgba(0.0) },
+          { offset: 0, color: rgba(0.22) },
+          { offset: 1, color: rgba(0.02) },
         ],
       },
     },
