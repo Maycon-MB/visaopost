@@ -44,3 +44,7 @@ backend/tmp/
 
 # Claude
 .claude/
+
+# artefatos de debug temporarios
+backend/_chk*
+backend/import_check.txt
