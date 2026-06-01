@@ -1,5 +1,15 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTheme } from '../theme-context.jsx';
+import { useAuth } from '../auth-context.jsx';
+import { fetchSettings, updateSettings, updateProfile } from '../api.js';
+import { DEMO } from '../config.js';
+
+// Domingo=0, Segunda=1 ... Sábado=6 (índice UI)
+// ISO: Segunda=1 ... Domingo=7
+const _isoToUi = (d) => d === 7 ? 0 : d;
+const _uiToIso = (i) => i === 0 ? 7 : i;
+const _hourToTime = (h) => String(h ?? 6).padStart(2, '0') + ':00';
+const _timeToHour = (t) => parseInt((t || '00').split(':')[0], 10);
 
 const DAYS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 
@@ -16,7 +26,6 @@ const Auto = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="13" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
 );
 
-// Regras prontas pra ligar/desligar (além do texto livre).
 const POST_RULES = [
   { id: 'no_red', ct: 'Evitar a cor vermelha', cd: 'A IA não usa vermelho nas artes.' },
   { id: 'city', ct: 'Sempre citar a cidade', cd: 'Menciona "ótica em BH" nas primeiras linhas.' },
@@ -98,19 +107,91 @@ function CheckRow({ on, onToggle, ct, cd }) {
 
 export default function Settings() {
   const { mode, setMode } = useTheme();
+  const { user } = useAuth();
+
+  // form state
   const [active, setActive] = useState([1, 2, 3, 4, 5, 6]);
   const [sendHour, setSendHour] = useState('06:00');
   const [pubHour, setPubHour] = useState('12:00');
-  const [name, setName] = useState('Marcelo');
-  const [phone, setPhone] = useState('(31) 99999-0000');
-  const [email, setEmail] = useState('marcelo@oticadilorenzo.com.br');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [postOn, setPostOn] = useState({ no_red: true, city: true, premium: false, promo: false });
   const [botOn, setBotOn] = useState({ hours: true, schedule: true, insurance: true, handoff: true });
   const [postFree, setPostFree] = useState('');
-  const [botFree, setBotFree] = useState('Garantia de 12 meses na armação. Entrega de óculos em até 7 dias úteis.');
+  const [botFree, setBotFree] = useState('');
+
+  // ui state
+  const [loadError, setLoadError] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const [settings] = await Promise.all([fetchSettings()]);
+        if (cancelled) return;
+        if (settings.active_weekdays) {
+          setActive(settings.active_weekdays.map(_isoToUi));
+        }
+        if (settings.send_hour != null) setSendHour(_hourToTime(settings.send_hour));
+        if (settings.publish_hour != null) setPubHour(_hourToTime(settings.publish_hour));
+        if (settings.extra_instructions) setPostFree(settings.extra_instructions);
+        if (settings.whatsapp_faq) setBotFree(settings.whatsapp_faq);
+        if (settings.owner_email) setEmail(settings.owner_email);
+      } catch (e) {
+        if (!cancelled) setLoadError('Não foi possível carregar as configurações.');
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, []);
+
+  // preenche nome/phone do usuário logado
+  useEffect(() => {
+    if (user) {
+      setName(user.name || '');
+      setPhone(user.phone || '');
+    }
+  }, [user]);
 
   const toggleDay = (i) => setActive((d) => d.includes(i) ? d.filter((x) => x !== i) : [...d, i]);
   const THEMES = [['light', 'Claro', Sun], ['dark', 'Escuro', Moon], ['auto', 'Automático', Auto]];
+
+  async function handleSave(e) {
+    e.preventDefault();
+    setSaving(true);
+    setSaved(false);
+    setSaveError(null);
+    try {
+      await Promise.all([
+        updateProfile({ name: name.trim() || undefined, phone: phone.trim() || undefined }),
+        updateSettings({
+          send_hour: _timeToHour(sendHour),
+          publish_hour: _timeToHour(pubHour),
+          active_weekdays: active.map(_uiToIso),
+          extra_instructions: postFree.trim() || null,
+          whatsapp_faq: botFree.trim() || null,
+          owner_email: email.trim() || null,
+        }),
+      ]);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      setSaveError(err.message || 'Erro ao salvar. Tente novamente.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function handleCancel() {
+    // re-carrega do servidor — limpa alterações não salvas
+    setSaveError(null);
+    setSaved(false);
+    window.location.reload();
+  }
 
   return (
     <>
@@ -120,6 +201,8 @@ export default function Settings() {
           <p className="dash-sub">Seu perfil, a cara do painel e como a gente trabalha pra você.</p>
         </div>
       </div>
+
+      {loadError && <div className="alert-atelier" style={{ marginBottom: 16 }}>{loadError}</div>}
 
       {/* Perfil */}
       <section className="set-section">
@@ -226,20 +309,20 @@ export default function Settings() {
           </div>
           <div style={{ marginTop: 16 }}>
             <label className="label-atelier">Informações que ele deve saber</label>
-            <textarea className="textarea-atelier" style={{ minHeight: 140 }} value={botFree} onChange={(e) => setBotFree(e.target.value)} maxLength={2000} placeholder="Horários, convênios aceitos, política de garantia, tempo de entrega…" />
+            <textarea className="textarea-atelier" style={{ minHeight: 140 }} value={botFree} onChange={(e) => setBotFree(e.target.value)} maxLength={4000} placeholder="Horários, convênios aceitos, política de garantia, tempo de entrega…" />
             <div className="help-atelier">Quanto mais detalhe, menos ele precisa te chamar.</div>
           </div>
         </div>
       </section>
 
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 8 }}>
-        <button className="btn-touch btn-ghost-atelier" style={{ minHeight: 48, padding: '0 22px' }}>Cancelar</button>
-        <button className="btn-touch btn-primary-atelier" style={{ minHeight: 48, padding: '0 28px' }}>Salvar alterações</button>
-      </div>
+      {saveError && <div className="alert-atelier" style={{ marginBottom: 12 }}>{saveError}</div>}
 
-      <p className="muted" style={{ marginTop: 24, fontSize: 12.5, textAlign: 'center' }}>
-        Persistência liga em <code style={{ background: 'var(--ivory-soft)', padding: '2px 6px', borderRadius: 4 }}>PATCH /api/settings</code> (backend já pronto). Tema já salva no navegador.
-      </p>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 8 }}>
+        <button type="button" className="btn-touch btn-ghost-atelier" style={{ minHeight: 48, padding: '0 22px' }} onClick={handleCancel} disabled={saving}>Cancelar</button>
+        <button type="button" className="btn-touch btn-primary-atelier" style={{ minHeight: 48, padding: '0 28px' }} onClick={handleSave} disabled={saving}>
+          {saving ? <><span className="spinner" /> Salvando…</> : saved ? '✓ Salvo' : 'Salvar alterações'}
+        </button>
+      </div>
     </>
   );
 }

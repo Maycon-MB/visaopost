@@ -10,7 +10,7 @@ from app.db.pool import acquire
 from app.models.admin import AdminUser, AdminUserWithHash
 
 _COLS = (
-    "id, tenant_id, name, email, role, status, last_login_at, created_at"
+    "id, tenant_id, name, phone, email, role, status, last_login_at, created_at"
 )
 
 
@@ -20,17 +20,18 @@ class AdminEmailConflict(Exception):
 
 def _to_user(row: asyncpg.Record) -> AdminUser:
     return AdminUser(
-        id=row["id"], tenant_id=row["tenant_id"], name=row["name"], email=row["email"],
-        role=row["role"], status=row["status"], last_login_at=row["last_login_at"],
-        created_at=row["created_at"],
+        id=row["id"], tenant_id=row["tenant_id"], name=row["name"], phone=row["phone"],
+        email=row["email"], role=row["role"], status=row["status"],
+        last_login_at=row["last_login_at"], created_at=row["created_at"],
     )
 
 
 def _to_user_hash(row: asyncpg.Record) -> AdminUserWithHash:
     return AdminUserWithHash(
-        id=row["id"], tenant_id=row["tenant_id"], name=row["name"], email=row["email"],
-        role=row["role"], status=row["status"], last_login_at=row["last_login_at"],
-        created_at=row["created_at"], password_hash=row["password_hash"],
+        id=row["id"], tenant_id=row["tenant_id"], name=row["name"], phone=row["phone"],
+        email=row["email"], role=row["role"], status=row["status"],
+        last_login_at=row["last_login_at"], created_at=row["created_at"],
+        password_hash=row["password_hash"],
     )
 
 
@@ -104,3 +105,29 @@ async def list_by_tenant(tenant_id: UUID) -> list[AdminUser]:
             tenant_id,
         )
     return [_to_user(r) for r in rows]
+
+
+async def update_profile(
+    user_id: UUID,
+    *,
+    name: str | None = None,
+    phone: str | None = None,
+) -> AdminUser | None:
+    sets: list[str] = []
+    values: list[object] = []
+    idx = 1
+    if name is not None:
+        sets.append(f"name = ${idx}")
+        values.append(name)
+        idx += 1
+    if phone is not None:
+        sets.append(f"phone = ${idx}")
+        values.append(phone)
+        idx += 1
+    if not sets:
+        return await get_by_id(user_id)
+    values.append(user_id)
+    sql = f"UPDATE admin_users SET {', '.join(sets)} WHERE id = ${idx} RETURNING {_COLS}"
+    async with acquire() as conn:
+        row = await conn.fetchrow(sql, *values)
+    return None if row is None else _to_user(row)

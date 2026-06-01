@@ -18,11 +18,21 @@ class AdminUser(BaseModel):
     id: UUID
     tenant_id: UUID
     name: str
+    phone: str | None = None
     email: str
     role: str
     status: str
     last_login_at: datetime | None
     created_at: datetime
+
+
+class ProfileUpdate(BaseModel):
+    """Payload PATCH parcial do perfil do usuário logado."""
+
+    model_config = ConfigDict(frozen=True)
+
+    name: str | None = Field(default=None, min_length=2, max_length=120)
+    phone: str | None = Field(default=None, max_length=30)
 
 
 class AdminUserWithHash(AdminUser):

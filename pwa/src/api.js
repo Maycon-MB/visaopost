@@ -202,6 +202,29 @@ export async function downloadClientsCsv() {
   URL.revokeObjectURL(url);
 }
 
+// ── Settings (tenant + perfil) ────────────────────────────────────────
+export async function fetchSettings() {
+  if (DEMO) return {
+    send_hour: 6, publish_hour: 12,
+    active_weekdays: [1, 2, 3, 4, 5, 6],
+    extra_instructions: null,
+    whatsapp_faq: 'Garantia de 12 meses na armação. Entrega de óculos em até 7 dias úteis.',
+    owner_email: 'marcelo@oticadilorenzo.com.br',
+    timezone: 'America/Sao_Paulo',
+  };
+  return request('/api/settings');
+}
+
+export async function updateSettings(patch) {
+  if (DEMO) return patch;
+  return request('/api/settings', { method: 'PATCH', body: JSON.stringify(patch) });
+}
+
+export async function updateProfile(patch) {
+  if (DEMO) return patch;
+  return request('/api/auth/me', { method: 'PATCH', body: JSON.stringify(patch) });
+}
+
 export function imageUrlFor(post) {
   if (!post || !post.image_url) return null;
   if (post.image_url.startsWith('http')) return post.image_url;
