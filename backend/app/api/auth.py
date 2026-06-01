@@ -22,6 +22,7 @@ from app.models.admin import (
     ForgotPasswordRequest,
     LoginRequest,
     LoginResponse,
+    ProfileUpdate,
     ResetPasswordRequest,
 )
 from app.services import auth as auth_svc
@@ -100,6 +101,22 @@ async def me(principal: Principal = Depends(current_principal)) -> AdminUser:
     user = await admin_repo.get_by_id(principal.user_id)
     if user is None:
         raise HTTPException(status_code=401, detail="usuário não encontrado")
+    return user
+
+
+@router.patch("/me", response_model=AdminUser)
+async def update_me(
+    payload: ProfileUpdate,
+    principal: Principal = Depends(current_principal),
+) -> AdminUser:
+    user = await admin_repo.update_profile(
+        principal.user_id,
+        name=payload.name,
+        phone=payload.phone,
+    )
+    if user is None:
+        raise HTTPException(status_code=404, detail="usuário não encontrado")
+    logger.info("auth.update_profile", user_id=str(principal.user_id))
     return user
 
 

@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 from uuid import UUID
 
+import asyncpg
+
 from app.db.pool import acquire
 from app.models.brand import BrandColors, BrandKit
 from app.models.settings import TenantSettings, TenantSettingsUpdate
@@ -89,37 +91,41 @@ def _coerce_weekdays(raw: object) -> list[int]:
     return [int(x) for x in parsed]
 
 
-async def get_tenant_settings(slug: str) -> TenantSettings | None:
-    """Retorna settings do tenant ativo. None se slug inexistente/inativo."""
-    async with acquire() as conn:
-        row = await conn.fetchrow(
-            """
-            SELECT send_hour, publish_hour, active_weekdays, extra_instructions,
-                   owner_email, timezone
-            FROM tenants
-            WHERE slug = $1 AND is_active = true
-            """,
-            slug,
-        )
-    if row is None:
-        return None
+_SETTINGS_COLS = (
+    "send_hour, publish_hour, active_weekdays, extra_instructions, "
+    "whatsapp_faq, owner_email, timezone"
+)
+
+
+def _row_to_settings(row: asyncpg.Record) -> TenantSettings:
     return TenantSettings(
         send_hour=row["send_hour"],
         publish_hour=row["publish_hour"],
         active_weekdays=_coerce_weekdays(row["active_weekdays"]),
         extra_instructions=row["extra_instructions"],
+        whatsapp_faq=row["whatsapp_faq"],
         owner_email=row["owner_email"],
         timezone=row["timezone"],
     )
 
 
+async def get_tenant_settings(tenant_id: UUID) -> TenantSettings | None:
+    """Retorna settings do tenant ativo. None se inexistente/inativo."""
+    async with acquire() as conn:
+        row = await conn.fetchrow(
+            f"SELECT {_SETTINGS_COLS} FROM tenants WHERE id = $1 AND is_active = true",
+            tenant_id,
+        )
+    return None if row is None else _row_to_settings(row)
+
+
 async def update_tenant_settings(
-    slug: str,
+    tenant_id: UUID,
     patch: TenantSettingsUpdate,
 ) -> TenantSettings | None:
     """Aplica patch nos campos não-None. Retorna snapshot atualizado.
 
-    None se slug inexistente/inativo. Patch vazio = no-op, devolve estado atual.
+    None se tenant inexistente/inativo. Patch vazio = no-op, devolve estado atual.
     """
     sets: list[str] = []
     values: list[object] = []
@@ -141,34 +147,27 @@ async def update_tenant_settings(
         sets.append(f"extra_instructions = ${idx}")
         values.append(patch.extra_instructions)
         idx += 1
+    if patch.whatsapp_faq is not None:
+        sets.append(f"whatsapp_faq = ${idx}")
+        values.append(patch.whatsapp_faq)
+        idx += 1
     if patch.owner_email is not None:
         sets.append(f"owner_email = ${idx}")
         values.append(patch.owner_email)
         idx += 1
 
     if not sets:
-        return await get_tenant_settings(slug)
+        return await get_tenant_settings(tenant_id)
 
-    values.append(slug)
+    values.append(tenant_id)
     sql = f"""
         UPDATE tenants
         SET {", ".join(sets)}
-        WHERE slug = ${idx} AND is_active = true
-        RETURNING send_hour, publish_hour, active_weekdays, extra_instructions,
-                  owner_email, timezone
+        WHERE id = ${idx} AND is_active = true
+        RETURNING {_SETTINGS_COLS}
     """
 
     async with acquire() as conn:
         row = await conn.fetchrow(sql, *values)
 
-    if row is None:
-        return None
-
-    return TenantSettings(
-        send_hour=row["send_hour"],
-        publish_hour=row["publish_hour"],
-        active_weekdays=_coerce_weekdays(row["active_weekdays"]),
-        extra_instructions=row["extra_instructions"],
-        owner_email=row["owner_email"],
-        timezone=row["timezone"],
-    )
+    return None if row is None else _row_to_settings(row)

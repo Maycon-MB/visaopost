@@ -28,6 +28,11 @@ class TenantSettings(BaseModel):
         max_length=2000,
         description="Instruções livres pro Gemini. Ex.: 'evitar vermelho', 'mencionar Black Friday'.",
     )
+    whatsapp_faq: str | None = Field(
+        default=None,
+        max_length=4000,
+        description="Regras/FAQ do bot de WhatsApp (horários, convênios, garantia, quando escalar).",
+    )
     owner_email: str | None = None
     timezone: str = "America/Sao_Paulo"
 
@@ -46,6 +51,7 @@ class TenantSettingsUpdate(BaseModel):
     publish_hour: int | None = Field(default=None, ge=0, le=23)
     active_weekdays: list[int] | None = None
     extra_instructions: str | None = Field(default=None, max_length=2000)
+    whatsapp_faq: str | None = Field(default=None, max_length=4000)
     owner_email: str | None = Field(default=None, max_length=120)
 
     @field_validator("active_weekdays")
