@@ -13,6 +13,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 # (DDD+9+8 com ou sem +55). Validação branda — onboarding é rude com restrição agressiva.
 _PHONE_DIGITS = re.compile(r"\D+")
 _VALID_STATUS = {"active", "opted_out", "converted"}
+_VALID_SOURCE = {"manual", "csv", "qr_balcao", "indicacao", "instagram", "site"}
 
 
 def _normalize_phone(raw: str) -> str:
@@ -20,6 +21,12 @@ def _normalize_phone(raw: str) -> str:
     if not (10 <= len(digits) <= 13):
         raise ValueError(f"telefone com {len(digits)} dígitos; esperado 10-13 (DDD + número)")
     return digits
+
+
+def _not_future(v: DateType | None, label: str) -> DateType | None:
+    if v is not None and v > DateType.today():
+        raise ValueError(f"{label} não pode estar no futuro")
+    return v
 
 
 class ClientCreate(BaseModel):
@@ -32,6 +39,18 @@ class ClientCreate(BaseModel):
     email: str | None = Field(default=None, max_length=120)
     last_exam_date: DateType | None = None
     observations: str | None = Field(default=None, max_length=500)
+
+    # CRM (Fase 6c): dados que dão liga ao recall + personalização + LGPD.
+    birth_date: DateType | None = None
+    consent_whatsapp: bool = False
+    source: str = "manual"
+    health_plan: str | None = Field(default=None, max_length=80)
+    lens_type: str | None = Field(default=None, max_length=60)
+    frame_brand: str | None = Field(default=None, max_length=60)
+    last_purchase_date: DateType | None = None
+    last_purchase_value_brl: float | None = Field(default=None, ge=0)
+    next_return_date: DateType | None = None
+    neighborhood: str | None = Field(default=None, max_length=80)
 
     @field_validator("name")
     @classmethod
@@ -59,8 +78,23 @@ class ClientCreate(BaseModel):
     @field_validator("last_exam_date")
     @classmethod
     def _exam_not_future(cls, v: DateType | None) -> DateType | None:
-        if v is not None and v > DateType.today():
-            raise ValueError("data do exame não pode estar no futuro")
+        return _not_future(v, "data do exame")
+
+    @field_validator("birth_date")
+    @classmethod
+    def _birth_not_future(cls, v: DateType | None) -> DateType | None:
+        return _not_future(v, "data de nascimento")
+
+    @field_validator("last_purchase_date")
+    @classmethod
+    def _purchase_not_future(cls, v: DateType | None) -> DateType | None:
+        return _not_future(v, "data da compra")
+
+    @field_validator("source")
+    @classmethod
+    def _validate_source(cls, v: str) -> str:
+        if v not in _VALID_SOURCE:
+            raise ValueError(f"origem inválida: {v!r}")
         return v
 
 
@@ -76,6 +110,17 @@ class ClientUpdate(BaseModel):
     observations: str | None = Field(default=None, max_length=500)
     status: str | None = None
 
+    birth_date: DateType | None = None
+    consent_whatsapp: bool | None = None
+    source: str | None = None
+    health_plan: str | None = Field(default=None, max_length=80)
+    lens_type: str | None = Field(default=None, max_length=60)
+    frame_brand: str | None = Field(default=None, max_length=60)
+    last_purchase_date: DateType | None = None
+    last_purchase_value_brl: float | None = Field(default=None, ge=0)
+    next_return_date: DateType | None = None
+    neighborhood: str | None = Field(default=None, max_length=80)
+
     @field_validator("phone")
     @classmethod
     def _validate_phone(cls, v: str | None) -> str | None:
@@ -88,6 +133,13 @@ class ClientUpdate(BaseModel):
             return None
         if v not in _VALID_STATUS:
             raise ValueError(f"status inválido: {v!r} (esperado um de {sorted(_VALID_STATUS)})")
+        return v
+
+    @field_validator("source")
+    @classmethod
+    def _validate_source(cls, v: str | None) -> str | None:
+        if v is not None and v not in _VALID_SOURCE:
+            raise ValueError(f"origem inválida: {v!r}")
         return v
 
 
@@ -106,3 +158,15 @@ class Client(BaseModel):
     status: str
     observations: str | None
     created_at: datetime
+
+    birth_date: DateType | None = None
+    consent_whatsapp: bool = False
+    consent_at: datetime | None = None
+    source: str = "manual"
+    health_plan: str | None = None
+    lens_type: str | None = None
+    frame_brand: str | None = None
+    last_purchase_date: DateType | None = None
+    last_purchase_value_brl: float | None = None
+    next_return_date: DateType | None = None
+    neighborhood: str | None = None

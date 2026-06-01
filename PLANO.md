@@ -157,12 +157,21 @@ PWA mobile/tablet first em `pwa/` (React 18 + Vite + Bootstrap 5). Service worke
 - [x] Backend `CORSMiddleware` + settings `frontend_url`/`cors_origins`. Build prod 87KB gzipped (JS 55.8KB + CSS 31.6KB), Lighthouse-friendly.
 - [ ] E2E via ngrok + Resend real — fazer depois com email do dono Di Lorenzo.
 
-### Fase 6c — Tela `/clientes` (independe Instagram token, cliente usa dia 1)
-- [ ] Tabela com search + filtros (ativos, exame +12m, novos da semana, opt-out).
-- [ ] Formulário cadastro single: nome, telefone WhatsApp, email opcional, data último exame, observações.
-- [ ] Import CSV: template baixável + upload + parser idempotente (UNIQUE tenant_id+phone já no schema).
-- [ ] Botões linha: marcar contatado / marcar exame feito / opt-out.
-- [ ] Export CSV (backup pro cliente).
+### Fase 6c — Tela `/clientes` ✅ (independe Instagram token, cliente usa dia 1)
+- [x] Tabela com search + filtros (todos, ativos, exame +12m, novos da semana, opt-out). Wired ao backend real.
+- [x] Formulário cadastro: essenciais (nome, WhatsApp, nascimento, **consentimento WhatsApp/LGPD**) + acordeão "mais detalhes" (email, bairro, último exame, próximo retorno, convênio, tipo lente, última compra + valor, armação, origem, observações).
+- [x] Import CSV + Export CSV (via blob com token).
+- [x] Botões linha: editar / marcar contatado / exame feito / opt-out / reativar.
+- [x] Migration 0006 expandiu `clients` (consent_whatsapp, consent_at, birth_date, source, health_plan, lens_type, frame_brand, last_purchase_date, last_purchase_value_brl, next_return_date, neighborhood). Repo + models atualizados.
+- [x] Tenant vem do **token de sessão** (não mais `?tenant=`).
+
+### Fase 6g — Login do painel + controle de assinatura ✅ (NOVO, não estava no plano original)
+- [x] Migration 0005 `admin_users` (owner/staff, multi-usuário por tenant) + `password_resets` + `subscription_status` no `tenants` (active/past_due/suspended/canceled). Migration 0007 add `username`.
+- [x] Auth: login por **usuário OU email** + senha (bcrypt), JWT de sessão, esqueci-senha + redefinir (token hash, email Resend), `current_principal`/`current_tenant_id` deps.
+- [x] **Guard de inadimplência/cancelamento:** login bloqueia se assinatura suspensa/cancelada (dados preservados).
+- [x] Frontend: `AuthContext`, rotas `/login` `/esqueci-senha` `/redefinir-senha`, route guard, AppShell com usuário real + logout.
+- [x] Seed dev: `scripts/create_admin.py` (admin/admin). Runner `scripts/apply_migrations.py`.
+- [x] **Modo demo** (`VITE_DEMO`): build estático em `docs/app` pro GitHub Pages — abre direto no painel, dados de exemplo, sem login. Pendente: **owner/staff CRUD** (convidar equipe) — endpoints/models prontos, falta tela.
 
 ### Fase 6d — Tela `/settings` (configs do dono)
 - [ ] Horário envio email (default 06h), horário publicação (default 12h).

@@ -301,6 +301,15 @@ export default function Clientes() {
   );
 }
 
+const SOURCES = [
+  ['manual', 'Cadastro no balcão'],
+  ['qr_balcao', 'QR Code do balcão'],
+  ['indicacao', 'Indicação'],
+  ['instagram', 'Instagram'],
+  ['site', 'Site'],
+];
+const LENS_TYPES = ['Monofocal', 'Multifocal', 'Antirreflexo', 'Transitions', 'Bifocal'];
+
 function ClientModal({ client, onClose, onSaved, onError }) {
   const editing = !!client;
   const [form, setForm] = useState({
@@ -309,11 +318,23 @@ function ClientModal({ client, onClose, onSaved, onError }) {
     email: client?.email || '',
     last_exam_date: client?.last_exam_date || '',
     observations: client?.observations || '',
+    birth_date: client?.birth_date || '',
+    consent_whatsapp: client?.consent_whatsapp || false,
+    source: client?.source || 'manual',
+    health_plan: client?.health_plan || '',
+    lens_type: client?.lens_type || '',
+    frame_brand: client?.frame_brand || '',
+    last_purchase_date: client?.last_purchase_date || '',
+    last_purchase_value_brl: client?.last_purchase_value_brl ?? '',
+    next_return_date: client?.next_return_date || '',
+    neighborhood: client?.neighborhood || '',
   });
   const [saving, setSaving] = useState(false);
   const [fieldErr, setFieldErr] = useState(null);
+  const [showMore, setShowMore] = useState(editing);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const today = new Date().toISOString().slice(0, 10);
 
   async function submit(e) {
     e.preventDefault();
@@ -328,6 +349,16 @@ function ClientModal({ client, onClose, onSaved, onError }) {
         email: form.email.trim() || null,
         last_exam_date: form.last_exam_date || null,
         observations: form.observations.trim() || null,
+        birth_date: form.birth_date || null,
+        consent_whatsapp: form.consent_whatsapp,
+        source: form.source || 'manual',
+        health_plan: form.health_plan.trim() || null,
+        lens_type: form.lens_type.trim() || null,
+        frame_brand: form.frame_brand.trim() || null,
+        last_purchase_date: form.last_purchase_date || null,
+        last_purchase_value_brl: form.last_purchase_value_brl ? Number(form.last_purchase_value_brl) : null,
+        next_return_date: form.next_return_date || null,
+        neighborhood: form.neighborhood.trim() || null,
       };
       if (editing) {
         await updateClient(client.id, payload);
@@ -350,8 +381,8 @@ function ClientModal({ client, onClose, onSaved, onError }) {
         <div className="modal-grabber" />
         <div className="modal-head">
           <div>
-            <div className="eyebrow"><span className="eyebrow-num">{editing ? '✎' : '+'}</span> {editing ? 'Editar' : 'Novo cliente'}</div>
-            <h2>{editing ? client.name : <>Quem entra na <em className="text-italic-serif" style={{ color: 'var(--champagne)' }}>carteira</em>?</>}</h2>
+            <div className="eyebrow">{editing ? 'Editar cliente' : 'Novo cliente'}</div>
+            <h2>{editing ? client.name : 'Quem entra na carteira'}</h2>
           </div>
           <button className="modal-close" onClick={onClose} aria-label="Fechar">×</button>
         </div>
@@ -371,21 +402,96 @@ function ClientModal({ client, onClose, onSaved, onError }) {
                 <input className="input-atelier" value={form.phone} onChange={set('phone')} placeholder="(31) 99999-9999" inputMode="tel" />
               </div>
               <div>
-                <label className="label-atelier">Último exame</label>
-                <input type="date" className="input-atelier" value={form.last_exam_date} onChange={set('last_exam_date')} max={new Date().toISOString().slice(0, 10)} />
+                <label className="label-atelier">Nascimento <span className="muted" style={{ fontWeight: 400 }}>(opcional)</span></label>
+                <input type="date" className="input-atelier" value={form.birth_date} onChange={set('birth_date')} max={today} />
               </div>
             </div>
 
-            <div>
-              <label className="label-atelier">Email <span className="muted" style={{ fontWeight: 400 }}>(opcional)</span></label>
-              <input type="email" className="input-atelier" value={form.email} onChange={set('email')} placeholder="maria@email.com" />
+            <div
+              className={`check-row ${form.consent_whatsapp ? 'on' : ''}`}
+              onClick={() => setForm((f) => ({ ...f, consent_whatsapp: !f.consent_whatsapp }))}
+              role="checkbox" aria-checked={form.consent_whatsapp} tabIndex={0}
+              onKeyDown={(e) => (e.key === ' ' || e.key === 'Enter') && (e.preventDefault(), setForm((f) => ({ ...f, consent_whatsapp: !f.consent_whatsapp })))}
+            >
+              <span className="check-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 13l4 4 10-10" /></svg>
+              </span>
+              <span className="check-main">
+                <div className="ct">Autoriza receber mensagens no WhatsApp</div>
+                <div className="cd">Necessário pra entrar no recall (LGPD). Marque só se o cliente concordou.</div>
+              </span>
             </div>
 
-            <div>
-              <label className="label-atelier">Observações <span className="muted" style={{ fontWeight: 400 }}>(opcional)</span></label>
-              <textarea className="textarea-atelier" style={{ minHeight: 90 }} value={form.observations} onChange={set('observations')} maxLength={500} placeholder="Prefere armação leve, indicada pela irmã…" />
-              <div className="help-atelier">Some no recall, ajuda a personalizar o atendimento.</div>
-            </div>
+            <button type="button" className="btn-link-atelier" style={{ alignSelf: 'flex-start' }} onClick={() => setShowMore((s) => !s)}>
+              {showMore ? '− Menos detalhes' : '+ Mais detalhes'}
+            </button>
+
+            {showMore && (
+              <>
+                <div className="field-grid two">
+                  <div>
+                    <label className="label-atelier">Email</label>
+                    <input type="email" className="input-atelier" value={form.email} onChange={set('email')} placeholder="maria@email.com" />
+                  </div>
+                  <div>
+                    <label className="label-atelier">Bairro</label>
+                    <input className="input-atelier" value={form.neighborhood} onChange={set('neighborhood')} placeholder="Savassi" />
+                  </div>
+                </div>
+
+                <div className="field-grid two">
+                  <div>
+                    <label className="label-atelier">Último exame</label>
+                    <input type="date" className="input-atelier" value={form.last_exam_date} onChange={set('last_exam_date')} max={today} />
+                  </div>
+                  <div>
+                    <label className="label-atelier">Próximo retorno sugerido</label>
+                    <input type="date" className="input-atelier" value={form.next_return_date} onChange={set('next_return_date')} />
+                  </div>
+                </div>
+
+                <div className="field-grid two">
+                  <div>
+                    <label className="label-atelier">Convênio</label>
+                    <input className="input-atelier" value={form.health_plan} onChange={set('health_plan')} placeholder="Unimed, Bradesco…" />
+                  </div>
+                  <div>
+                    <label className="label-atelier">Tipo de lente</label>
+                    <input className="input-atelier" list="lens-types" value={form.lens_type} onChange={set('lens_type')} placeholder="Multifocal" />
+                    <datalist id="lens-types">{LENS_TYPES.map((l) => <option key={l} value={l} />)}</datalist>
+                  </div>
+                </div>
+
+                <div className="field-grid two">
+                  <div>
+                    <label className="label-atelier">Última compra</label>
+                    <input type="date" className="input-atelier" value={form.last_purchase_date} onChange={set('last_purchase_date')} max={today} />
+                  </div>
+                  <div>
+                    <label className="label-atelier">Valor da compra (R$)</label>
+                    <input type="number" min="0" step="0.01" className="input-atelier" value={form.last_purchase_value_brl} onChange={set('last_purchase_value_brl')} placeholder="890,00" />
+                  </div>
+                </div>
+
+                <div className="field-grid two">
+                  <div>
+                    <label className="label-atelier">Armação preferida</label>
+                    <input className="input-atelier" value={form.frame_brand} onChange={set('frame_brand')} placeholder="Ray-Ban, acetato…" />
+                  </div>
+                  <div>
+                    <label className="label-atelier">Como chegou</label>
+                    <select className="select-atelier" value={form.source} onChange={set('source')}>
+                      {SOURCES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="label-atelier">Observações</label>
+                  <textarea className="textarea-atelier" style={{ minHeight: 80 }} value={form.observations} onChange={set('observations')} maxLength={500} placeholder="Prefere armação leve, indicada pela irmã…" />
+                </div>
+              </>
+            )}
           </div>
 
           <div className="modal-foot">

@@ -1,8 +1,8 @@
 """Queries da tabela `clients` — base de clientes da ótica pra recall WhatsApp.
 
-`observations` mora em `metadata.observations` (jsonb) — schema atual não tem
-coluna dedicada e seria over-migration adicionar. Outras notas livres futuras
-vão pelo mesmo jsonb.
+`observations` mora em `metadata.observations` (jsonb). Demais campos de CRM
+(nascimento, consentimento, origem, convênio, lente, armação, compra, retorno,
+bairro) são colunas dedicadas (migration 0006).
 """
 
 from __future__ import annotations
@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 from datetime import date as DateType
 from datetime import datetime
+from decimal import Decimal
 from typing import Any
 from uuid import UUID
 
@@ -17,6 +18,14 @@ import asyncpg
 
 from app.db.pool import acquire
 from app.models.client import Client, ClientCreate, ClientUpdate
+
+# Lista única de colunas — usada em todo SELECT/RETURNING.
+_COLS = """
+    id, tenant_id, name, phone, email, last_exam_date, last_contacted_at,
+    status, metadata, created_at, birth_date, consent_whatsapp, consent_at,
+    source, health_plan, lens_type, frame_brand, last_purchase_date,
+    last_purchase_value_brl, next_return_date, neighborhood
+"""
 
 
 class ClientPhoneConflict(Exception):
@@ -30,6 +39,7 @@ def _row_to_client(row: asyncpg.Record) -> Client:
     elif metadata is None:
         metadata = {}
     observations = metadata.get("observations") if isinstance(metadata, dict) else None
+    value = row["last_purchase_value_brl"]
     return Client(
         id=row["id"],
         tenant_id=row["tenant_id"],
@@ -41,7 +51,22 @@ def _row_to_client(row: asyncpg.Record) -> Client:
         status=row["status"],
         observations=observations,
         created_at=row["created_at"],
+        birth_date=row["birth_date"],
+        consent_whatsapp=row["consent_whatsapp"],
+        consent_at=row["consent_at"],
+        source=row["source"],
+        health_plan=row["health_plan"],
+        lens_type=row["lens_type"],
+        frame_brand=row["frame_brand"],
+        last_purchase_date=row["last_purchase_date"],
+        last_purchase_value_brl=float(value) if value is not None else None,
+        next_return_date=row["next_return_date"],
+        neighborhood=row["neighborhood"],
     )
+
+
+def _money(v: float | None) -> Decimal | None:
+    return Decimal(str(v)) if v is not None else None
 
 
 async def create_client(tenant_id: UUID, payload: ClientCreate) -> Client:
@@ -49,18 +74,21 @@ async def create_client(tenant_id: UUID, payload: ClientCreate) -> Client:
     metadata: dict[str, Any] = {}
     if payload.observations:
         metadata["observations"] = payload.observations
+    consent_at = datetime.now() if payload.consent_whatsapp else None
 
     try:
         async with acquire() as conn:
             row = await conn.fetchrow(
-                """
+                f"""
                 INSERT INTO clients (
-                    tenant_id, name, phone, email, last_exam_date,
-                    status, metadata
+                    tenant_id, name, phone, email, last_exam_date, status, metadata,
+                    birth_date, consent_whatsapp, consent_at, source, health_plan,
+                    lens_type, frame_brand, last_purchase_date, last_purchase_value_brl,
+                    next_return_date, neighborhood
                 )
-                VALUES ($1, $2, $3, $4, $5, 'active', $6::jsonb)
-                RETURNING id, tenant_id, name, phone, email, last_exam_date,
-                          last_contacted_at, status, metadata, created_at
+                VALUES ($1, $2, $3, $4, $5, 'active', $6::jsonb,
+                        $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+                RETURNING {_COLS}
                 """,
                 tenant_id,
                 payload.name,
@@ -68,6 +96,17 @@ async def create_client(tenant_id: UUID, payload: ClientCreate) -> Client:
                 payload.email,
                 payload.last_exam_date,
                 json.dumps(metadata),
+                payload.birth_date,
+                payload.consent_whatsapp,
+                consent_at,
+                payload.source,
+                payload.health_plan,
+                payload.lens_type,
+                payload.frame_brand,
+                payload.last_purchase_date,
+                _money(payload.last_purchase_value_brl),
+                payload.next_return_date,
+                payload.neighborhood,
             )
     except asyncpg.UniqueViolationError as exc:
         raise ClientPhoneConflict(
@@ -109,8 +148,7 @@ async def list_clients(
 
     values.extend([limit, offset])
     sql = f"""
-        SELECT id, tenant_id, name, phone, email, last_exam_date,
-               last_contacted_at, status, metadata, created_at
+        SELECT {_COLS}
         FROM clients
         WHERE {" AND ".join(conditions)}
         ORDER BY created_at DESC
@@ -125,12 +163,7 @@ async def list_clients(
 async def get_client(tenant_id: UUID, client_id: UUID) -> Client | None:
     async with acquire() as conn:
         row = await conn.fetchrow(
-            """
-            SELECT id, tenant_id, name, phone, email, last_exam_date,
-                   last_contacted_at, status, metadata, created_at
-            FROM clients
-            WHERE id = $1 AND tenant_id = $2
-            """,
+            f"SELECT {_COLS} FROM clients WHERE id = $1 AND tenant_id = $2",
             client_id,
             tenant_id,
         )
@@ -147,26 +180,49 @@ async def update_client(
     values: list[object] = []
     idx = 1
 
+    # Campos escalares simples: (coluna, valor).
+    simple: list[tuple[str, object]] = []
     if patch.name is not None:
-        sets.append(f"name = ${idx}")
-        values.append(patch.name)
-        idx += 1
+        simple.append(("name", patch.name))
     if patch.phone is not None:
-        sets.append(f"phone = ${idx}")
-        values.append(patch.phone)
-        idx += 1
+        simple.append(("phone", patch.phone))
     if patch.email is not None:
-        sets.append(f"email = ${idx}")
-        values.append(patch.email)
-        idx += 1
+        simple.append(("email", patch.email))
     if patch.last_exam_date is not None:
-        sets.append(f"last_exam_date = ${idx}")
-        values.append(patch.last_exam_date)
-        idx += 1
+        simple.append(("last_exam_date", patch.last_exam_date))
     if patch.status is not None:
-        sets.append(f"status = ${idx}")
-        values.append(patch.status)
+        simple.append(("status", patch.status))
+    if patch.birth_date is not None:
+        simple.append(("birth_date", patch.birth_date))
+    if patch.source is not None:
+        simple.append(("source", patch.source))
+    if patch.health_plan is not None:
+        simple.append(("health_plan", patch.health_plan))
+    if patch.lens_type is not None:
+        simple.append(("lens_type", patch.lens_type))
+    if patch.frame_brand is not None:
+        simple.append(("frame_brand", patch.frame_brand))
+    if patch.last_purchase_date is not None:
+        simple.append(("last_purchase_date", patch.last_purchase_date))
+    if patch.last_purchase_value_brl is not None:
+        simple.append(("last_purchase_value_brl", _money(patch.last_purchase_value_brl)))
+    if patch.next_return_date is not None:
+        simple.append(("next_return_date", patch.next_return_date))
+    if patch.neighborhood is not None:
+        simple.append(("neighborhood", patch.neighborhood))
+
+    for col, val in simple:
+        sets.append(f"{col} = ${idx}")
+        values.append(val)
         idx += 1
+
+    # Consentimento: ao ligar, registra a data; ao desligar, limpa.
+    if patch.consent_whatsapp is not None:
+        sets.append(f"consent_whatsapp = ${idx}")
+        values.append(patch.consent_whatsapp)
+        idx += 1
+        sets.append("consent_at = " + ("now()" if patch.consent_whatsapp else "NULL"))
+
     if patch.observations is not None:
         # Merge no metadata jsonb existente, sem dropar outras chaves.
         sets.append(f"metadata = COALESCE(metadata,'{{}}'::jsonb) || ${idx}::jsonb")
@@ -181,8 +237,7 @@ async def update_client(
         UPDATE clients
         SET {", ".join(sets)}
         WHERE id = ${idx} AND tenant_id = ${idx + 1}
-        RETURNING id, tenant_id, name, phone, email, last_exam_date,
-                  last_contacted_at, status, metadata, created_at
+        RETURNING {_COLS}
     """
 
     try:
@@ -215,12 +270,11 @@ async def mark_client_contacted(
     timestamp = when or datetime.now()
     async with acquire() as conn:
         row = await conn.fetchrow(
-            """
+            f"""
             UPDATE clients
             SET last_contacted_at = $1
             WHERE id = $2 AND tenant_id = $3
-            RETURNING id, tenant_id, name, phone, email, last_exam_date,
-                      last_contacted_at, status, metadata, created_at
+            RETURNING {_COLS}
             """,
             timestamp,
             client_id,
