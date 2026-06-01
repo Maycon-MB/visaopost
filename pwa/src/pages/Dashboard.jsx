@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import ReactECharts from 'echarts-for-react/lib/core';
 import echarts from '../charts/echartsCore.js';
 import { baseChart, lineSeries, axisLine, axisValue, TOKENS, FONT, fmtNum, refreshTokens } from '../charts/theme.js';
@@ -41,61 +41,109 @@ const IC = {
 };
 
 // Mock (vira dado real na Fase 10f, depende dos tokens da Fase 9).
-const DAILY_VISTAS = [820, 905, 1102, 970, 1180, 1340, 1490, 1322, 1410, 1605, 1788, 1690, 1740, 1820, 1934, 2010, 1875, 2102, 2240, 2188, 2298, 2410, 2350, 2502, 2640, 2710, 2580, 2790, 2842, 2980, 3050];
-const DAILY_CURTIDAS = [62, 71, 84, 79, 96, 110, 118, 105, 112, 124, 138, 131, 136, 142, 151, 158, 147, 165, 176, 172, 180, 189, 184, 196, 207, 212, 202, 218, 223, 234, 240];
-const MONTH_VISTAS = [28, 31, 35, 40, 44, 47, 52, 54, 0, 0, 0, 0].map((v) => v * 1000);
-const MONTH_CURTIDAS = [1800, 2100, 2400, 2900, 3200, 3500, 3900, 4200, 0, 0, 0, 0];
+const DAILY_VISTAS = [1240, 1380, 1640, 1510, 1780, 2020, 2240, 1990, 2120, 2410, 2680, 2540, 2620, 2730, 2900, 3020, 2820, 3160, 3360, 3280, 3450, 3620, 3530, 3760, 3960, 4070, 3880, 4190, 4260, 4480, 4580];
+const DAILY_CURTIDAS = [88, 101, 122, 114, 138, 158, 170, 151, 162, 179, 199, 189, 196, 205, 218, 228, 212, 238, 254, 248, 260, 273, 266, 283, 298, 306, 291, 314, 321, 338, 346];
+const MONTH_VISTAS = [38, 46, 54, 62, 71, 82, 0, 0, 0, 0, 0, 0].map((v) => v * 1000);
+const MONTH_CURTIDAS = [2600, 3200, 3900, 4600, 5400, 6200, 0, 0, 0, 0, 0, 0];
 
 const TOP_POSTS = [
-  { tema: 'Óculos de sol', curtidas: 412, salvos: 86 },
-  { tema: 'Dica de estilo', curtidas: 358, salvos: 74 },
-  { tema: 'Lentes que escurecem', curtidas: 296, salvos: 68 },
-  { tema: 'Promoção do mês', curtidas: 274, salvos: 41 },
-  { tema: 'Cliente feliz', curtidas: 218, salvos: 52 },
+  { tema: 'Óculos de sol verão', curtidas: 587, salvos: 134 },
+  { tema: 'Dica de estilo pessoal', curtidas: 492, salvos: 108 },
+  { tema: 'Lentes que escurecem no sol', curtidas: 421, salvos: 97 },
+  { tema: 'Promoção de aniversário', curtidas: 378, salvos: 63 },
+  { tema: 'Novidades da coleção', curtidas: 312, salvos: 88 },
 ];
 
-// 3 cores BEM distintas (verde / dourado / azul-ardósia) — sem confundir.
-const WA = [
-  { nome: 'Respondidas na hora', valor: 124, cor: TOKENS.primary },
-  { nome: 'Viraram agendamento', valor: 38, cor: TOKENS.secondary },
-  { nome: 'Ainda aguardando', valor: 8, cor: '#5B7C99' },
+
+const MONTHLY_GROWTH = [
+  { mes: 'Jan', vistas: 38000 }, { mes: 'Fev', vistas: 46000 }, { mes: 'Mar', vistas: 54000 },
+  { mes: 'Abr', vistas: 62000 }, { mes: 'Mai', vistas: 71000 }, { mes: 'Jun', vistas: 82000 },
+];
+
+const HORA_PICO = [
+  { h: '8h', v: 340 }, { h: '9h', v: 520 }, { h: '10h', v: 680 }, { h: '11h', v: 820 },
+  { h: '12h', v: 1240 }, { h: '13h', v: 980 }, { h: '14h', v: 760 }, { h: '15h', v: 690 },
+  { h: '16h', v: 720 }, { h: '17h', v: 840 }, { h: '18h', v: 1180 }, { h: '19h', v: 1420 },
+  { h: '20h', v: 1100 }, { h: '21h', v: 780 }, { h: '22h', v: 480 },
+];
+
+const TEMAS_PERF = [
+  { tema: 'Óculos de sol', score: 94 }, { tema: 'Dica de estilo', score: 87 },
+  { tema: 'Lentes especiais', score: 79 }, { tema: 'Promoções', score: 71 },
+  { tema: 'Novidades', score: 65 },
+];
+
+const CLIENTES_ORIGEM = [
+  { name: 'Balcão', value: 148 }, { name: 'QR Code', value: 84 },
+  { name: 'WhatsApp', value: 72 }, { name: 'Indicação', value: 44 },
 ];
 
 const METRICAS = [
-  { ic: 'megafone', label: 'Publicações no mês', value: '26', unit: '', delta: '+8', pos: true, foot: '8 a mais que no mês passado' },
-  { ic: 'olho', label: 'Pessoas que viram seus posts', value: '54,2', unit: 'mil', delta: '+12%', pos: true, foot: 'mais gente conhecendo a Di Lorenzo' },
-  { ic: 'pessoas', label: 'Clientes na sua carteira', value: '348', unit: '', delta: '+21', pos: true, foot: 'novos no balcão e no site' },
-  { ic: 'balao', label: 'Conversas no WhatsApp', value: '170', unit: '', delta: '94% respondidas', pos: true, foot: 'a maioria sem você tocar' },
+  { ic: 'megafone', label: 'Posts publicados no mês', value: '26', unit: '', delta: '+8', pos: true, foot: 'média de 1 post por dia útil' },
+  { ic: 'olho', label: 'Pessoas alcançadas', value: '82,3', unit: 'mil', delta: '+24%', pos: true, foot: 'crescimento em relação ao mês passado' },
+  { ic: 'pessoas', label: 'Clientes na carteira', value: '348', unit: '', delta: '+21', pos: true, foot: '21 novos cadastrados esse mês' },
+  { ic: 'balao', label: 'Conversas no WhatsApp', value: '170', unit: '', delta: '+38 agendamentos', pos: true, foot: '73% respondidas sem você tocar' },
 ];
 
-const ATIVIDADE = [
-  { ic: 'relogio', kind: 'pending', texto: 'Tem um post novo esperando sua aprovação.', hora: 'há 2 horas' },
-  { ic: 'voltou', kind: 'ok', texto: '3 clientes marcaram horário depois da mensagem no WhatsApp.', hora: 'ontem, 18:42' },
-  { ic: 'subindo', kind: 'ok', texto: 'Sua publicação de óculos de sol foi ao ar.', hora: 'ontem, 12:00' },
-  { ic: 'mais', kind: 'ok', texto: 'Margareth se cadastrou pelo QR Code do balcão.', hora: 'há 2 dias' },
-];
+// Heatmap: ano inteiro 2026. Jan–Jun com dados, Jul–Dez vazio (futuro).
+const HEATMAP_DATA = (() => {
+  const data = [];
+  const today = new Date('2026-06-01');
+  const start = new Date('2026-01-01');
+  const end = new Date('2027-01-01');
+  for (let i = 0, d = new Date(start); d < end; d.setDate(d.getDate() + 1), i++) {
+    if (d > today) { data.push([d.toISOString().slice(0, 10), 0]); continue; }
+    const weekend = d.getDay() === 0 || d.getDay() === 6;
+    const val = Math.max(0, Math.round(
+      900 + i * 13
+      + Math.sin(i * 0.65) * 280
+      + Math.sin(i * 0.28) * 190
+      - (weekend ? 480 : 0),
+    ));
+    data.push([d.toISOString().slice(0, 10), val]);
+  }
+  return data;
+})();
 
 const GRID = { left: 12, right: 18, top: 44, bottom: 28, containLabel: true };
 const todayISO = () => new Date().toISOString().slice(0, 10);
 const isoDaysAgo = (n) => { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); };
 
-const PRESETS = [['7d', '7 dias'], ['mes', 'Este mês'], ['trimestre', 'Trimestre'], ['ano', 'Ano']];
+const PRESETS = [['7d', '7 dias'], ['30d', '30 dias'], ['trimestre', 'Trimestre'], ['ano', 'Ano']];
 
 export default function Dashboard() {
   const now = new Date();
   const { theme } = useTheme();
   refreshTokens(); // relê as cores do tema vigente antes de montar os gráficos
-  const [preset, setPreset] = useState('mes');
-  const [from, setFrom] = useState(new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10));
+  const [preset, setPreset] = useState('30d');
+  const [from, setFrom] = useState(isoDaysAgo(29));
   const [to, setTo] = useState(todayISO());
   const [compare, setCompare] = useState(false);
+  const comboRef = useRef(null);
+
+  function zoomChart(direction) {
+    const inst = comboRef.current?.getEchartsInstance();
+    if (!inst) return;
+    const opt = inst.getOption();
+    const dz = opt.dataZoom?.[0] ?? {};
+    const start = dz.start ?? 0;
+    const end = dz.end ?? 100;
+    const span = end - start;
+    if (direction === 'in') {
+      const mid = (start + end) / 2;
+      const half = Math.max(10, span * 0.6) / 2;
+      inst.dispatchAction({ type: 'dataZoom', dataZoomIndex: 0, start: Math.max(0, mid - half), end: Math.min(100, mid + half) });
+    } else {
+      inst.dispatchAction({ type: 'dataZoom', dataZoomIndex: 0, start: 0, end: 100 });
+    }
+  }
 
   const monthly = preset === 'ano' || preset === 'trimestre';
 
   function applyPreset(p) {
     setPreset(p);
     if (p === '7d') { setFrom(isoDaysAgo(6)); setTo(todayISO()); }
-    else if (p === 'mes') { setFrom(new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10)); setTo(todayISO()); }
+    else if (p === '30d') { setFrom(isoDaysAgo(29)); setTo(todayISO()); }
   }
 
   const { labels, vistas, curtidas, periodoLabel } = useMemo(() => {
@@ -128,63 +176,198 @@ export default function Dashboard() {
       { ...lineSeries('Pessoas que viram', vistas, TOKENS.primary), yAxisIndex: 0, z: 3 },
       {
         name: 'Curtidas', type: 'bar', data: curtidas, yAxisIndex: 1,
-        barWidth: '46%', itemStyle: { color: TOKENS.secondarySoft, borderRadius: [4, 4, 0, 0], opacity: 0.85 },
-        emphasis: { itemStyle: { color: TOKENS.secondary } },
+        barWidth: '46%', itemStyle: { color: TOKENS.secondary, borderRadius: [4, 4, 0, 0] },
+        emphasis: { itemStyle: { color: TOKENS.champagne } },
       },
     ];
     const legendData = ['Pessoas que viram', 'Curtidas'];
     if (compare) {
       series.push({
-        name: 'Período anterior', type: 'line', yAxisIndex: 0,
+        name: 'Mês passado', type: 'line', yAxisIndex: 0,
         data: vistas.map((v) => Math.round(v * 0.84)),
-        smooth: 0.3, symbol: 'none', lineStyle: { width: 1.6, type: 'dashed', color: TOKENS.inkMute }, z: 2,
+        smooth: 0.3, symbol: 'none', lineStyle: { width: 1.12, type: 'dashed', color: TOKENS.inkMute }, z: 2,
       });
-      legendData.push('Período anterior');
+      legendData.push('Mês passado');
     }
     return baseChart({
-      grid: { ...GRID, bottom: 50 },
+      grid: GRID,
       legend: { data: legendData, right: 0, top: 4, textStyle: { color: TOKENS.inkSoft, fontFamily: FONT, fontSize: 12 }, itemGap: 16 },
       xAxis: { ...axisLine(), data: labels, axisLabel: { ...axisLine().axisLabel, interval: Math.ceil(labels.length / 8) } },
       yAxis: [axisValue(), axisValue({ position: 'right', splitLine: { show: false } })],
-      dataZoom: [
-        { type: 'inside' },
-        { type: 'slider', height: 16, bottom: 8, borderColor: 'transparent', backgroundColor: TOKENS.ivory, fillerColor: 'rgba(26,92,61,0.12)', handleStyle: { color: TOKENS.primary }, moveHandleSize: 4, textStyle: { color: TOKENS.inkMute, fontSize: 10 } },
-      ],
+      dataZoom: [{ type: 'inside' }],
       series,
     });
   }, [labels, vistas, curtidas, compare, theme]);
 
-  const barOption = useMemo(() => baseChart({
-    grid: { ...GRID, left: 12, right: 28 },
-    legend: { data: ['Curtidas', 'Salvos'], right: 0, top: 4, textStyle: { color: TOKENS.inkSoft, fontFamily: FONT, fontSize: 12 }, icon: 'roundRect', itemWidth: 12, itemHeight: 8, itemGap: 16 },
-    xAxis: axisValue(),
-    yAxis: {
-      type: 'category', data: TOP_POSTS.map((p) => p.tema).reverse(),
-      axisLine: { show: false }, axisTick: { show: false },
-      axisLabel: { color: TOKENS.ink, fontFamily: FONT, fontSize: 13, fontWeight: 500 },
+
+
+  const heatmapOption = useMemo(() => {
+    const maxVal = Math.max(...HEATMAP_DATA.filter((d) => d[1] > 0).map((d) => d[1]));
+    return {
+      tooltip: {
+        formatter: (p) => {
+          if (!p.data || p.data[1] === 0) return '';
+          const d = new Date(p.data[0] + 'T12:00:00');
+          return `${d.toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' })}: <b>${fmtNum(p.data[1])}</b> pessoas`;
+        },
+      },
+      visualMap: {
+        show: false, min: 0, max: maxVal,
+        inRange: { color: [TOKENS.hairline, TOKENS.primary, TOKENS.secondary] },
+      },
+      calendar: {
+        range: '2026',
+        top: 28, bottom: 28, left: 32, right: 16,
+        splitLine: { show: false },
+        itemStyle: { borderWidth: 1, borderColor: TOKENS.surface, borderRadius: 2 },
+        dayLabel: { firstDay: 1, nameMap: 'pt-br', color: TOKENS.inkMute, fontFamily: FONT, fontSize: 10 },
+        monthLabel: { nameMap: 'pt-br', color: TOKENS.inkSoft, fontFamily: FONT, fontSize: 11 },
+        yearLabel: { show: true, color: TOKENS.inkMute, fontFamily: FONT, fontSize: 12 },
+        cellSize: ['auto', 'auto'],
+      },
+      series: [{
+        type: 'heatmap', coordinateSystem: 'calendar', data: HEATMAP_DATA,
+        emphasis: { itemStyle: { shadowBlur: 6, shadowColor: TOKENS.primary } },
+      }],
+    };
+  }, [theme]);
+
+  const SMALL_GRID = { left: 8, right: 8, top: 28, bottom: 24, containLabel: true };
+
+  const growthOption = useMemo(() => baseChart({
+    grid: SMALL_GRID,
+    xAxis: { ...axisLine(), data: MONTHLY_GROWTH.map((d) => d.mes) },
+    yAxis: axisValue(),
+    series: [{ ...lineSeries('Alcance', MONTHLY_GROWTH.map((d) => d.vistas), TOKENS.primary), yAxisIndex: 0 }],
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: TOKENS.surface, borderColor: TOKENS.hairline, borderWidth: 1,
+      textStyle: { color: TOKENS.ink, fontFamily: FONT, fontSize: 12 },
+      formatter: (params) => `${params[0].name}: <b>${(params[0].value / 1000).toFixed(0)}k pessoas</b>`,
     },
-    series: [
-      { name: 'Curtidas', type: 'bar', data: TOP_POSTS.map((p) => p.curtidas).reverse(), barWidth: 11, itemStyle: { color: TOKENS.primary, borderRadius: [0, 5, 5, 0] } },
-      { name: 'Salvos', type: 'bar', data: TOP_POSTS.map((p) => p.salvos).reverse(), barWidth: 11, itemStyle: { color: TOKENS.secondary, borderRadius: [0, 5, 5, 0] } },
-    ],
   }), [theme]);
 
-  const waTotal = WA.reduce((s, w) => s + w.valor, 0);
-  const donutOption = useMemo(() => ({
-    color: WA.map((w) => w.cor),
-    tooltip: { trigger: 'item', backgroundColor: TOKENS.surface, borderColor: TOKENS.hairline, borderWidth: 1, textStyle: { color: TOKENS.ink, fontFamily: FONT, fontSize: 12.5 }, valueFormatter: (v) => fmtNum(v) },
+  const horaOption = useMemo(() => baseChart({
+    grid: SMALL_GRID,
+    xAxis: { ...axisLine(), data: HORA_PICO.map((d) => d.h), axisLabel: { ...axisLine().axisLabel, interval: 2 } },
+    yAxis: axisValue(),
     series: [{
-      type: 'pie', radius: ['60%', '86%'], center: ['50%', '50%'],
-      padAngle: 3, itemStyle: { borderRadius: 6, borderColor: TOKENS.surface, borderWidth: 2 },
-      label: { show: true, position: 'center', formatter: `{t|${waTotal}}\n{s|conversas}`, rich: {
-        t: { fontFamily: '"Fraunces Variable", serif', fontSize: 32, fontWeight: 500, color: TOKENS.ink },
-        s: { fontFamily: FONT, fontSize: 12, color: TOKENS.inkMute, padding: [4, 0, 0, 0] },
-      } },
-      labelLine: { show: false },
-      emphasis: { scale: true, scaleSize: 5 },
-      data: WA.map((w) => ({ name: w.nome, value: w.valor })),
+      type: 'bar', data: HORA_PICO.map((d) => d.v),
+      barWidth: '72%',
+      itemStyle: {
+        color: (p) => [4, 11].includes(p.dataIndex)
+          ? { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#E8B84B' }, { offset: 1, color: '#B07D14' }] }
+          : { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#3EAE74' }, { offset: 1, color: '#1A5C3D' }] },
+        borderRadius: [3, 3, 0, 0],
+      },
     }],
-  }), [waTotal, theme]);
+  }), [theme]);
+
+  const ringGaugeOption = useMemo(() => {
+    const COLORS = ['#1A5C3D', '#C4881A', '#2E86AB', '#A23B72'];
+    return {
+      tooltip: {
+        trigger: 'item', backgroundColor: TOKENS.surface, borderColor: TOKENS.hairline, borderWidth: 1,
+        textStyle: { color: TOKENS.ink, fontFamily: FONT, fontSize: 12 },
+        formatter: (p) => `${p.name}: <b>${p.value}</b> clientes (${p.percent}%)`,
+      },
+      legend: {
+        bottom: 0, left: 'center', orient: 'horizontal',
+        textStyle: { color: TOKENS.inkSoft, fontFamily: FONT, fontSize: 11 },
+        itemWidth: 10, itemHeight: 10,
+      },
+      series: [{
+        type: 'pie',
+        radius: ['46%', '78%'],
+        center: ['50%', '45%'],
+        label: { show: false },
+        labelLine: { show: false },
+        itemStyle: {
+          color: (p) => {
+            const c = COLORS[p.dataIndex % COLORS.length];
+            const m = c.replace('#', '');
+            const r = parseInt(m.slice(0,2),16), g = parseInt(m.slice(2,4),16), b = parseInt(m.slice(4,6),16);
+            const dark = `rgba(${Math.round(r*0.5)},${Math.round(g*0.5)},${Math.round(b*0.5)},1)`;
+            return { type: 'linear', x: 0, y: 0, x2: 1, y2: 0, colorStops: [{ offset: 0, color: dark }, { offset: 1, color: c }] };
+          },
+          borderWidth: 2, borderColor: TOKENS.surface,
+        },
+        data: CLIENTES_ORIGEM.map((d) => ({ name: d.name, value: d.value })),
+      }],
+    };
+  }, [theme]);
+
+  const temasOption = useMemo(() => baseChart({
+    grid: { left: 8, right: 36, top: 16, bottom: 8, containLabel: true },
+    xAxis: { ...axisValue(), max: 100, axisLabel: { ...axisValue().axisLabel, formatter: (v) => `${v}` } },
+    yAxis: {
+      type: 'category', data: TEMAS_PERF.map((t) => t.tema).reverse(),
+      axisLine: { show: false }, axisTick: { show: false },
+      axisLabel: { color: TOKENS.ink, fontFamily: FONT, fontSize: 12, fontWeight: 500 },
+    },
+    tooltip: {
+      trigger: 'item',
+      backgroundColor: TOKENS.surface, borderColor: TOKENS.hairline, borderWidth: 1,
+      textStyle: { color: TOKENS.ink, fontFamily: FONT, fontSize: 12 },
+      formatter: (p) => `${p.name}: <b>${p.value} pts</b>`,
+    },
+    series: [{
+      type: 'bar', data: TEMAS_PERF.map((t) => t.score).reverse(), barWidth: 14,
+      itemStyle: { color: { type: 'linear', x: 0, y: 0, x2: 1, y2: 0, colorStops: [{ offset: 0, color: '#0D3322' }, { offset: 1, color: '#34A36C' }] }, borderRadius: [0, 5, 5, 0] },
+      label: { show: true, position: 'right', fontFamily: FONT, fontSize: 11, color: TOKENS.inkMute, formatter: (p) => `${p.value}` },
+    }],
+  }), [theme]);
+
+  const atendimentoOption = useMemo(() => {
+    const ATEND = [
+      { name: 'Taxa resposta', value: 92 },
+      { name: 'Resolução bot', value: 73 },
+      { name: 'Conversão', value: 28 },
+    ];
+    const RING_GRAD = [
+      ['#0D3322', '#34A36C'], ['#7B4A10', '#E8B84B'], ['#1A3F5C', '#2E86AB'],
+    ];
+    const offsets = ['-38%', '-4%', '30%'];
+    const data = ATEND.map((d, i) => ({
+      value: d.value,
+      name: d.name,
+      itemStyle: {
+        color: { type: 'linear', x: 1, y: 0, x2: 0, y2: 0, colorStops: [{ offset: 0, color: RING_GRAD[i][0] }, { offset: 1, color: RING_GRAD[i][1] }] },
+      },
+      title: { offsetCenter: ['0%', offsets[i]], fontSize: 11, fontFamily: FONT, color: TOKENS.inkSoft },
+      detail: {
+        offsetCenter: ['0%', `${parseInt(offsets[i]) + 18}%`],
+        fontSize: 14, fontWeight: 700, fontFamily: FONT, color: RING_GRAD[i][1],
+        formatter: '{value}%',
+      },
+    }));
+    return {
+      tooltip: {
+        trigger: 'item', backgroundColor: TOKENS.surface, borderColor: TOKENS.hairline, borderWidth: 1,
+        textStyle: { color: TOKENS.ink, fontFamily: FONT, fontSize: 12 },
+        formatter: (p) => `${p.name}: <b>${p.value}%</b>`,
+      },
+      series: [{
+        type: 'gauge', startAngle: 90, endAngle: -270, radius: '100%',
+        pointer: { show: false },
+        progress: { show: true, overlap: false, roundCap: true, clip: false, itemStyle: { borderWidth: 3, borderColor: TOKENS.surface } },
+        axisLine: { lineStyle: { width: 46, color: [[1, TOKENS.hairline]] } },
+        splitLine: { show: false }, axisTick: { show: false }, axisLabel: { show: false },
+        data,
+      }],
+    };
+  }, [theme]);
+
+  const volumeOption = useMemo(() => baseChart({
+    grid: { left: 8, right: 8, top: 28, bottom: 24, containLabel: true },
+    xAxis: { ...axisLine(), data: MONTHLY_GROWTH.map((d) => d.mes) },
+    yAxis: axisValue(),
+    series: [{
+      type: 'bar', data: [8, 10, 11, 12, 14, 26], barWidth: '52%',
+      itemStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#34A36C' }, { offset: 1, color: '#0D3322' }] }, borderRadius: [4, 4, 0, 0] },
+      label: { show: true, position: 'top', fontFamily: FONT, fontSize: 11, color: TOKENS.inkMute },
+    }],
+  }), [theme]);
 
   return (
     <>
@@ -210,7 +393,7 @@ export default function Dashboard() {
             </>
           )}
           <span className="fb-div" />
-          <button className={`fb-btn ${compare ? 'active' : ''}`} onClick={() => setCompare((c) => !c)} title="Comparar com o período anterior">Comparar</button>
+          <button className={`fb-btn ${compare ? 'active' : ''}`} onClick={() => setCompare((c) => !c)} title="Mostrar linha do mês passado para comparar">Mês passado</button>
         </div>
       </div>
 
@@ -233,73 +416,153 @@ export default function Dashboard() {
       </div>
 
       <div className="bento">
+
+        {/* Linha 1: heatmap ano inteiro */}
+        <section className="chart-card span-12 enter">
+          <div className="chart-head" style={{ marginBottom: 4 }}>
+            <div>
+              <div className="chart-title">Atividade do ano inteiro — 2026</div>
+              <div className="chart-note">cada quadrado = 1 dia · mais escuro = mais pessoas viram · meses futuros aparecem vazios</div>
+            </div>
+            <div className="chart-head-actions">
+              <InfoButton text={<>365 dias de atividade. Quadrados escuros = mais alcance naquele dia. Fins de semana naturalmente mais claros. Meses futuros ficam em branco.</>} />
+            </div>
+          </div>
+          <ReactECharts echarts={echarts} option={heatmapOption} style={{ height: 215 }} opts={{ renderer: 'svg' }} notMerge />
+        </section>
+
+        {/* Linha 2: alcance principal + radar WhatsApp */}
         <section className="chart-card span-8 enter">
           <div className="chart-head">
             <div>
-              <div className="chart-title">Quantas pessoas viram suas publicações</div>
-              <div className="chart-note">a área mostra quem viu; as barras, quantas curtidas</div>
+              <div className="chart-title">Pessoas alcançadas por dia</div>
+              <div className="chart-note">linha verde = quem viu · barras douradas = curtidas</div>
             </div>
             <div className="chart-head-actions">
               <span className="chart-tag">crescendo</span>
-              <InfoButton text={<>A linha verde é <strong>quanta gente viu</strong> suas publicações por dia. As barras douradas são as <strong>curtidas</strong>. Arraste a barrinha de baixo pra dar zoom num período.</>} />
+              <button className="zoom-btn" onClick={() => zoomChart('in')} title="Aproximar" aria-label="Aproximar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg>
+              </button>
+              <button className="zoom-btn" onClick={() => zoomChart('out')} title="Ver tudo" aria-label="Ver tudo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/></svg>
+              </button>
+              <InfoButton text={<>Linha verde = quantas pessoas viram seus posts naquele dia. Barras douradas = curtidas. Role com o mouse pra dar zoom em qualquer período.</>} />
             </div>
           </div>
-          <ReactECharts echarts={echarts} option={comboOption} style={{ height: 300 }} opts={{ renderer: 'svg' }} notMerge />
+          <ReactECharts ref={comboRef} echarts={echarts} option={comboOption} style={{ height: 200 }} opts={{ renderer: 'svg' }} notMerge />
         </section>
 
         <section className="chart-card span-4 enter">
           <div className="chart-head">
             <div>
-              <div className="chart-title">WhatsApp este mês</div>
-              <div className="chart-note">conversas com clientes</div>
+              <div className="chart-title">Desempenho do atendimento</div>
+              <div className="chart-note">taxa de resposta · resolução pelo bot · conversão em agendamento</div>
             </div>
             <div className="chart-head-actions">
-              <InfoButton text={<>Como estão as conversas no seu WhatsApp: quantas foram <strong>respondidas na hora</strong>, quantas <strong>viraram agendamento</strong> e quantas ainda esperam resposta.</>} />
+              <InfoButton text={<>Taxa resposta = % de conversas atendidas. Resolução bot = % resolvidas sem intervenção humana. Conversão = % que viraram agendamento.</>} />
             </div>
           </div>
-          <div className="wa-figure">
-            <ReactECharts echarts={echarts} option={donutOption} style={{ height: 184, width: '100%' }} opts={{ renderer: 'svg' }} notMerge />
-            <div className="wa-list">
-              {WA.map((w) => (
-                <div className="wa-item" key={w.nome}>
-                  <span className="lbl"><span className="wa-dot" style={{ background: w.cor }} />{w.nome}</span>
-                  <span className="val">{w.valor}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <ReactECharts echarts={echarts} option={atendimentoOption} style={{ height: 160 }} opts={{ renderer: 'svg' }} notMerge />
         </section>
 
-        <section className="chart-card span-7 enter">
+        {/* Linha 2: volume de posts + crescimento + horário de pico */}
+        <section className="chart-card span-4 enter">
           <div className="chart-head">
             <div>
-              <div className="chart-title">As publicações que mais chamaram atenção</div>
-              <div className="chart-note">curtidas e quem salvou pra ver depois</div>
+              <div className="chart-title">Posts publicados por mês</div>
+              <div className="chart-note">volume de publicações ao longo do ano</div>
             </div>
             <div className="chart-head-actions">
-              <InfoButton text={<>Suas publicações com mais <strong>curtidas</strong> e mais <strong>salvamentos</strong> (quando alguém guarda pra ver depois — sinal de interesse forte).</>} />
+              <InfoButton text={<>Quantos posts a Di Lorenzo publicou em cada mês. Junho já ultrapassou todos os meses anteriores.</>} />
             </div>
           </div>
-          <ReactECharts echarts={echarts} option={barOption} style={{ height: 268 }} opts={{ renderer: 'svg' }} notMerge />
+          <ReactECharts echarts={echarts} option={volumeOption} style={{ height: 160 }} opts={{ renderer: 'svg' }} notMerge />
         </section>
 
-        <section className="chart-card span-5 enter">
-          <div className="chart-head" style={{ marginBottom: 4 }}>
-            <div className="chart-title">O que rolou por aqui</div>
+        <section className="chart-card span-4 enter">
+          <div className="chart-head">
+            <div>
+              <div className="chart-title">Crescimento do alcance</div>
+              <div className="chart-note">total de pessoas alcançadas mês a mês</div>
+            </div>
             <div className="chart-head-actions">
-              <InfoButton text={<>Um resumo das últimas coisas que aconteceram: posts pra aprovar, clientes que voltaram, publicações no ar e novos cadastros.</>} />
+              <InfoButton text={<>Crescimento acumulado do alcance mensal. Em 6 meses o alcance mais que dobrou.</>} />
             </div>
           </div>
-          {ATIVIDADE.map((a, i) => (
-            <div key={i} className="feed-item">
-              <span className={`feed-dot ${a.kind}`}><Icon paths={IC[a.ic]} /></span>
-              <div>
-                <div className="feed-text">{a.texto}</div>
-                <div className="feed-time">{a.hora}</div>
-              </div>
-            </div>
-          ))}
+          <ReactECharts echarts={echarts} option={growthOption} style={{ height: 160 }} opts={{ renderer: 'svg' }} notMerge />
         </section>
+
+        <section className="chart-card span-4 enter">
+          <div className="chart-head">
+            <div>
+              <div className="chart-title">Horário de pico</div>
+              <div className="chart-note">quando seu público está mais ativo</div>
+            </div>
+            <div className="chart-head-actions">
+              <InfoButton text={<>Engajamento por hora do dia. Barras douradas = picos. Seus posts saem no momento certo.</>} />
+            </div>
+          </div>
+          <ReactECharts echarts={echarts} option={horaOption} style={{ height: 160 }} opts={{ renderer: 'svg' }} notMerge />
+        </section>
+
+        {/* Linha 3: ranking visual + temas + origem */}
+        <section className="chart-card span-5 enter compact">
+          <div className="chart-head">
+            <div>
+              <div className="chart-title">Ranking de posts</div>
+              <div className="chart-note">curtidas e salvamentos do período</div>
+            </div>
+            <div className="chart-head-actions">
+              <InfoButton text={<><strong>Salvamentos</strong> valem mais que curtidas — é quando alguém guarda pra ver depois, sinal de interesse real.</>} />
+            </div>
+          </div>
+          <table className="rank-table">
+            <thead><tr><th>#</th><th>Publicação</th><th className="num">Curtidas</th><th className="num">Salvos</th></tr></thead>
+            <tbody>
+              {TOP_POSTS.map((p, i) => {
+                const pct = Math.round(p.curtidas / TOP_POSTS[0].curtidas * 100);
+                return (
+                  <tr key={i} style={{ '--bar': `${pct}%` }}>
+                    <td><span className={`rank-badge${i === 0 ? ' gold' : i === 1 ? ' silver' : i === 2 ? ' bronze' : ''}`}>{i + 1}</span></td>
+                    <td className="rank-tema">{p.tema}</td>
+                    <td className="num rank-bar-cell">
+                      <span className="rank-bar-fill" />
+                      <span className="rank-bar-val">{p.curtidas.toLocaleString('pt-BR')}</span>
+                    </td>
+                    <td className="num saved">{p.salvos}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </section>
+
+        <section className="chart-card span-4 enter compact">
+          <div className="chart-head">
+            <div>
+              <div className="chart-title">Temas que mais funcionam</div>
+              <div className="chart-note">score de performance por tipo de post</div>
+            </div>
+            <div className="chart-head-actions">
+              <InfoButton text={<>Performance relativa de cada tema de post. Score combina curtidas, salvamentos e alcance.</>} />
+            </div>
+          </div>
+          <ReactECharts echarts={echarts} option={temasOption} style={{ height: 160 }} opts={{ renderer: 'svg' }} notMerge />
+        </section>
+
+        <section className="chart-card span-3 enter compact">
+          <div className="chart-head">
+            <div>
+              <div className="chart-title">Clientes por origem</div>
+              <div className="chart-note">como chegaram até você</div>
+            </div>
+            <div className="chart-head-actions">
+              <InfoButton text={<>De onde vieram seus clientes cadastrados. QR Code do balcão, WhatsApp, indicações e atendimento presencial.</>} />
+            </div>
+          </div>
+          <ReactECharts echarts={echarts} option={ringGaugeOption} style={{ height: 150 }} opts={{ renderer: 'svg' }} notMerge />
+        </section>
+
       </div>
     </>
   );
