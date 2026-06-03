@@ -19,7 +19,8 @@ const WA_NUMBER = '5521964389591'
 const WA_MSG = encodeURIComponent('Olá! Vim pelo site e quero agendar uma visita.')
 const WA_HREF = `https://wa.me/${WA_NUMBER}?text=${WA_MSG}`
 
-const LandingPage = () => {
+const LandingPage = ({ baseUrl = '/' }) => {
+  const img = (name) => `${baseUrl}${name}`
   const brands = ['RAY-BAN', 'OAKLEY', 'CHLOÉ', 'TOMMY HILFIGER', 'PRADA', 'VOGUE']
   const reviews = [
     { name: 'Ana Beatriz', text: 'O atendimento visagista mudou minha autoestima! Encontrei óculos que realmente combinam comigo.', time: 'Cliente há 3 anos' },
@@ -47,7 +48,7 @@ const LandingPage = () => {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: '#fff', fontWeight: '900', fontSize: '14px'
             }}>
-              <img src="/otica_logo.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              <img src={img('otica_logo.jpg')} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 onError={(e) => { e.target.style.display = 'none' }} />
               DL
             </div>
@@ -85,7 +86,7 @@ const LandingPage = () => {
       }}>
         <div style={{
           position: 'absolute', inset: 0, zIndex: -1,
-          backgroundImage: 'linear-gradient(rgba(13, 51, 34, 0.72), rgba(13, 51, 34, 0.72)), url("/hero_otica_premium_1778270703774.png")',
+          backgroundImage: `linear-gradient(rgba(13, 51, 34, 0.72), rgba(13, 51, 34, 0.72)), url("${img('hero_otica_premium_1778270703774.png')}")`,
           backgroundSize: 'cover', backgroundPosition: 'center'
         }} />
         <div style={{ maxWidth: '850px', padding: '0 20px' }}>
@@ -174,7 +175,7 @@ const LandingPage = () => {
           </motion.div>
           <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
             style={{ flex: '1.2', minWidth: '350px', position: 'relative' }}>
-            <img src="/oculos_luxo_close_1778271030465.png" alt="Detalhe Óculos"
+            <img src={img('oculos_luxo_close_1778271030465.png')} alt="Detalhe Óculos"
               style={{ width: '100%', borderRadius: radii.card, boxShadow: '0 40px 80px rgba(0,0,0,0.15)' }} />
             <div style={{ position: 'absolute', top: '-20px', right: '-20px', backgroundColor: landing.orange, color: '#fff', padding: '20px', borderRadius: radii.md, fontWeight: 800, fontSize: '0.9rem', boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}>
               QUALIDADE<br />PREMIUM

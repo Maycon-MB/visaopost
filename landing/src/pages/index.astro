@@ -15,7 +15,7 @@ import LandingPage from '../components/LandingPage.jsx';
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script type="application/ld+json">{JSON.stringify({
+  <script type="application/ld+json" is:inline>{JSON.stringify({
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "Optician"],
     "name": "Ótica Di Lorenzo",
@@ -30,6 +30,6 @@ import LandingPage from '../components/LandingPage.jsx';
   </style>
 </head>
 <body>
-  <LandingPage client:load />
+  <LandingPage client:load baseUrl={import.meta.env.BASE_URL} />
 </body>
 </html>
