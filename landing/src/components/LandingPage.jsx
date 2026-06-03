@@ -82,11 +82,12 @@ const LandingPage = ({ baseUrl = '/' }) => {
       <header style={{
         height: '90vh', minHeight: '600px', position: 'relative',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        textAlign: 'center', color: '#fff', overflow: 'hidden', paddingTop: '80px'
+        textAlign: 'center', color: '#fff', overflow: 'hidden', paddingTop: '80px',
+        backgroundColor: landing.green
       }}>
         <div style={{
-          position: 'absolute', inset: 0, zIndex: -1,
-          backgroundImage: `linear-gradient(rgba(13, 51, 34, 0.72), rgba(13, 51, 34, 0.72)), url("${img('hero_otica_premium_1778270703774.png')}")`,
+          position: 'absolute', inset: 0,
+          backgroundImage: `linear-gradient(rgba(13, 51, 34, 0.80), rgba(13, 51, 34, 0.80)), url("${img('hero_otica_premium_1778270703774.png')}")`,
           backgroundSize: 'cover', backgroundPosition: 'center'
         }} />
         <div style={{ maxWidth: '850px', padding: '0 20px' }}>
@@ -104,7 +105,7 @@ const LandingPage = ({ baseUrl = '/' }) => {
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
-            style={{ fontSize: '1.2rem', color: '#fff', opacity: 0.9, marginBottom: '40px', maxWidth: '600px', marginInline: 'auto', fontWeight: 400 }}
+            style={{ fontSize: '1.2rem', color: 'rgba(255,255,255,0.92)', marginBottom: '40px', maxWidth: '600px', marginInline: 'auto', fontWeight: 400 }}
           >
             A melhor curadoria de armações do mundo aliada à tecnologia de ponta para sua saúde ocular.
           </motion.p>
