@@ -116,10 +116,10 @@ const LandingPage = ({ baseUrl = '/' }) => {
               boxShadow: '0 10px 30px rgba(212, 136, 10, 0.4)'
             }}>Agendar Consulta</a>
             <a href="#catalogo" style={{
-              backgroundColor: 'rgba(255,255,255,0.12)', color: '#fff', padding: '18px 45px',
-              borderRadius: '50px', fontWeight: 700, textDecoration: 'none',
+              backgroundColor: 'transparent', color: landing.orange, padding: '18px 45px',
+              borderRadius: '50px', fontWeight: 800, textDecoration: 'none',
               textTransform: 'uppercase', letterSpacing: '1px',
-              border: '2px solid rgba(255,255,255,0.6)'
+              border: `2px solid ${landing.orange}`
             }}>Ver Coleções</a>
           </div>
         </div>
