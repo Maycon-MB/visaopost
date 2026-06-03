@@ -4,9 +4,9 @@ Roadmap de execução. Mandatos técnicos em [`CLAUDE.md`](CLAUDE.md). Visão ge
 
 ---
 
-## Status (2026-05-28)
+## Status (2026-06-03)
 
-**Modo:** FREE TIER. **Cliente Di Lorenzo fechou comigo hoje** (informal via WhatsApp, contrato + LGPD a formalizar). Zero gasto com VPS/domínio até estar tudo pronto local + ele entregar tokens (Fase 9).
+**Modo:** FREE TIER. **Cliente Di Lorenzo fechou** (informal via WhatsApp 2026-05-28, contrato + LGPD a formalizar). Zero gasto com VPS/domínio até estar tudo pronto local + ele entregar tokens (Fase 9).
 
 | Fase | Escopo | Status |
 |---|---|---|
@@ -17,10 +17,17 @@ Roadmap de execução. Mandatos técnicos em [`CLAUDE.md`](CLAUDE.md). Visão ge
 | 4 | `calendar.py` + `caption.py` + `post_generator.py` | ✅ done* (gate 30d migrado pra Fase 5) |
 | 5 | Retry 429 Gemini + GH Actions cron demo + RQ infra + queue endpoints + stock photos | ✅ |
 | 6a | Backend PWA do dono (email + JWT + 14 endpoints + 28 tests) | ✅ |
-| **6b-f** | **PWA frontend: aprovar + clientes + settings + dashboard skeleton + catálogo** | **⏭ ATIVA** |
-| 7 | Landing Astro + galeria pública + QR Code de Balcão | pendente |
+| 6b | PWA `/aprovar/:token` (tela do email, touch 56px, SW offline) | ✅ |
+| 6c | PWA `/clientes` CRUD + CSV + filtros + migration 0006 | ✅ |
+| 6d | PWA `/settings` (horário, dias, regras IA, FAQ bot) wired ao backend | ✅ |
+| 6e | PWA `/dashboard` (ECharts, bento, tema claro/escuro) | ✅ |
+| 6f | PWA `/produtos` CRUD + upload foto + backend `/api/products` + migration 0009 | ✅ |
+| 6g | Auth login/senha + JWT sessão + guard assinatura + migrations 0005+0007+0008 | ✅ |
+| **7a** | **Landing Astro pública Di Lorenzo** (design pitch, React, Playfair+Montserrat, hero+catálogo+agendamento+depoimentos+unidade) | **✅ 2026-06-03** |
+| 7b | Galeria pública dos posts aprovados | pendente |
+| 7c | QR Code de balcão + form opt-in recall | pendente |
 | pré-0b | Contrato + LGPD formal (cliente já topou informal) | **em curso humano** |
-| 0b | Hostinger + domínio + Cloudflare + Backblaze B2 | aguarda Fase 6+7 done |
+| 0b | Hostinger + domínio + Cloudflare + Backblaze B2 | aguarda 7b/7c done |
 | 8 | Deploy VPS produção | depende 0b |
 | 9 | Cliente entrega tokens + brand + FAQ + fotos + decisões | **gate cliente** |
 | 10a-j | Integração ondas (IG + bot WA + recall + scripts reels + GMB sync + relatório + personagem + reviews→posts + posts contextuais) | depende 9 |

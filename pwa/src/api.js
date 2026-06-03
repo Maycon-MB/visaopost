@@ -225,6 +225,47 @@ export async function updateProfile(patch) {
   return request('/api/auth/me', { method: 'PATCH', body: JSON.stringify(patch) });
 }
 
+// ── Produtos (catálogo) ───────────────────────────────────────────────────────
+const DEMO_PRODUCTS = [
+  { id: 'd1', tenant_id: 'demo', name: 'Aurora Tortoise', category: 'Solar', description: null, price_brl: 890, image_url: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=600&q=85', tags: [], position: 0, is_active: true, created_at: '2025-01-01T00:00:00Z' },
+  { id: 'd2', tenant_id: 'demo', name: 'Lumen Acetato', category: 'Grau', description: null, price_brl: 1140, image_url: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?auto=format&fit=crop&w=600&q=85', tags: [], position: 1, is_active: true, created_at: '2025-01-01T00:00:00Z' },
+  { id: 'd3', tenant_id: 'demo', name: 'Câmara Gold', category: 'Premium', description: null, price_brl: 2380, image_url: 'https://images.unsplash.com/photo-1556306535-0f09a537f0a3?auto=format&fit=crop&w=600&q=85', tags: [], position: 2, is_active: true, created_at: '2025-01-01T00:00:00Z' },
+  { id: 'd4', tenant_id: 'demo', name: 'Vesper Titânio', category: 'Premium', description: null, price_brl: 2940, image_url: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=600&q=85', tags: [], position: 3, is_active: true, created_at: '2025-01-01T00:00:00Z' },
+];
+
+export async function listProducts({ includeInactive = false } = {}) {
+  if (DEMO) { await new Promise((r) => setTimeout(r, 200)); return DEMO_PRODUCTS; }
+  return request(`/api/products${qs({ include_inactive: includeInactive || undefined })}`);
+}
+
+export async function createProduct(payload) {
+  if (DEMO) return { id: 'demo-' + Date.now(), tenant_id: 'demo', ...payload, image_url: null, created_at: new Date().toISOString() };
+  return request('/api/products', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function updateProduct(id, patch) {
+  if (DEMO) return { id, ...patch };
+  return request(`/api/products/${id}`, { method: 'PATCH', body: JSON.stringify(patch) });
+}
+
+export async function deleteProduct(id) {
+  if (DEMO) return {};
+  return request(`/api/products/${id}`, { method: 'DELETE' });
+}
+
+export async function uploadProductImage(productId, file) {
+  if (DEMO) return null;
+  const form = new FormData();
+  form.append('file', file);
+  const headers = {};
+  const token = getToken();
+  if (token) headers.Authorization = `Bearer ${token}`;
+  const res = await fetch(`${BASE}/api/products/${productId}/image`, { method: 'POST', body: form, headers });
+  const data = await res.json().catch(() => null);
+  if (!res.ok) { const err = new Error((data && data.detail) || `HTTP ${res.status}`); err.status = res.status; throw err; }
+  return data;
+}
+
 export function imageUrlFor(post) {
   if (!post || !post.image_url) return null;
   if (post.image_url.startsWith('http')) return post.image_url;

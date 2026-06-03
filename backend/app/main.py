@@ -8,6 +8,7 @@ from app.api.auth import router as auth_router
 from app.api.clients import router as clients_router
 from app.api.dev import router as dev_router
 from app.api.posts import router as posts_router
+from app.api.products import router as products_router
 from app.api.settings import router as settings_router
 from app.config import get_settings
 from app.db.pool import acquire, close_pool, init_pool
@@ -49,6 +50,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(posts_router)
 app.include_router(clients_router)
+app.include_router(products_router)
 app.include_router(settings_router)
 
 if _settings.app_env == "dev":
