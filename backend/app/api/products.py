@@ -13,6 +13,7 @@ from typing import Any
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi.responses import Response
 from fastapi.responses import FileResponse
 
 from app.api.auth import current_tenant_id
@@ -118,11 +119,12 @@ async def update_endpoint(
 
 # ── Delete ─────────────────────────────────────────────────────────────────────
 
-@router.delete("/{product_id}", status_code=204)
+@router.delete("/{product_id}", status_code=204, response_class=Response)
 async def delete_endpoint(
     product_id: UUID,
     tenant_id: UUID = Depends(current_tenant_id),
-) -> None:
+) -> Response:
     deleted = await delete_product(tenant_id, product_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="Produto não encontrado.")
+    return Response(status_code=204)

@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { createProduct, deleteProduct, listProducts, updateProduct, uploadProductImage } from '../api.js';
 import { DEMO } from '../config.js';
 
 const CATEGORIES = ['Solar', 'Grau', 'Premium', 'Lentes', 'Acessórios', 'Outros'];
 
-const EMPTY_FORM = { name: '', category: 'Solar', description: '', price_brl: '', image_file: null };
+const EMPTY_FORM = { name: '', category: 'Solar', description: '', price_brl: '', features: '', image_file: null };
 
 function formatPrice(v) {
   if (v == null) return '';
@@ -15,7 +16,7 @@ function ProductModal({ product, onClose, onSaved, onDeleted }) {
   const isEdit = !!product;
   const [form, setForm] = useState(
     isEdit
-      ? { name: product.name, category: product.category, description: product.description || '', price_brl: product.price_brl != null ? String(product.price_brl) : '', image_file: null }
+      ? { name: product.name, category: product.category, description: product.description || '', price_brl: product.price_brl != null ? String(product.price_brl) : '', features: (product.features || []).join('\n'), image_file: null }
       : { ...EMPTY_FORM }
   );
   const [preview, setPreview] = useState(isEdit ? product.image_url : null);
@@ -45,6 +46,7 @@ function ProductModal({ product, onClose, onSaved, onDeleted }) {
         description: form.description.trim() || null,
         price_brl: form.price_brl !== '' ? parseFloat(form.price_brl) : null,
         tags: [],
+        features: form.features.split('\n').map((l) => l.trim()).filter(Boolean),
         is_active: true,
         position: isEdit ? product.position : 9999,
       };
@@ -131,6 +133,20 @@ function ProductModal({ product, onClose, onSaved, onDeleted }) {
             <input className="input-atelier" type="number" min="0" step="0.01" value={form.price_brl} onChange={(e) => set('price_brl', e.target.value)} placeholder="Ex.: 890" style={{ maxWidth: 180 }} />
           </div>
 
+          {/* Diferenciais */}
+          <div>
+            <label className="label-atelier">
+              Diferenciais <span className="muted" style={{ fontWeight: 400 }}>(1 por linha — aparecem na apresentação)</span>
+            </label>
+            <textarea
+              className="textarea-atelier"
+              value={form.features}
+              onChange={(e) => set('features', e.target.value)}
+              rows={4}
+              placeholder={'Conforto e Nitidez\nFácil Adaptação\nMenor Distorção Periférica'}
+            />
+          </div>
+
           {/* Descrição */}
           <div>
             <label className="label-atelier">Descrição curta (opcional)</label>
@@ -210,9 +226,15 @@ export default function Produtos() {
           <h1 className="dash-hello">Catálogo</h1>
           <p className="dash-sub">As fotos que aparecem no seu site público.</p>
         </div>
-        <button className="btn-touch btn-primary-atelier" style={{ minHeight: 44, padding: '0 18px', fontSize: 13 }} onClick={() => setModal('new')}>
-          + Adicionar
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <Link to="/apresentacao" className="btn-touch btn-ghost-atelier" style={{ minHeight: 44, padding: '0 16px', fontSize: 13, display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            Apresentar
+          </Link>
+          <button className="btn-touch btn-primary-atelier" style={{ minHeight: 44, padding: '0 18px', fontSize: 13 }} onClick={() => setModal('new')}>
+            + Adicionar
+          </button>
+        </div>
       </div>
 
       {cats.length > 1 && (

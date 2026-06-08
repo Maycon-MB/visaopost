@@ -9,6 +9,39 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+
+class OlhoReceita(BaseModel):
+    """Dados de refração de um olho (OD ou OE) pra uma distância."""
+
+    model_config = ConfigDict(frozen=True)
+
+    esferico: float | None = None    # ex: -2.50 ou +1.25
+    cilindrico: float | None = None  # ex: -0.75
+    eixo: int | None = None          # 0–180°
+    dp: float | None = None          # distância pupilar mm
+    altura: float | None = None      # altura mm
+
+
+class ParReceita(BaseModel):
+    """Par OD + OE pra uma distância (longe ou perto)."""
+
+    model_config = ConfigDict(frozen=True)
+
+    od: OlhoReceita = Field(default_factory=OlhoReceita)
+    oe: OlhoReceita = Field(default_factory=OlhoReceita)
+
+
+class Receita(BaseModel):
+    """Receita ótica completa do cliente (grau longe + perto + produto)."""
+
+    model_config = ConfigDict(frozen=True)
+
+    longe: ParReceita = Field(default_factory=ParReceita)
+    perto: ParReceita = Field(default_factory=ParReceita)
+    lente: str | None = Field(default=None, max_length=100)
+    armacao: str | None = Field(default=None, max_length=100)
+    obs: str | None = Field(default=None, max_length=300)
+
 # Aceita só dígitos depois de remover separadores. 10-13 dígitos cobre BR
 # (DDD+9+8 com ou sem +55). Validação branda — onboarding é rude com restrição agressiva.
 _PHONE_DIGITS = re.compile(r"\D+")
@@ -51,6 +84,7 @@ class ClientCreate(BaseModel):
     last_purchase_value_brl: float | None = Field(default=None, ge=0)
     next_return_date: DateType | None = None
     neighborhood: str | None = Field(default=None, max_length=80)
+    receita: Receita | None = None
 
     @field_validator("name")
     @classmethod
@@ -120,6 +154,7 @@ class ClientUpdate(BaseModel):
     last_purchase_value_brl: float | None = Field(default=None, ge=0)
     next_return_date: DateType | None = None
     neighborhood: str | None = Field(default=None, max_length=80)
+    receita: Receita | None = None
 
     @field_validator("phone")
     @classmethod
@@ -170,3 +205,4 @@ class Client(BaseModel):
     last_purchase_value_brl: float | None = None
     next_return_date: DateType | None = None
     neighborhood: str | None = None
+    receita: Receita | None = None

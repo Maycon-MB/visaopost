@@ -10,7 +10,7 @@ import asyncpg
 from app.db.pool import acquire
 from app.models.product import Product, ProductCreate, ProductUpdate
 
-_COLS = "id, tenant_id, name, category, description, price_brl, image_url, tags, position, is_active, created_at"
+_COLS = "id, tenant_id, name, category, description, price_brl, image_url, tags, features, position, is_active, created_at"
 
 
 def _row_to_product(row: asyncpg.Record) -> Product:
@@ -24,6 +24,7 @@ def _row_to_product(row: asyncpg.Record) -> Product:
         price_brl=float(price) if price is not None else None,
         image_url=row["image_url"],
         tags=list(row["tags"] or []),
+        features=list(row["features"] or []),
         position=row["position"],
         is_active=row["is_active"],
         created_at=row["created_at"],
@@ -50,8 +51,8 @@ async def get_product(tenant_id: UUID, product_id: UUID) -> Product | None:
 
 async def create_product(tenant_id: UUID, payload: ProductCreate) -> Product:
     q = f"""
-        INSERT INTO products (tenant_id, name, category, description, price_brl, tags, position, is_active)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        INSERT INTO products (tenant_id, name, category, description, price_brl, tags, features, position, is_active)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         RETURNING {_COLS}
     """
     price = Decimal(str(payload.price_brl)) if payload.price_brl is not None else None
@@ -64,10 +65,12 @@ async def create_product(tenant_id: UUID, payload: ProductCreate) -> Product:
             payload.description,
             price,
             payload.tags,
+            payload.features,
             payload.position,
             payload.is_active,
         )
-    return _row_to_product(row)  # type: ignore[arg-type]
+    assert row is not None
+    return _row_to_product(row)
 
 
 async def update_product(tenant_id: UUID, product_id: UUID, patch: ProductUpdate) -> Product | None:
@@ -91,6 +94,8 @@ async def update_product(tenant_id: UUID, product_id: UUID, patch: ProductUpdate
         add("price_brl", Decimal(str(patch.price_brl)) if patch.price_brl is not None else None)
     if patch.tags is not None:
         add("tags", patch.tags)
+    if patch.features is not None:
+        add("features", patch.features)
     if patch.position is not None:
         add("position", patch.position)
     if patch.is_active is not None:
@@ -116,5 +121,5 @@ async def set_product_image(tenant_id: UUID, product_id: UUID, image_url: str) -
 async def delete_product(tenant_id: UUID, product_id: UUID) -> bool:
     q = "DELETE FROM products WHERE id = $1 AND tenant_id = $2"
     async with acquire() as conn:
-        result = await conn.execute(q, product_id, tenant_id)
+        result: str = await conn.execute(q, product_id, tenant_id)
     return result == "DELETE 1"

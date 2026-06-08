@@ -301,6 +301,9 @@ export default function Clientes() {
   );
 }
 
+const thS = { padding: '4px 6px', textAlign: 'center', fontWeight: 500, fontSize: 11, color: 'var(--text-muted, #888)', borderBottom: '1px solid var(--border, #e0e0e0)', whiteSpace: 'nowrap' };
+const tdS = { padding: '3px 3px', verticalAlign: 'middle' };
+
 const SOURCES = [
   ['manual', 'Cadastro no balcão'],
   ['qr_balcao', 'QR Code do balcão'],
@@ -312,6 +315,24 @@ const LENS_TYPES = ['Monofocal', 'Multifocal', 'Antirreflexo', 'Transitions', 'B
 
 function ClientModal({ client, onClose, onSaved, onError }) {
   const editing = !!client;
+  const emptyOlho = () => ({ esferico: '', cilindrico: '', eixo: '', dp: '', altura: '' });
+  const emptyReceita = () => ({
+    longe: { od: emptyOlho(), oe: emptyOlho() },
+    perto: { od: emptyOlho(), oe: emptyOlho() },
+    lente: '', armacao: '', obs: '',
+  });
+  const fromReceita = (r) => r ? {
+    longe: {
+      od: { esferico: r.longe?.od?.esferico ?? '', cilindrico: r.longe?.od?.cilindrico ?? '', eixo: r.longe?.od?.eixo ?? '', dp: r.longe?.od?.dp ?? '', altura: r.longe?.od?.altura ?? '' },
+      oe: { esferico: r.longe?.oe?.esferico ?? '', cilindrico: r.longe?.oe?.cilindrico ?? '', eixo: r.longe?.oe?.eixo ?? '', dp: r.longe?.oe?.dp ?? '', altura: r.longe?.oe?.altura ?? '' },
+    },
+    perto: {
+      od: { esferico: r.perto?.od?.esferico ?? '', cilindrico: r.perto?.od?.cilindrico ?? '', eixo: r.perto?.od?.eixo ?? '', dp: r.perto?.od?.dp ?? '', altura: r.perto?.od?.altura ?? '' },
+      oe: { esferico: r.perto?.oe?.esferico ?? '', cilindrico: r.perto?.oe?.cilindrico ?? '', eixo: r.perto?.oe?.eixo ?? '', dp: r.perto?.oe?.dp ?? '', altura: r.perto?.oe?.altura ?? '' },
+    },
+    lente: r.lente || '', armacao: r.armacao || '', obs: r.obs || '',
+  } : emptyReceita();
+
   const [form, setForm] = useState({
     name: client?.name || '',
     phone: client?.phone || '',
@@ -328,12 +349,22 @@ function ClientModal({ client, onClose, onSaved, onError }) {
     last_purchase_value_brl: client?.last_purchase_value_brl ?? '',
     next_return_date: client?.next_return_date || '',
     neighborhood: client?.neighborhood || '',
+    receita: fromReceita(client?.receita),
   });
   const [saving, setSaving] = useState(false);
   const [fieldErr, setFieldErr] = useState(null);
   const [showMore, setShowMore] = useState(editing);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const setR = (dist, olho, campo) => (e) =>
+    setForm((f) => ({
+      ...f,
+      receita: {
+        ...f.receita,
+        [dist]: { ...f.receita[dist], [olho]: { ...f.receita[dist][olho], [campo]: e.target.value } },
+      },
+    }));
+  const setRField = (campo) => (e) => setForm((f) => ({ ...f, receita: { ...f.receita, [campo]: e.target.value } }));
   const today = new Date().toISOString().slice(0, 10);
 
   async function submit(e) {
@@ -343,6 +374,19 @@ function ClientModal({ client, onClose, onSaved, onError }) {
     setFieldErr(null);
     setSaving(true);
     try {
+      const parseNum = (v) => v === '' || v == null ? null : Number(v);
+      const parseOlho = (o) => ({ esferico: parseNum(o.esferico), cilindrico: parseNum(o.cilindrico), eixo: parseNum(o.eixo), dp: parseNum(o.dp), altura: parseNum(o.altura) });
+      const rr = form.receita;
+      const receitaPayload = (() => {
+        const longeOd = parseOlho(rr.longe.od);
+        const longeOe = parseOlho(rr.longe.oe);
+        const pertoOd = parseOlho(rr.perto.od);
+        const pertoOe = parseOlho(rr.perto.oe);
+        const hasData = Object.values({ ...longeOd, ...longeOe, ...pertoOd, ...pertoOe }).some((v) => v != null)
+          || rr.lente.trim() || rr.armacao.trim() || rr.obs.trim();
+        if (!hasData) return null;
+        return { longe: { od: longeOd, oe: longeOe }, perto: { od: pertoOd, oe: pertoOe }, lente: rr.lente.trim() || null, armacao: rr.armacao.trim() || null, obs: rr.obs.trim() || null };
+      })();
       const payload = {
         name: form.name.trim(),
         phone: form.phone.trim(),
@@ -359,6 +403,7 @@ function ClientModal({ client, onClose, onSaved, onError }) {
         last_purchase_value_brl: form.last_purchase_value_brl ? Number(form.last_purchase_value_brl) : null,
         next_return_date: form.next_return_date || null,
         neighborhood: form.neighborhood.trim() || null,
+        receita: receitaPayload,
       };
       if (editing) {
         await updateClient(client.id, payload);
@@ -489,6 +534,56 @@ function ClientModal({ client, onClose, onSaved, onError }) {
                 <div>
                   <label className="label-atelier">Observações</label>
                   <textarea className="textarea-atelier" style={{ minHeight: 80 }} value={form.observations} onChange={set('observations')} maxLength={500} placeholder="Prefere armação leve, indicada pela irmã…" />
+                </div>
+
+                <div>
+                  <label className="label-atelier" style={{ marginBottom: 10 }}>Receita ótica</label>
+                  <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12, minWidth: 420 }}>
+                      <thead>
+                        <tr>
+                          <th style={thS} />
+                          {['Esférico', 'Cilíndrico', 'Eixo', 'DP', 'Altura'].map((h) => (
+                            <th key={h} style={thS}>{h}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[['longe', 'od', 'Longe OD'], ['longe', 'oe', 'Longe OE'], ['perto', 'od', 'Perto OD'], ['perto', 'oe', 'Perto OE']].map(([dist, olho, label]) => (
+                          <tr key={`${dist}-${olho}`}>
+                            <td style={{ ...tdS, fontWeight: 500, whiteSpace: 'nowrap', paddingRight: 8 }}>{label}</td>
+                            {['esferico', 'cilindrico', 'eixo', 'dp', 'altura'].map((campo) => (
+                              <td key={campo} style={tdS}>
+                                <input
+                                  type="number"
+                                  step={campo === 'eixo' ? '1' : '0.25'}
+                                  className="input-atelier"
+                                  style={{ padding: '6px 6px', textAlign: 'center', minWidth: 60 }}
+                                  value={form.receita[dist][olho][campo]}
+                                  onChange={setR(dist, olho, campo)}
+                                  placeholder="—"
+                                />
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="field-grid two" style={{ marginTop: 10 }}>
+                    <div>
+                      <label className="label-atelier">Lente indicada</label>
+                      <input className="input-atelier" value={form.receita.lente} onChange={setRField('lente')} placeholder="Ex: Multifocal antirreflexo" maxLength={100} />
+                    </div>
+                    <div>
+                      <label className="label-atelier">Armação indicada</label>
+                      <input className="input-atelier" value={form.receita.armacao} onChange={setRField('armacao')} placeholder="Ex: Ray-Ban acetato" maxLength={100} />
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 8 }}>
+                    <label className="label-atelier">Obs. da receita</label>
+                    <input className="input-atelier" value={form.receita.obs} onChange={setRField('obs')} placeholder="Ex: Pendente conferência com oftalmologista" maxLength={300} />
+                  </div>
                 </div>
               </>
             )}

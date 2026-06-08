@@ -17,14 +17,14 @@ from uuid import UUID
 import asyncpg
 
 from app.db.pool import acquire
-from app.models.client import Client, ClientCreate, ClientUpdate
+from app.models.client import Client, ClientCreate, ClientUpdate, Receita
 
 # Lista única de colunas — usada em todo SELECT/RETURNING.
 _COLS = """
     id, tenant_id, name, phone, email, last_exam_date, last_contacted_at,
     status, metadata, created_at, birth_date, consent_whatsapp, consent_at,
     source, health_plan, lens_type, frame_brand, last_purchase_date,
-    last_purchase_value_brl, next_return_date, neighborhood
+    last_purchase_value_brl, next_return_date, neighborhood, receita
 """
 
 
@@ -40,6 +40,8 @@ def _row_to_client(row: asyncpg.Record) -> Client:
         metadata = {}
     observations = metadata.get("observations") if isinstance(metadata, dict) else None
     value = row["last_purchase_value_brl"]
+    raw_receita = row["receita"]
+    receita = Receita.model_validate(raw_receita) if raw_receita else None
     return Client(
         id=row["id"],
         tenant_id=row["tenant_id"],
@@ -62,6 +64,7 @@ def _row_to_client(row: asyncpg.Record) -> Client:
         last_purchase_value_brl=float(value) if value is not None else None,
         next_return_date=row["next_return_date"],
         neighborhood=row["neighborhood"],
+        receita=receita,
     )
 
 
@@ -76,6 +79,7 @@ async def create_client(tenant_id: UUID, payload: ClientCreate) -> Client:
         metadata["observations"] = payload.observations
     consent_at = datetime.now() if payload.consent_whatsapp else None
 
+    receita_json = payload.receita.model_dump_json() if payload.receita else None
     try:
         async with acquire() as conn:
             row = await conn.fetchrow(
@@ -84,10 +88,10 @@ async def create_client(tenant_id: UUID, payload: ClientCreate) -> Client:
                     tenant_id, name, phone, email, last_exam_date, status, metadata,
                     birth_date, consent_whatsapp, consent_at, source, health_plan,
                     lens_type, frame_brand, last_purchase_date, last_purchase_value_brl,
-                    next_return_date, neighborhood
+                    next_return_date, neighborhood, receita
                 )
                 VALUES ($1, $2, $3, $4, $5, 'active', $6::jsonb,
-                        $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+                        $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18::jsonb)
                 RETURNING {_COLS}
                 """,
                 tenant_id,
@@ -107,6 +111,7 @@ async def create_client(tenant_id: UUID, payload: ClientCreate) -> Client:
                 _money(payload.last_purchase_value_brl),
                 payload.next_return_date,
                 payload.neighborhood,
+                receita_json,
             )
     except asyncpg.UniqueViolationError as exc:
         raise ClientPhoneConflict(
@@ -227,6 +232,11 @@ async def update_client(
         # Merge no metadata jsonb existente, sem dropar outras chaves.
         sets.append(f"metadata = COALESCE(metadata,'{{}}'::jsonb) || ${idx}::jsonb")
         values.append(json.dumps({"observations": patch.observations}))
+        idx += 1
+
+    if patch.receita is not None:
+        sets.append(f"receita = ${idx}::jsonb")
+        values.append(patch.receita.model_dump_json())
         idx += 1
 
     if not sets:

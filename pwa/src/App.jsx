@@ -10,6 +10,7 @@ const AppShell = lazy(() => import('./components/AppShell.jsx'));
 const Dashboard = lazy(() => import('./pages/Dashboard.jsx'));
 const Clientes = lazy(() => import('./pages/Clientes.jsx'));
 const Produtos = lazy(() => import('./pages/Produtos.jsx'));
+const Apresentacao = lazy(() => import('./pages/Apresentacao.jsx'));
 const Settings = lazy(() => import('./pages/Settings.jsx'));
 const Aprovacoes = lazy(() => import('./pages/Aprovacoes.jsx'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword.jsx'));
@@ -106,6 +107,7 @@ export default function App() {
           <Route path="produtos" element={<Produtos />} />
           <Route path="settings" element={<Settings />} />
         </Route>
+        <Route path="/apresentacao" element={<ProtectedRoute><Apresentacao /></ProtectedRoute>} />
         <Route path="/dashboard" element={<Navigate to="/admin" replace />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
