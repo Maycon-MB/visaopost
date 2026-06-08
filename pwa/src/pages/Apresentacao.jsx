@@ -298,7 +298,7 @@ const R = {
     border: '1px solid rgba(255,255,255,0.1)',
     color: 'rgba(255,255,255,0.4)',
     borderRadius: 999,
-    padding: '5px 14px',
+    padding: '7px 14px',
     fontSize: 12,
     cursor: 'pointer',
     whiteSpace: 'nowrap',
@@ -316,7 +316,7 @@ const R = {
     flexShrink: 0,
     marginLeft: 'auto',
     width: 34,
-    height: 34,
+    height: 41,
     borderRadius: '50%',
     background: 'rgba(255,255,255,0.06)',
     border: '1px solid rgba(255,255,255,0.08)',
@@ -345,13 +345,15 @@ const R = {
 
   /* Slide */
   slide: {
-    flex: 1,
+    flex: '1 1 0',
     display: 'flex',
     overflow: 'hidden',
     minHeight: 0,
+    alignItems: 'stretch',
   },
   imgPanel: {
     flex: '0 0 50%',
+    alignSelf: 'stretch',
     position: 'relative',
     overflow: 'hidden',
     borderRight: '1px solid rgba(255,255,255,0.05)',
@@ -387,6 +389,7 @@ const R = {
   /* Info */
   info: {
     flex: '0 0 50%',
+    alignSelf: 'stretch',
     overflowY: 'auto',
     padding: '40px 48px',
     display: 'flex',
