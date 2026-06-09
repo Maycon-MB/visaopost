@@ -4,43 +4,77 @@ Roadmap de execução. Mandatos técnicos em [`CLAUDE.md`](CLAUDE.md). Visão ge
 
 ---
 
-## Status (2026-06-03)
+## Status (2026-06-09)
 
-**Modo:** FREE TIER. **Cliente Di Lorenzo fechou** (informal via WhatsApp 2026-05-28, contrato + LGPD a formalizar). Zero gasto com VPS/domínio até estar tudo pronto local + ele entregar tokens (Fase 9).
+**Modo:** FREE TIER. **Cliente Di Lorenzo fechou** (informal via WhatsApp 2026-05-28, contrato + LGPD a formalizar). Zero gasto com VPS/domínio até estar tudo pronto.
+
+**PRÓXIMO PASSO IMEDIATO:** configurar Meta Business Manager junto com cliente (1h presencial/call) → pegar token Instagram → atacar Fase 10a-instagram.
 
 | Fase | Escopo | Status |
 |---|---|---|
-| 0a | Contas grátis Gemini + Resend | ✅ chaves em `backend/.env` + backup Bitwarden |
+| 0a | Contas grátis Gemini + Resend | ✅ |
 | 1 | Foundation (FastAPI, Docker, CI, structlog, /health) | ✅ |
-| 2 | Schema SQL + seed calendário BR + tenant Di Lorenzo | ✅ validado em Postgres 16 nativo Win |
-| 3 | Pipeline render IA→JPEG (Gemini + Playwright) | ✅ 5/5 temas, 24 testes, hardening (Pydantic models + repos + Protocol DI) |
-| 4 | `calendar.py` + `caption.py` + `post_generator.py` | ✅ done* (gate 30d migrado pra Fase 5) |
-| 5 | Retry 429 Gemini + GH Actions cron demo + RQ infra + queue endpoints + stock photos | ✅ |
+| 2 | Schema SQL + seed calendário BR + tenant Di Lorenzo | ✅ |
+| 3 | Pipeline render IA→JPEG (Gemini + Playwright) | ✅ 5/5 temas, 24 testes |
+| 4 | `calendar.py` + `caption.py` + `post_generator.py` | ✅ |
+| 5 | Retry 429 Gemini + GH Actions cron demo + RQ infra + queue endpoints | ✅ |
 | 6a | Backend PWA do dono (email + JWT + 14 endpoints + 28 tests) | ✅ |
-| 6b | PWA `/aprovar/:token` (tela do email, touch 56px, SW offline) | ✅ |
+| 6b | PWA `/aprovar/:token` redesenhada com brand Di Lorenzo | ✅ |
 | 6c | PWA `/clientes` CRUD + CSV + filtros + migration 0006 | ✅ |
-| 6d | PWA `/settings` (horário, dias, regras IA, FAQ bot) wired ao backend | ✅ |
-| 6e | PWA `/dashboard` (ECharts, bento, tema claro/escuro) | ✅ |
-| 6f | PWA `/produtos` CRUD + upload foto + backend `/api/products` + migration 0009 | ✅ |
-| 6g | Auth login/senha + JWT sessão + guard assinatura + migrations 0005+0007+0008 | ✅ |
-| **7a** | **Landing Astro pública Di Lorenzo** (design pitch, React, Playfair+Montserrat, hero+catálogo+agendamento+depoimentos+unidade) | **✅ 2026-06-03** |
+| 6d | PWA `/settings` wired ao backend | ✅ |
+| 6e | PWA `/dashboard` ECharts + bento + paleta Di Lorenzo | ✅ |
+| 6f | PWA `/produtos` CRUD + upload foto | ✅ |
+| 6g | Auth login/senha + JWT + guard assinatura | ✅ |
+| 7a | Landing Astro Di Lorenzo (brand real, imagens cliente, hero+catálogo+agendamento+depoimentos) | ✅ 2026-06-09 — `/visaopost/dilorenzo/` |
+| **IG-setup** | **Configurar Meta Business Manager + conta IG Business + token** (Maycon faz junto com cliente) | **🔜 amanhã** |
 | 7b | Galeria pública dos posts aprovados | pendente |
 | 7c | QR Code de balcão + form opt-in recall | pendente |
-| pré-0b | Contrato + LGPD formal (cliente já topou informal) | **em curso humano** |
-| 0b | Hostinger + domínio + Cloudflare + Backblaze B2 | aguarda 7b/7c done |
-| 8 | Deploy VPS produção | depende 0b |
-| 9 | Cliente entrega tokens + brand + FAQ + fotos + decisões | **gate cliente** |
-| 10a-j | Integração ondas (IG + bot WA + recall + scripts reels + GMB sync + relatório + personagem + reviews→posts + posts contextuais) | depende 9 |
-| 11 | Operacional contínuo (atualização + manutenção bot + consultoria ROI) | recorrente pós-handoff |
-| 6 | PWA do dono: aprovação + `/clientes` CRUD + `/settings` (horário, dias, instruções) | pendente |
-| 7 | Landing Astro multi-tenant + galeria preview dos posts | pendente |
-| pré-0b | Kickoff comercial: Onboarding Pack PDF + contrato + LGPD + reunião + assinatura | pendente |
-| 0b | [VPS] assinar Hostinger + domínio + Cloudflare + Backblaze B2 | depende kickoff |
-| 8 | [VPS] Deploy produção (Docker, Nginx, Let's Encrypt, GH Actions SSH) | depende 0b |
-| 9 | Cliente entrega tokens (Instagram, brand kit, fotos, WhatsApp) | bloqueado |
-| 10 | Integração final + handoff (Instagram Graph, bot WhatsApp, brand/assets/regras, treino, suporte, status) | depende 9 |
+| pré-0b | Contrato + LGPD formal + kickoff | **em curso humano** |
+| 0b | Hostinger VPS (~R$33/mês) + domínio + Cloudflare + Backblaze B2 | **pronto pra contratar** |
+| 8 | Deploy VPS produção (Docker, Nginx, Let's Encrypt, GH Actions SSH) | depende 0b |
+| 10a-ig | `services/instagram.py` — publicação Graph API + webhook métricas | depende IG-setup + 8 |
+| 10a-wa | Bot WhatsApp + recall (Cloud API Meta — burocracia 2-3 semanas Meta) | depois IG |
+| 10b-j | Demais integrações (GMB, reels, relatório, status page, etc.) | ondas pós-handoff |
+| 11 | Operacional contínuo (R$297/mês incluso) | recorrente |
 
 Schema SQL real: `backend/app/db/migrations/0001_initial.sql`. Estrutura do repo: `CLAUDE.md`. Aprendizados Fase 3: commit `83ccab5`.
+
+---
+
+## Configuração Instagram — roteiro da reunião com Marcelo (IG-setup)
+
+**Duração:** ~1h presencial ou chamada com compartilhamento de tela.
+**Quem faz:** Maycon. Marcelo só precisa estar logado no Facebook dele.
+
+### Passo a passo
+
+1. **Conta Instagram Profissional**
+   - Abrir Instagram @oticadilorenzo → Configurações → Tipo de conta → Conta Profissional → Empresa.
+   - Categoria: Ótica / Loja de óculos.
+
+2. **Facebook Page vinculada**
+   - Se não tiver: criar Facebook Page "Ótica Di Lorenzo" (Maycon faz na conta do Marcelo).
+   - Configurações Instagram → Conta vinculada → conectar à Page criada.
+
+3. **Meta Business Manager**
+   - Acessar [business.facebook.com](https://business.facebook.com) → criar Business Manager em nome da Ótica Di Lorenzo.
+   - Adicionar a Page e a conta Instagram ao Business Manager.
+
+4. **Meta App (Maycon faz)**
+   - [developers.facebook.com](https://developers.facebook.com) → Criar App → tipo "Business".
+   - Adicionar produto: Instagram Graph API.
+   - Permissões necessárias: `instagram_basic`, `instagram_content_publish`, `instagram_manage_insights`, `pages_read_engagement`.
+   - Gerar token de longa duração (60 dias) via OAuth.
+
+5. **Salvar no backend**
+   - Token vai em `backend/.env` como `IG_ACCESS_TOKEN` + `IG_ACCOUNT_ID`.
+   - Refresh automático antes de expirar (cron mensal).
+
+6. **Teste de publicação**
+   - `POST /dev/instagram/test` → publica post de teste na conta.
+   - Verificar que apareceu no perfil.
+
+**Obs WhatsApp:** Cloud API Meta exige verificação de negócio (CNPJ + domínio) → processo separado, 2-3 semanas. Não bloqueia Instagram.
 
 ---
 
