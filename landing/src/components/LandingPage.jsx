@@ -81,6 +81,17 @@ const LandingPage = ({ baseUrl = '/' }) => {
             ))}
           </div>
 
+          <a href="../app/" style={{
+            color: 'rgba(255,255,255,0.45)', fontSize: '12px', fontWeight: 600,
+            textDecoration: 'none', letterSpacing: '0.06em', textTransform: 'uppercase',
+            border: '1px solid rgba(255,255,255,0.15)', borderRadius: '50px',
+            padding: '9px 18px', transition: 'all 140ms ease',
+            flexShrink: 0
+          }}
+          onMouseEnter={e => { e.target.style.color = '#fff'; e.target.style.borderColor = 'rgba(255,255,255,0.35)'; }}
+          onMouseLeave={e => { e.target.style.color = 'rgba(255,255,255,0.45)'; e.target.style.borderColor = 'rgba(255,255,255,0.15)'; }}
+          >Painel →</a>
+
           <a href={WA_HREF} target="_blank" rel="noopener" style={{
             backgroundColor: ochre, color: '#fff', padding: '11px 24px',
             borderRadius: '50px', textDecoration: 'none', fontWeight: 700, fontSize: '13px',
