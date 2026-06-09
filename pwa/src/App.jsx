@@ -96,7 +96,7 @@ export default function App() {
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
-        <Route path="/" element={DEMO ? <Navigate to="/admin" replace /> : <Landing />} />
+        <Route path="/" element={<Landing />} />
         <Route path="/login" element={DEMO ? <Navigate to="/admin" replace /> : <Login />} />
         <Route path="/esqueci-senha" element={<ForgotPassword />} />
         <Route path="/redefinir-senha" element={<ResetPassword />} />
