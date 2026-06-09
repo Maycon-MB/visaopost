@@ -45,7 +45,7 @@ export default function MarketingSection() {
             <ShieldAlert size={14} /> Exclusividade: Apenas 1 ótica por bairro
           </div>
           <h2 style={{ fontSize: '3rem', color: 'white', fontFamily: fonts.heading, marginBottom: '20px' }}>
-            Quanto custa <span style={{ color: colors.gold }}>não ter</span> o Projeto?
+            Quanto custa <span style={{ color: colors.gold }}>não ter</span> a Projeto?
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1.2rem', maxWidth: '800px', margin: '0 auto' }}>
             Não importa se você tem 200 ou 20.000 seguidores. O que importa é a <strong>percepção de valor</strong> de quem entra no seu perfil hoje.

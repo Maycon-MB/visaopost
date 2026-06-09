@@ -34,7 +34,7 @@ const navLinks = [
   { id: 'roi', label: 'Calculadora' },
   { id: 'demo', label: 'Simulador' },
   { id: 'whatsapp', label: 'WhatsApp' },
-  { id: 'precos', label: 'Preços' },
+  { id: 'planos', label: 'Preços' },
   { id: 'faq', label: 'FAQ' }
 ];
 
@@ -63,16 +63,16 @@ const PresentationPage = () => {
 
   const postTemplates = [
     {
-      tag: 'LUXO',
+      tag: 'PRADA',
       location: 'Ótica Di Lorenzo - Premium Store',
       img: './stylish_person_glasses_1778289098822.png',
-      desc: 'A nova coleção de grifes internacionais acaba de chegar. Sofisticação e precisão técnica em cada detalhe. ✨ #LuxuryEyewear #Estilo'
+      desc: 'A nova coleção Prada acaba de chegar. Sofisticação e precisão técnica em cada detalhe. ✨ #PradaEyewear #Luxury'
     },
     {
-      tag: 'SOLAR',
-      location: 'Coleção Verão 2026',
+      tag: 'RAY-BAN',
+      location: 'Village Mall - Rio de Janeiro',
       img: './rayban_sunglasses_beach_1778289078548.png',
-      desc: 'Os clássicos que nunca saem de moda. Aproveite nossa Special Week com 20% OFF em modelos selecionados. 😎 #Sunglasses #Summer'
+      desc: 'Os clássicos nunca morrem. Aproveite nossa Special Week com 20% OFF. 😎 #RayBan #ClassicStyle'
     },
     {
       tag: 'SAÚDE',
@@ -111,7 +111,7 @@ const PresentationPage = () => {
           <a key={link.id} href={`#${link.id}`} style={{
             textDecoration: 'none', color: activeNav === link.id ? colors.gold : 'white',
             fontSize: '0.75rem', fontWeight: '700', textTransform: 'uppercase',
-            opacity: activeNav === link.id ? 1 : 0.6, transition: '0.3s'
+            opacity: activeNav === link.id ? 1 : 0.8, transition: '0.3s'
           }}>
             {link.label}
           </a>
@@ -254,8 +254,8 @@ const PresentationPage = () => {
               display: 'flex',
               flexDirection: 'column',
               gap: '30px',
-              boxShadow: '0 40px 100px rgba(0,0,0,0.08)',
-              color: '#1A2E1C'
+              boxShadow: '0 40px 100px rgba(0,0,0,0.3)',
+              color: colors.white
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
@@ -279,7 +279,7 @@ const PresentationPage = () => {
                     ></motion.div>
                   ))}
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.6rem', color: 'rgba(0,0,0,0.4)', fontWeight: '700' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.6rem', color: 'rgba(255,255,255,0.5)', fontWeight: '700' }}>
                   <span>SEG</span><span>TER</span><span>QUA</span><span>QUI</span><span>SEX</span><span>SÁB</span><span>DOM</span>
                 </div>
               </div>

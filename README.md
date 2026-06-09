@@ -1,122 +1,59 @@
-# automacao_instagram
+# Projeto 👓✨
 
-SaaS B2B de automação de marketing para óticas. Geração diária de posts Instagram via IA, aprovação em 1 clique, publicação automática, bot WhatsApp e recall de clientes.
+> **A tecnologia que óticas usam para dominar o mercado local.**
+> Uma plataforma SaaS completa de automação de marketing: Posts com IA, Landing Pages, Bot de WhatsApp e Sistema de Recall Automático.
 
-**Piloto:** Ótica Di Lorenzo (plano Premium, pago).
-
----
-
-## Status
-
-| Fase | Escopo | Status |
-|---|---|---|
-| 0a | Contas grátis Gemini + Resend | ✅ |
-| 1 | Foundation (FastAPI, Docker, CI) | ✅ |
-| 2 | Schema SQL + seed calendário BR + tenant Di Lorenzo | ✅ validado em Postgres 16 nativo |
-| 3 | Pipeline render IA→JPEG (Gemini + Playwright) | ✅ 5/5 temas, 24 testes |
-| 4 | calendar.py + caption.py + post_generator.py | ⏭ próxima |
-| 5-10 | Fila RQ, email, PWA, landing, Instagram, WhatsApp, dashboard | pendente |
-
-Detalhes completos em [PLANO.md](PLANO.md).
+🔗 **Acesse a Apresentação:** [maycon-mb.github.io/Projeto](https://maycon-mb.github.io/Projeto/)
 
 ---
 
-## Stack
-
-- **Backend:** Python 3.13, FastAPI, Pydantic v2, asyncpg, Playwright, Pillow, RQ + Redis
-- **Frontend (Fase 6+):** PWA React + Vite + Bootstrap 5 / Landing Astro + Tailwind
-- **DB:** Postgres 17 produção, Postgres 16 nativo Windows em dev
-- **IA:** `gemini-flash-latest` (texto), `gemini-2.5-flash-image` (Nano Banana, edita foto óculos)
-- **Deploy (Fase 8):** Docker Compose no VPS Hostinger Ubuntu 24.04, Nginx + Let's Encrypt, GitHub Actions
-
-Mandatos técnicos completos em [CLAUDE.md](CLAUDE.md). Ferramentas de IA que não leem `CLAUDE.md` automaticamente: [AGENTS.md](AGENTS.md) é o pointer de entrada.
+## 🚀 O Diferencial
+O Projeto não é apenas um agendador de posts. É um ecossistema focado no **Ciclo de Vendas Óptico**:
+1. **Atração**: Posts inteligentes e contextuais (baseados no clima e tendências) gerados por IA.
+2. **Conversão**: Landing Pages de alta performance integradas ao Google Meu Negócio.
+3. **Fidelização (Recall)**: Sistema que identifica clientes que não renovam o exame há 1 ano e envia convites automáticos via WhatsApp.
 
 ---
 
-## Estrutura do repo
+## 🛠️ Stack Tecnológica
+Esta nova versão foi refatorada de HTML estático para uma aplicação **React moderna** para garantir performance e escalabilidade:
 
-```
-automacao_instagram/
-├── backend/        ATIVO — FastAPI + asyncpg + Playwright + Gemini (Fase 1-3 done)
-├── pitch/          Apresentação institucional (React + Vite). Canal ativo de venda.
-├── docs/           Build live do pitch/ — servido pelo GitHub Pages em
-│                   https://maycon-mb.github.io/visaopost/
-├── legacy/         Protótipo Python pré-Fase 1 (scripts Pillow puros, descontinuados).
-├── CLAUDE.md       Mandatos técnicos (ler 1º)
-├── PLANO.md        Roadmap e status detalhado por fase
-├── docker-compose.yml      Stack dev local (Postgres + Redis + backend + worker)
-└── .github/workflows/      CI + futuro deploy SSH
-```
-
-Estruturas que ainda não existem (criadas em fases futuras): `pwa/` (Fase 6, PWA de aprovação), `landing/` (Fase 7, landing Astro multi-tenant), `nginx/` (Fase 8, configs produção).
+- **Core:** React 18 + Vite
+- **Styling:** Vanilla CSS (Design System exclusivo Di Lorenzo)
+- **Animações:** Framer Motion
+- **Ícones:** Lucide React
+- **Deployment:** GitHub Pages (via GitHub Actions)
+- **Automação (Workflow):** Gemini 2.0 Flash (Legendas e Estratégia)
 
 ---
 
-## Rodar
+## 📋 Funcionalidades Core
 
-### Backend (dev local, sem Docker)
-
-Pré-requisito: Postgres 16 nativo Windows + Python 3.13.
-
-```powershell
-cd backend
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-playwright install chromium
-copy .env.example .env
-# edita .env: DATABASE_URL, GEMINI_API_KEY, RESEND_API_KEY (do Bitwarden)
-
-# aplica migrations no Postgres 16 local
-psql -U visaopost -d visaopost -f app/db/migrations/0001_initial.sql
-psql -U visaopost -d visaopost -f app/db/migrations/0002_seed_calendar_br.sql
-psql -U visaopost -d visaopost -f app/db/migrations/0003_seed_tenant_dilorenzo.sql
-
-uvicorn app.main:app --reload
-# → http://localhost:8000/health/db
-# → http://localhost:8000/dev/preview/natal
-```
-
-Detalhes: [backend/README.md](backend/README.md).
-
-### Tests
-
-```powershell
-cd backend
-.\.venv\Scripts\python.exe -m pytest -m "not slow and not db" -v   # fast
-.\.venv\Scripts\python.exe -m pytest -m "db" -v                    # integração Postgres
-.\.venv\Scripts\python.exe -m pytest -m "slow" -v                  # Playwright real
-.\.venv\Scripts\python.exe scripts\smoke_fase3.py                  # 5 temas Gemini → JPEG
-```
-
-### Apresentação institucional (pitch)
-
-Editar e publicar a apresentação live (https://maycon-mb.github.io/visaopost/):
-
-```powershell
-cd pitch
-npm install                  # 1ª vez
-npm run dev                  # preview local em http://localhost:5175/visaopost/
-npm run build                # gera ../docs/ direto (vite.config.js já aponta pra lá)
-
-cd ..
-git add docs/ pitch/
-git commit -m "design: <descrição>"
-git push                     # GitHub Pages atualiza em ~1min
-```
-
-Detalhes (estrutura, customização por prospect, snapshots): [pitch/README.md](pitch/README.md).
-
-Tag `pitch-v1-dilorenzo` marca a versão que fechou o cliente atual — útil pra rollback.
+- [x] **Post Simulator**: Visualização em tempo real de conteúdos gerados por IA.
+- [x] **WhatsApp Automation**: Mockup de atendimento 24h e FAQ inteligente.
+- [x] **Sistema de Recall**: Automação de retorno de clientes pós-12 meses.
+- [x] **Design Premium**: Identidade visual unificada em Dark Theme (Verde/Ouro).
+- [x] **Aprovação One-Click**: Fluxo simplificado para o dono da ótica aprovar posts via celular.
 
 ---
 
-## Planos do produto
+## 💻 Desenvolvimento Local
 
-| Plano | Setup | Mensalidade |
-|---|---|---|
-| Starter | R$800 | R$97 |
-| Growth | R$1.000 | R$197 |
-| Premium | R$1.500 | R$297 |
+```bash
+# Instalar dependências
+npm install
 
-Cliente atual: Di Lorenzo (Premium).
+# Rodar em modo desenvolvimento
+npm run dev
+
+# Build para produção
+npm run build
+```
+
+---
+
+## 📈 Roadmap & Visão
+O projeto iniciou como um piloto para a **Ótica Di Lorenzo** e evoluiu para uma estrutura SaaS (Software as a Service) modular, onde cada ótica pode ter seu próprio ecossistema de marketing operando no piloto automático.
+
+---
+Desenvolvido com ❤️ para o mercado óptico.
