@@ -1,48 +1,57 @@
-// ─── src/styles/theme.js ───────────────────────────────────────────
-// Shared color palette and design tokens used across all pages.
+// ─── Paleta oficial Di Lorenzo (PDF brand guide) ─────────────────────────────
+// Ochre #C1750B · Rich Black #03191E · Hooker's Green #638475
+// Ghost White #F6F8FF · Burgundy #941C2F · Fonte: Jost (web substitute Corbel)
 
 export const colors = {
-  // Dark / SaaS presentation palette
-  dark: '#0B1F0F',
-  primary: '#0D3322',
-  gold: '#D4880A',
-  goldLight: '#F5A623',
-  white: '#FFFFFF',
-  textMuted: 'rgba(255, 255, 255, 0.7)',
-  glass: 'rgba(255, 255, 255, 0.05)',
-  border: 'rgba(212, 136, 10, 0.2)',
-  blueLight: '#38bdf8',
-  green: '#22c55e',
+  // Di Lorenzo palette
+  ochre:        '#C1750B',
+  ochreDeep:    '#9A5C08',
+  ochreLight:   '#D4880A',
+  richBlack:    '#03191E',
+  sage:         '#638475',
+  sageDeep:     '#4A6358',
+  sageLight:    '#8BA89A',
+  ghostWhite:   '#F6F8FF',
+  burgundy:     '#941C2F',
 
-  // Landing page palette (lighter, client-facing)
+  // Alias legados (internamente mapeados pra Di Lorenzo)
+  primary:      '#C1750B',
+  gold:         '#C1750B',
+  goldLight:    '#D4880A',
+  white:        '#FFFFFF',
+  textMuted:    'rgba(3, 25, 30, 0.55)',
+  glass:        'rgba(255, 255, 255, 0.05)',
+  border:       'rgba(193, 117, 11, 0.18)',
+
   landing: {
-    green: '#0D3322',
-    orange: '#D4880A',
-    orangeLight: '#F5A623',
-    white: '#ffffff',
-    gray: '#F8F9FA',
-    text: '#1A2E1C',
-    textMuted: '#5A7A62',
+    // Substituições Di Lorenzo (nomes preservados p/ compat)
+    green:        '#03191E',   // richBlack como base escura
+    orange:       '#C1750B',   // ochre
+    orangeLight:  '#D4880A',   // ochreLight
+    white:        '#ffffff',
+    gray:         '#F6F8FF',   // ghostWhite
+    text:         '#03191E',
+    textMuted:    '#556068',
   },
 };
 
 export const fonts = {
-  heading: "'Playfair Display', serif",
-  body: "'Montserrat', sans-serif",
-  mono: "'JetBrains Mono', 'Fira Code', monospace",
+  heading: "'Jost', 'Corbel', 'Gill Sans', system-ui, sans-serif",
+  body:    "'Jost', 'Corbel', 'Gill Sans', system-ui, sans-serif",
+  mono:    "'JetBrains Mono', 'Fira Code', monospace",
 };
 
 export const shadows = {
-  card: '0 10px 30px rgba(0,0,0,0.2)',
-  gold: '0 10px 20px rgba(212, 136, 10, 0.3)',
-  elevated: '0 30px 60px rgba(0,0,0,0.5)',
+  card:     '0 10px 30px rgba(3, 25, 30, 0.14)',
+  gold:     '0 10px 20px rgba(193, 117, 11, 0.28)',
+  elevated: '0 30px 60px rgba(3, 25, 30, 0.38)',
 };
 
 export const radii = {
-  sm: '12px',
-  md: '16px',
-  lg: '24px',
-  xl: '30px',
+  sm:   '12px',
+  md:   '16px',
+  lg:   '24px',
+  xl:   '30px',
   pill: '50px',
-  card: '40px',
+  card: '24px',
 };
