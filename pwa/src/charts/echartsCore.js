@@ -1,5 +1,5 @@
 import * as echarts from 'echarts/core';
-import { LineChart, BarChart, PieChart, HeatmapChart, FunnelChart, RadarChart, GaugeChart } from 'echarts/charts';
+import { LineChart, BarChart, PieChart, HeatmapChart, FunnelChart, RadarChart, GaugeChart, TreemapChart, PictorialBarChart } from 'echarts/charts';
 import {
   GridComponent,
   TooltipComponent,
@@ -12,6 +12,7 @@ import {
   RadarComponent,
   PolarComponent,
   DatasetComponent,
+  GraphicComponent,
 } from 'echarts/components';
 import { SVGRenderer } from 'echarts/renderers';
 
@@ -23,6 +24,8 @@ echarts.use([
   FunnelChart,
   RadarChart,
   GaugeChart,
+  TreemapChart,
+  PictorialBarChart,
   GridComponent,
   TooltipComponent,
   LegendComponent,
@@ -34,6 +37,7 @@ echarts.use([
   RadarComponent,
   PolarComponent,
   DatasetComponent,
+  GraphicComponent,
   SVGRenderer,
 ]);
 

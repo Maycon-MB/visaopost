@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import ReactECharts from 'echarts-for-react/lib/core';
 import echarts from '../charts/echartsCore.js';
-import { baseChart, lineSeries, axisLine, axisValue, TOKENS, FONT, fmtNum, refreshTokens } from '../charts/theme.js';
+import { baseChart, lineSeries, axisLine, axisValue, TOKENS, FONT, IT_PALETTE, fmtNum, refreshTokens } from '../charts/theme.js';
 import { useTheme } from '../theme-context.jsx';
 
 function InfoButton({ text }) {
@@ -213,7 +213,7 @@ export default function Dashboard() {
       },
       visualMap: {
         show: false, min: 0, max: maxVal,
-        inRange: { color: [TOKENS.hairline, TOKENS.primary, TOKENS.secondary] },
+        inRange: { color: ['#EEF0F8', '#D4880A', '#7A4606'] },
       },
       calendar: {
         range: '2026',
@@ -256,44 +256,67 @@ export default function Dashboard() {
       barWidth: '72%',
       itemStyle: {
         color: (p) => [4, 11].includes(p.dataIndex)
-          ? { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#E8B84B' }, { offset: 1, color: '#B07D14' }] }
-          : { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#3EAE74' }, { offset: 1, color: '#1A5C3D' }] },
+          ? { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#D4880A' }, { offset: 1, color: '#9A5C08' }] }
+          : { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#8BA89A' }, { offset: 1, color: '#638475' }] },
         borderRadius: [3, 3, 0, 0],
       },
     }],
   }), [theme]);
 
-  const ringGaugeOption = useMemo(() => {
-    const COLORS = ['#1A5C3D', '#C4881A', '#2E86AB', '#A23B72'];
+  const ORIGEM_COLORS = ['#C1750B', '#638475', '#941C2F', '#8C7B5E'];
+  const origemOption = useMemo(() => {
+    const total = CLIENTES_ORIGEM.reduce((s, d) => s + d.value, 0);
     return {
       tooltip: {
-        trigger: 'item', backgroundColor: TOKENS.surface, borderColor: TOKENS.hairline, borderWidth: 1,
+        trigger: 'item',
+        backgroundColor: TOKENS.surface, borderColor: TOKENS.hairline, borderWidth: 1,
         textStyle: { color: TOKENS.ink, fontFamily: FONT, fontSize: 12 },
-        formatter: (p) => `${p.name}: <b>${p.value}</b> clientes (${p.percent}%)`,
+        formatter: (p) => `${p.name}<br/><b>${p.value}</b> clientes · ${p.percent.toFixed(0)}%`,
       },
       legend: {
-        bottom: 0, left: 'center', orient: 'horizontal',
-        textStyle: { color: TOKENS.inkSoft, fontFamily: FONT, fontSize: 11 },
-        itemWidth: 10, itemHeight: 10,
+        orient: 'horizontal', bottom: 4, left: 'center',
+        itemWidth: 9, itemHeight: 9, itemGap: 14,
+        textStyle: { color: TOKENS.inkSoft, fontFamily: FONT, fontSize: 11.5, fontWeight: 500 },
+        formatter: (name) => {
+          const d = CLIENTES_ORIGEM.find(x => x.name === name);
+          const pct = d ? Math.round(d.value / total * 100) : 0;
+          return `${name}  ${pct}%`;
+        },
       },
+      color: ORIGEM_COLORS,
       series: [{
         type: 'pie',
-        radius: ['46%', '78%'],
-        center: ['50%', '45%'],
+        radius: [52, 76],
+        center: ['50%', '43%'],
+        avoidLabelOverlap: false,
         label: { show: false },
         labelLine: { show: false },
-        itemStyle: {
-          color: (p) => {
-            const c = COLORS[p.dataIndex % COLORS.length];
-            const m = c.replace('#', '');
-            const r = parseInt(m.slice(0,2),16), g = parseInt(m.slice(2,4),16), b = parseInt(m.slice(4,6),16);
-            const dark = `rgba(${Math.round(r*0.5)},${Math.round(g*0.5)},${Math.round(b*0.5)},1)`;
-            return { type: 'linear', x: 0, y: 0, x2: 1, y2: 0, colorStops: [{ offset: 0, color: dark }, { offset: 1, color: c }] };
+        emphasis: {
+          scale: true, scaleSize: 4,
+          label: {
+            show: true, position: 'center',
+            formatter: (p) => `{val|${p.value}}\n{name|${p.name}}`,
+            rich: {
+              val:  { fontSize: 18, fontWeight: 700, color: TOKENS.ink, fontFamily: FONT, lineHeight: 24 },
+              name: { fontSize: 11, color: TOKENS.inkMute, fontFamily: FONT, lineHeight: 16 },
+            },
           },
-          borderWidth: 2, borderColor: TOKENS.surface,
         },
-        data: CLIENTES_ORIGEM.map((d) => ({ name: d.name, value: d.value })),
+        data: CLIENTES_ORIGEM.map((d, i) => ({
+          name: d.name, value: d.value,
+          itemStyle: { color: ORIGEM_COLORS[i], borderWidth: 2, borderColor: TOKENS.surface },
+        })),
       }],
+      graphic: [
+        {
+          type: 'text', left: 'center', top: '30%',
+          style: { text: String(total), textAlign: 'center', fill: TOKENS.ink, fontSize: 22, fontWeight: '700', fontFamily: FONT },
+        },
+        {
+          type: 'text', left: 'center', top: '46%',
+          style: { text: 'clientes', textAlign: 'center', fill: TOKENS.inkMute, fontSize: 11, fontFamily: FONT },
+        },
+      ],
     };
   }, [theme]);
 
@@ -312,8 +335,11 @@ export default function Dashboard() {
       formatter: (p) => `${p.name}: <b>${p.value} pts</b>`,
     },
     series: [{
-      type: 'bar', data: TEMAS_PERF.map((t) => t.score).reverse(), barWidth: 14,
-      itemStyle: { color: { type: 'linear', x: 0, y: 0, x2: 1, y2: 0, colorStops: [{ offset: 0, color: '#0D3322' }, { offset: 1, color: '#34A36C' }] }, borderRadius: [0, 5, 5, 0] },
+      type: 'bar', barWidth: 14,
+      data: TEMAS_PERF.map((t, i) => ({
+        value: t.score,
+        itemStyle: { color: IT_PALETTE[i % IT_PALETTE.length], borderRadius: [0, 5, 5, 0] },
+      })).reverse(),
       label: { show: true, position: 'right', fontFamily: FONT, fontSize: 11, color: TOKENS.inkMute, formatter: (p) => `${p.value}` },
     }],
   }), [theme]);
@@ -325,7 +351,7 @@ export default function Dashboard() {
       { name: 'Conversão', value: 28 },
     ];
     const RING_GRAD = [
-      ['#0D3322', '#34A36C'], ['#7B4A10', '#E8B84B'], ['#1A3F5C', '#2E86AB'],
+      ['#9A5C08', '#D4880A'], ['#4A6358', '#8BA89A'], ['#6B1522', '#941C2F'],
     ];
     const offsets = ['-38%', '-4%', '30%'];
     const data = ATEND.map((d, i) => ({
@@ -364,7 +390,7 @@ export default function Dashboard() {
     yAxis: axisValue(),
     series: [{
       type: 'bar', data: [8, 10, 11, 12, 14, 26], barWidth: '52%',
-      itemStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#34A36C' }, { offset: 1, color: '#0D3322' }] }, borderRadius: [4, 4, 0, 0] },
+      itemStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#D4880A' }, { offset: 1, color: '#9A5C08' }] }, borderRadius: [4, 4, 0, 0] },
       label: { show: true, position: 'top', fontFamily: FONT, fontSize: 11, color: TOKENS.inkMute },
     }],
   }), [theme]);
@@ -449,7 +475,7 @@ export default function Dashboard() {
               <InfoButton text={<>Linha verde = quantas pessoas viram seus posts naquele dia. Barras douradas = curtidas. Role com o mouse pra dar zoom em qualquer período.</>} />
             </div>
           </div>
-          <ReactECharts ref={comboRef} echarts={echarts} option={comboOption} style={{ height: 200 }} opts={{ renderer: 'svg' }} notMerge />
+          <ReactECharts ref={comboRef} echarts={echarts} option={comboOption} style={{ height: 180 }} opts={{ renderer: 'svg' }} notMerge />
         </section>
 
         <section className="chart-card span-4 enter">
@@ -462,7 +488,7 @@ export default function Dashboard() {
               <InfoButton text={<>Taxa resposta = % de conversas atendidas. Resolução bot = % resolvidas sem intervenção humana. Conversão = % que viraram agendamento.</>} />
             </div>
           </div>
-          <ReactECharts echarts={echarts} option={atendimentoOption} style={{ height: 160 }} opts={{ renderer: 'svg' }} notMerge />
+          <ReactECharts echarts={echarts} option={atendimentoOption} style={{ height: 180 }} opts={{ renderer: 'svg' }} notMerge />
         </section>
 
         {/* Linha 2: volume de posts + crescimento + horário de pico */}
@@ -506,7 +532,7 @@ export default function Dashboard() {
         </section>
 
         {/* Linha 3: ranking visual + temas + origem */}
-        <section className="chart-card span-5 enter compact">
+        <section className="chart-card span-4 enter compact">
           <div className="chart-head">
             <div>
               <div className="chart-title">Ranking de posts</div>
@@ -547,10 +573,10 @@ export default function Dashboard() {
               <InfoButton text={<>Performance relativa de cada tema de post. Score combina curtidas, salvamentos e alcance.</>} />
             </div>
           </div>
-          <ReactECharts echarts={echarts} option={temasOption} style={{ height: 160 }} opts={{ renderer: 'svg' }} notMerge />
+          <ReactECharts echarts={echarts} option={temasOption} style={{ height: 170 }} opts={{ renderer: 'svg' }} notMerge />
         </section>
 
-        <section className="chart-card span-3 enter compact">
+        <section className="chart-card span-4 enter compact">
           <div className="chart-head">
             <div>
               <div className="chart-title">Clientes por origem</div>
@@ -560,7 +586,7 @@ export default function Dashboard() {
               <InfoButton text={<>De onde vieram seus clientes cadastrados. QR Code do balcão, WhatsApp, indicações e atendimento presencial.</>} />
             </div>
           </div>
-          <ReactECharts echarts={echarts} option={ringGaugeOption} style={{ height: 150 }} opts={{ renderer: 'svg' }} notMerge />
+          <ReactECharts echarts={echarts} option={origemOption} style={{ height: 190 }} opts={{ renderer: 'svg' }} notMerge />
         </section>
 
       </div>
