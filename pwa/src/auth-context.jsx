@@ -5,6 +5,9 @@ import { DEMO } from './config.js';
 const AuthContext = createContext(null);
 
 const DEMO_USER = { id: 'demo', name: 'Marcelo', email: 'marcelo@oticadilorenzo.com.br', role: 'owner', status: 'active' };
+// Credenciais de teste para demonstração ao cliente (sem backend)
+const TEST_EMAIL = 'marcelo';
+const TEST_PASS  = 'dilorenzo2026';
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(DEMO ? DEMO_USER : null);
@@ -20,6 +23,10 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function signIn(email, password) {
+    if (email.trim().toLowerCase() === TEST_EMAIL && password === TEST_PASS) {
+      setUser(DEMO_USER);
+      return DEMO_USER;
+    }
     const u = await apiLogin(email, password);
     setUser(u);
     return u;

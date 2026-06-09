@@ -2,12 +2,36 @@ import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth-context.jsx';
 
+function NavIcon({ paths, ...props }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
+      strokeLinecap="round" strokeLinejoin="round" width="18" height="18" aria-hidden {...props}>
+      {paths.map((p, i) => <path key={i} d={p} />)}
+    </svg>
+  );
+}
+
 const NAV = [
-  { to: '/admin', label: 'Visão Geral', icon: '◐' },
-  { to: '/admin/aprovacoes', label: 'Aprovações', icon: '✓' },
-  { to: '/admin/clientes', label: 'Clientes', icon: '◇' },
-  { to: '/admin/produtos', label: 'Catálogo', icon: '◫' },
-  { to: '/admin/settings', label: 'Configurações', icon: '⚙' },
+  {
+    to: '/admin', label: 'Visão Geral',
+    icon: <NavIcon paths={['M3 3h7v7H3z', 'M14 3h7v7h-7z', 'M3 14h7v7H3z', 'M14 17.5a3.5 3.5 0 1 0 7 0 3.5 3.5 0 0 0-7 0']} />,
+  },
+  {
+    to: '/admin/aprovacoes', label: 'Aprovações',
+    icon: <NavIcon paths={['M9 11l3 3 8-8', 'M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9']} />,
+  },
+  {
+    to: '/admin/clientes', label: 'Clientes',
+    icon: <NavIcon paths={['M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2', 'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8', 'M23 21v-2a4 4 0 0 0-3-3.87', 'M16 3.13a4 4 0 0 1 0 7.75']} />,
+  },
+  {
+    to: '/admin/produtos', label: 'Catálogo',
+    icon: <NavIcon paths={['M2 6h4l3 9h10l3-9H6', 'M8.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3', 'M18.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3']} />,
+  },
+  {
+    to: '/admin/settings', label: 'Configurações',
+    icon: <NavIcon paths={['M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6', 'M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1']} />,
+  },
 ];
 
 const ROLE_LABEL = { owner: 'Proprietário', staff: 'Equipe' };

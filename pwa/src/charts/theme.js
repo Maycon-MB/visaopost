@@ -1,13 +1,12 @@
-// Tokens espelham o styles.css (paleta verde Di Lorenzo). Series usam verde da
-// marca + azul-ardósia como secundária: contraste limpo, corporativo, legível.
-// Lê as cores direto das CSS vars (styles.css) → gráfico segue tema claro/escuro.
-// Fallback = paleta clara da marca (verde #1a5c3d + dourado #D4880A).
+// Paleta Di Lorenzo — estética italiana: ocre #C1750B · sage #638475 · borgonha #941C2F
+// CSS vars do styles.css são a fonte primária; FALLBACK só quando DOM não disponível.
 const FALLBACK = {
-  ink: '#16201A', inkSoft: '#4D564E', inkMute: '#808A80',
-  hairline: '#E3E8DF', hairlineStrong: '#CCD5C9',
-  primary: '#1A5C3D', primaryDeep: '#0D3322', primaryLight: '#2E8B57',
-  secondary: '#C4881A', secondarySoft: '#E0C074',
-  champagne: '#B07D14', champagneSoft: '#E0C074', ivory: '#F6F7F3', surface: '#FFFFFF',
+  ink: '#03191E', inkSoft: '#1E3038', inkMute: '#556068',
+  hairline: '#D8DCF0', hairlineStrong: '#C0C6DC',
+  primary: '#C1750B', primaryDeep: '#9A5C08', primaryLight: '#D4880A',
+  secondary: '#638475', secondarySoft: '#8BA89A',
+  champagne: '#638475', champagneSoft: '#8BA89A',
+  ivory: '#F0F2FA', surface: '#FAFBFF',
 };
 const VARMAP = {
   ink: '--ink', inkSoft: '--ink-soft', inkMute: '--ink-mute',
@@ -31,16 +30,15 @@ export function refreshTokens() {
 }
 if (typeof document !== 'undefined') refreshTokens();
 
-// TOKENS.x sempre devolve a cor atual do tema vigente.
 export const TOKENS = new Proxy({}, { get: (_, k) => C[k] });
 
-const FONT = '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", system-ui, sans-serif';
-const SERIF = '"Fraunces Variable", "Fraunces", Georgia, serif';
+// Paleta italiana: ocre · sage · borgonha · ocre claro · sage claro
+export const IT_PALETTE = ['#C1750B', '#638475', '#941C2F', '#D4880A', '#8BA89A'];
+
+const FONT = '"Jost", "Corbel", "Gill Sans", system-ui, sans-serif';
 
 const nf = new Intl.NumberFormat('pt-BR');
-export function fmtNum(v) {
-  return nf.format(v);
-}
+export function fmtNum(v) { return nf.format(v); }
 export function fmtCompact(v) {
   if (v >= 1000) return `${(v / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 })}k`;
   return nf.format(v);
@@ -48,7 +46,7 @@ export function fmtCompact(v) {
 
 export function baseChart(extra = {}) {
   return {
-    color: [TOKENS.primary, TOKENS.secondary, TOKENS.champagne, TOKENS.inkSoft],
+    color: IT_PALETTE,
     textStyle: { fontFamily: FONT, color: TOKENS.ink, fontSize: 12 },
     grid: { left: 8, right: 16, top: 28, bottom: 24, containLabel: true },
     tooltip: {
@@ -59,7 +57,7 @@ export function baseChart(extra = {}) {
       padding: [10, 14],
       textStyle: { color: TOKENS.ink, fontFamily: FONT, fontSize: 12.5, fontWeight: 500 },
       valueFormatter: (v) => fmtNum(v),
-      extraCssText: 'box-shadow: 0 12px 30px -18px rgba(12,63,40,0.28); border-radius: 10px;',
+      extraCssText: 'box-shadow: 0 12px 30px -18px rgba(3,25,30,0.32); border-radius: 10px;',
       axisPointer: { lineStyle: { color: TOKENS.hairlineStrong, type: 'dashed' } },
     },
     ...extra,
@@ -123,4 +121,4 @@ export function axisValue(extra = {}) {
   };
 }
 
-export { FONT, SERIF };
+export { FONT };
