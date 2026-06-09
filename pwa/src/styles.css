@@ -1055,7 +1055,22 @@ h1, h2, h3, h4 {
 .user-meta { line-height: 1.2; min-width: 0; }
 .user-meta .u-name { font-weight: 600; font-size: 14px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .user-meta .u-role { font-size: 11px; color: rgba(193,117,11,0.75); letter-spacing: 0.04em; }
+.sidebar-landing {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  width: 100%; margin-bottom: 8px;
+  background: transparent;
+  border: 1px solid rgba(193,117,11,0.35);
+  color: #C1750B;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 13px; font-weight: 600;
+  text-decoration: none;
+  transition: background 140ms ease, color 140ms ease;
+}
+.sidebar-landing:hover { background: rgba(193,117,11,0.12); color: #D4880A; }
+
 .sidebar-logout {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
   width: 100%;
   background: transparent;
   border: 1px solid rgba(255,255,255,0.18);
@@ -1567,6 +1582,7 @@ h1, h2, h3, h4 {
   .app-frame.collapsed .nav-link { justify-content: center; padding: 13px 0; }
   .app-frame.collapsed .nav-link.active::before { display: none; }
   .app-frame.collapsed .user-card { justify-content: center; padding-bottom: 10px; }
+  .app-frame.collapsed .sidebar-landing { padding: 10px 0; }
   .app-frame.collapsed .sidebar-logout { padding: 11px 0; }
   .app-frame.collapsed .sidebar-collapse svg { transform: rotate(180deg); }
 }
