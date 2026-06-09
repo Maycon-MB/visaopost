@@ -54,7 +54,8 @@ function Landing() {
           </p>
           <div className="lp-cta">
             <Link to="/login" className="btn-touch btn-primary-atelier">Entrar no painel</Link>
-            <Link to="/aprovar/demo" className="btn-touch btn-ghost-atelier">Ver demo de aprovação</Link>
+            <Link to="/aprovar/demo" className="btn-touch btn-ghost-atelier">Demo de aprovação</Link>
+            <a href="../" className="btn-touch btn-ghost-atelier" style={{ textAlign: 'center' }}>Ver apresentação →</a>
           </div>
         </div>
 
