@@ -180,6 +180,23 @@ async def mark_rejected(post_id: UUID, *, reason: str | None) -> bool:
     return status == "UPDATE 1"
 
 
+async def mark_as_posted(post_id: UUID, *, instagram_post_id: str, when: datetime | None = None) -> bool:
+    """Atualiza status='posted' + instagram_post_id + posted_at."""
+    timestamp = when or datetime.now()
+    async with acquire() as conn:
+        status: str = await conn.execute(
+            """
+            UPDATE posts
+            SET status = 'posted', instagram_post_id = $1, posted_at = $2
+            WHERE id = $3 AND status = 'approved'
+            """,
+            instagram_post_id,
+            timestamp,
+            post_id,
+        )
+    return status == "UPDATE 1"
+
+
 async def request_regenerate(post_id: UUID, *, feedback: str | None) -> bool:
     """Marca pra regerar: status='draft', feedback persistido, contador +1.
 

@@ -35,6 +35,13 @@ class GeneratePostBody(BaseModel):
     date: DateType = Field(description="Data alvo do post (ISO YYYY-MM-DD)")
 
 
+class IGPublishTestBody(BaseModel):
+    """Payload do endpoint dev de publicação Instagram."""
+
+    image_url: str = Field(description="URL pública da imagem (acessível pelo Meta)")
+    caption: str = Field(default="", description="Legenda + hashtags do post")
+
+
 @router.get("/preview/{theme}", response_class=Response)
 async def dev_preview_jpeg(
     theme: str,
@@ -143,6 +150,39 @@ async def dev_enqueue_daily(body: GeneratePostBody) -> dict[str, object]:
         job_id=job.id,
     )
     return {"job_id": job.id, "queue": job.origin, "status": job.get_status()}
+
+
+@router.post("/instagram/publish-test")
+async def dev_instagram_publish_test(body: IGPublishTestBody) -> dict[str, object]:
+    """Publica post de teste no Instagram real. Requer IG_ACCESS_TOKEN + IG_ACCOUNT_ID no .env.
+
+    Body: `{"image_url": "https://...", "caption": "legenda #hashtag"}`.
+    image_url deve ser uma URL pública acessível pelo Meta.
+    """
+    from app.services.instagram import get_instagram_client
+
+    try:
+        client = get_instagram_client()
+        result = await client.publish_photo(image_url=body.image_url, caption=body.caption)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    logger.info("dev.instagram.published", media_id=result.media_id, permalink=result.permalink)
+    return {"media_id": result.media_id, "permalink": result.permalink}
+
+
+@router.get("/instagram/metrics/{media_id}")
+async def dev_instagram_metrics(media_id: str) -> dict[str, object]:
+    """Coleta métricas de um post publicado. Requer IG_ACCESS_TOKEN no .env."""
+    from app.services.instagram import get_instagram_client
+
+    try:
+        client = get_instagram_client()
+        metrics = await client.get_metrics(media_id)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    return metrics.model_dump()
 
 
 @router.get("/queue/status")
