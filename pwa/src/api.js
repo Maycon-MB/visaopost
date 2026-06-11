@@ -269,6 +269,31 @@ export async function uploadProductImage(productId, file) {
   return data;
 }
 
+export async function fetchMonthlyReport(year, month) {
+  if (DEMO) return null;
+  return request(`/api/reports/monthly?year=${year}&month=${month}`);
+}
+
+export async function generateReportInsights(year, month) {
+  if (DEMO) return null;
+  return request(`/api/reports/monthly/${year}/${month}/insights`, { method: 'POST' });
+}
+
+export async function generateReel(payload) {
+  if (DEMO) return null;
+  return request('/api/reels/generate', { method: 'POST', body: JSON.stringify(payload) });
+}
+
+export async function listReels() {
+  if (DEMO) return [];
+  return request('/api/reels');
+}
+
+export async function deleteReel(id) {
+  if (DEMO) return;
+  return request(`/api/reels/${id}`, { method: 'DELETE' });
+}
+
 export function imageUrlFor(post) {
   if (!post || !post.image_url) return null;
   if (post.image_url.startsWith('http')) return post.image_url;

@@ -1,0 +1,506 @@
+---
+const API_URL   = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8000';
+const base      = import.meta.env.BASE_URL?.replace(/\/$/, '') ?? '';
+const WA_NUMBER = '5521964389591';
+---
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Catálogo — Ótica Di Lorenzo</title>
+  <meta name="description" content="Explore nosso catálogo de armações, óculos solares e lentes. Ótica Di Lorenzo."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* ─── Reset ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ─── Tokens ─────────────────────────────────────── */
+    :root {
+      --ochre:      #C1750B;
+      --ochre-dim:  rgba(193,117,11,0.14);
+      --ochre-mid:  rgba(193,117,11,0.35);
+      --black:      #03191E;
+      --card-bg:    #071d23;
+      --white:      #F6F8FF;
+      --muted:      rgba(246,248,255,0.45);
+      --border:     rgba(193,117,11,0.12);
+      --wa-green:   #25D366;
+      --font:       'Jost','Corbel','Gill Sans',system-ui,sans-serif;
+      --radius:     14px;
+    }
+
+    /* ─── Base ───────────────────────────────────────── */
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font);
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* ─── Nav ────────────────────────────────────────── */
+    .nav {
+      position: sticky; top: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; height: 64px;
+      background: rgba(3,25,30,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-seal {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 1.5px solid var(--ochre); overflow: hidden;
+      background: var(--black); flex-shrink: 0;
+    }
+    .nav-seal img { width: 100%; height: 100%; object-fit: cover; }
+    .nav-brand { font-size: 17px; font-weight: 300; letter-spacing: 0.04em; }
+    .nav-brand em { font-style: italic; color: var(--ochre); }
+    .nav-back {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 400; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--muted);
+      background: none; border: none; padding: 0;
+      cursor: pointer; font-family: var(--font);
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--ochre); }
+    .nav-back:hover svg { transform: translateX(-3px); }
+    .nav-back svg { transition: transform 0.2s; }
+
+    /* ─── Hero ───────────────────────────────────────── */
+    .hero {
+      padding: 4rem 1.5rem 2rem;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% -10%, rgba(193,117,11,0.09) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--ochre); margin-bottom: 1.25rem;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: ''; display: block; width: 24px; height: 1px;
+      background: var(--ochre); opacity: 0.6;
+    }
+    .hero-title {
+      font-size: clamp(3rem, 10vw, 7rem);
+      font-weight: 200; line-height: 0.92; letter-spacing: -0.02em;
+    }
+    .hero-title em { font-style: italic; font-weight: 300; color: var(--ochre); }
+    .hero-sub {
+      margin-top: 1.25rem; font-size: 14px; font-weight: 300;
+      color: var(--muted); letter-spacing: 0.04em;
+      max-width: 380px; margin-left: auto; margin-right: auto;
+    }
+    .hero-line {
+      width: 48px; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--ochre), transparent);
+      margin: 1.75rem auto 0;
+    }
+
+    /* ─── Filter bar ─────────────────────────────────── */
+    .filter-wrap {
+      position: sticky; top: 64px; z-index: 100;
+      background: rgba(3,25,30,0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.25rem;
+    }
+    .filter-scroll {
+      display: flex; gap: 0.5rem;
+      overflow-x: auto; scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .filter-scroll::-webkit-scrollbar { display: none; }
+    .filter-pill {
+      flex-shrink: 0; padding: 0.35rem 1rem;
+      border-radius: 50px; font-size: 12px;
+      font-weight: 500; letter-spacing: 0.06em;
+      font-family: var(--font); cursor: pointer;
+      background: transparent;
+      border: 1px solid rgba(193,117,11,0.25);
+      color: var(--muted);
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .filter-pill:hover { color: var(--white); border-color: var(--ochre-mid); }
+    .filter-pill.active {
+      background: var(--ochre); color: #fff; border-color: var(--ochre);
+    }
+
+    /* ─── Count ──────────────────────────────────────── */
+    .count-bar {
+      max-width: 1080px; margin: 1.25rem auto 0;
+      padding: 0 1.25rem;
+      font-size: 12px; color: var(--muted);
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+
+    /* ─── Grid ───────────────────────────────────────── */
+    .catalog-wrap { max-width: 1080px; margin: 0 auto; padding: 1rem 1.25rem 5rem; }
+    .catalog-grid {
+      display: grid; grid-template-columns: 1fr; gap: 1.25rem;
+    }
+    @media (min-width: 600px) { .catalog-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 960px) { .catalog-grid { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } }
+
+    /* ─── Card ───────────────────────────────────────── */
+    .product-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      opacity: 0; transform: translateY(20px);
+      animation: cardIn 0.45s forwards;
+      animation-delay: var(--delay, 0s);
+      transition: transform 0.28s cubic-bezier(0.25,0.46,0.45,0.94),
+                  border-color 0.28s ease, box-shadow 0.28s ease;
+    }
+    @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
+    .product-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--ochre-mid);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px var(--ochre-mid);
+    }
+
+    /* image */
+    .card-img {
+      position: relative; aspect-ratio: 1/1; overflow: hidden;
+      background: #0a1e24; flex-shrink: 0;
+    }
+    .card-img img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .product-card:hover .card-img img { transform: scale(1.05); }
+
+    /* placeholder */
+    .card-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #071d23 0%, #0d2a32 100%);
+    }
+    .card-placeholder svg { opacity: 0.18; color: var(--ochre); }
+
+    /* category badge */
+    .card-badge {
+      position: absolute; top: 10px; left: 10px;
+      font-size: 9px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 3px 8px; border-radius: 4px;
+      background: rgba(193,117,11,0.85); color: #fff;
+    }
+
+    /* body */
+    .card-body { padding: 1rem 1.1rem; flex: 1; display: flex; flex-direction: column; gap: 0; }
+
+    .card-name {
+      font-size: 15px; font-weight: 500; color: var(--white);
+      line-height: 1.3; margin-bottom: 0.4rem;
+    }
+
+    .card-desc {
+      font-size: 13px; font-weight: 300; line-height: 1.55;
+      color: rgba(246,248,255,0.65);
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      overflow: hidden; flex: 1; margin-bottom: 0.75rem;
+    }
+
+    .card-features {
+      display: flex; flex-direction: column; gap: 3px;
+      margin-bottom: 0.75rem;
+    }
+    .card-feature {
+      font-size: 11px; color: rgba(246,248,255,0.5);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .card-feature::before {
+      content: ''; width: 4px; height: 4px; border-radius: 50%;
+      background: var(--ochre); flex-shrink: 0;
+    }
+
+    .card-footer { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-top: auto; }
+
+    .card-price {
+      font-size: 16px; font-weight: 600; color: var(--ochre);
+      letter-spacing: 0.01em;
+    }
+    .card-price.consulte { font-style: italic; font-weight: 300; font-size: 13px; color: var(--muted); }
+
+    .card-wa {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 0.45rem 0.85rem;
+      background: rgba(37,211,102,0.1);
+      border: 1px solid rgba(37,211,102,0.25);
+      border-radius: 8px;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.04em;
+      color: var(--wa-green);
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .card-wa:hover { background: rgba(37,211,102,0.18); border-color: rgba(37,211,102,0.45); }
+
+    /* ─── Skeleton ───────────────────────────────────── */
+    .skel-card {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .skel-img { aspect-ratio: 1/1; }
+    .skel-body { padding: 1rem 1.1rem; }
+    .skel-line {
+      height: 10px; border-radius: 5px; margin-bottom: 0.6rem;
+      background: linear-gradient(90deg, #0d2229 25%, #122931 50%, #0d2229 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    .skel-img { background: linear-gradient(90deg, #0d2229 25%, #122931 50%, #0d2229 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+    .w-40 { width: 40%; } .w-70 { width: 70%; } .w-55 { width: 55%; } .w-full { width: 100%; }
+
+    /* ─── Empty / Error ──────────────────────────────── */
+    .state-center { grid-column: 1/-1; text-align: center; padding: 5rem 1.5rem; }
+    .state-icon { width: 52px; height: 52px; margin: 0 auto 1.5rem; opacity: 0.25; color: var(--ochre); }
+    .state-title { font-size: 1.2rem; font-weight: 300; font-style: italic; color: rgba(246,248,255,0.55); }
+    .state-sub { font-size: 13px; color: var(--muted); margin-top: 0.4rem; }
+
+    /* ─── Footer ─────────────────────────────────────── */
+    .footer {
+      text-align: center; padding: 2rem 1.5rem 3rem;
+      font-size: 12px; color: var(--muted); letter-spacing: 0.06em;
+      border-top: 1px solid var(--border);
+    }
+    .footer a { color: var(--ochre); opacity: 0.7; transition: opacity 0.2s; text-decoration: none; }
+    .footer a:hover { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="nav-logo">
+      <div class="nav-seal">
+        <img src={`${base}/dl-logo.png`} alt="Di Lorenzo"/>
+      </div>
+      <span class="nav-brand">di <em>Lorenzo</em></span>
+    </div>
+    <button class="nav-back" onclick="window.history.length > 1 ? window.history.back() : window.close()" type="button">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5M12 5l-7 7 7 7"/>
+      </svg>
+      Voltar
+    </button>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-eyebrow"><span></span>Coleção<span></span></div>
+    <h1 class="hero-title">Nosso<br/><em>Catálogo</em></h1>
+    <p class="hero-sub">Armações, solares e lentes selecionados para cada estilo de vida.</p>
+    <div class="hero-line"></div>
+  </header>
+
+  <!-- Filter -->
+  <div class="filter-wrap">
+    <div class="filter-scroll" id="filters">
+      <button class="filter-pill active" data-cat="Todos">Todos</button>
+      <button class="filter-pill" data-cat="Solar">Solar</button>
+      <button class="filter-pill" data-cat="Grau">Grau</button>
+      <button class="filter-pill" data-cat="Premium">Premium</button>
+      <button class="filter-pill" data-cat="Lentes">Lentes</button>
+      <button class="filter-pill" data-cat="Acessórios">Acessórios</button>
+      <button class="filter-pill" data-cat="Outros">Outros</button>
+    </div>
+  </div>
+
+  <div class="count-bar" id="count-bar"></div>
+
+  <!-- Grid -->
+  <main class="catalog-wrap">
+    <div class="catalog-grid" id="catalog-grid">
+      {Array.from({length: 6}).map(() => (
+        <div class="skel-card">
+          <div class="skel-img"></div>
+          <div class="skel-body">
+            <div class="skel-line w-40"></div>
+            <div class="skel-line w-full"></div>
+            <div class="skel-line w-70"></div>
+            <div class="skel-line w-55"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Ótica Di Lorenzo &nbsp;·&nbsp; <a href={`${base}/`}>Página inicial</a> &nbsp;·&nbsp; <a href={`${base}/galeria/`}>Ver feed</a></p>
+  </footer>
+
+  <script is:inline define:vars={{ API_URL, WA_NUMBER }}>
+    const grid    = document.getElementById('catalog-grid');
+    const countEl = document.getElementById('count-bar');
+    const filters = document.getElementById('filters');
+
+    let allProducts = [];
+    let activeCategory = 'Todos';
+
+    const CATEGORY_COLOR = {
+      Solar: '#C1750B', Grau: '#638475', Premium: '#941C2F',
+      Lentes: '#4a7fa5', Acessórios: '#7a6a4a', Outros: '#556068',
+    };
+
+    function fmtPrice(p) {
+      if (p == null) return null;
+      return 'R$ ' + Number(p).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+    }
+
+    function waLink(name) {
+      const msg = encodeURIComponent(`Olá! Vi o produto *${name}* no catálogo da Di Lorenzo e quero saber mais.`);
+      return `https://wa.me/${WA_NUMBER}?text=${msg}`;
+    }
+
+    function imgSrc(url) {
+      if (!url) return null;
+      if (url.startsWith('http')) return url;
+      return API_URL + url;
+    }
+
+    const PLACEHOLDER_SVG = `
+      <svg width="72" height="48" viewBox="0 0 72 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="12" width="28" height="24" rx="10"/>
+        <rect x="42" y="12" width="28" height="24" rx="10"/>
+        <path d="M30 24h12"/>
+        <path d="M2 24C2 24 0 18 4 16"/>
+        <path d="M70 24C70 24 72 18 68 16"/>
+      </svg>`;
+
+    function renderCard(product, index) {
+      const delay = `${(index * 0.06).toFixed(2)}s`;
+      const src   = imgSrc(product.image_url);
+      const price = fmtPrice(product.price_brl);
+      const feat  = (product.features || []).slice(0, 3);
+      const color = CATEGORY_COLOR[product.category] || '#C1750B';
+
+      const card = document.createElement('article');
+      card.className = 'product-card';
+      card.dataset.category = product.category || 'Outros';
+      card.style.setProperty('--delay', delay);
+
+      card.innerHTML = `
+        <div class="card-img">
+          ${src
+            ? `<img src="${src}" alt="${product.name}" loading="lazy"/>`
+            : `<div class="card-placeholder">${PLACEHOLDER_SVG}</div>`
+          }
+          <span class="card-badge" style="background:${color}cc">${product.category || 'Produto'}</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">${product.name}</div>
+          ${product.description
+            ? `<div class="card-desc">${product.description}</div>`
+            : '<div class="card-desc" style="visibility:hidden;height:2.4em"></div>'
+          }
+          ${feat.length ? `
+          <div class="card-features">
+            ${feat.map(f => `<span class="card-feature">${f}</span>`).join('')}
+          </div>` : ''}
+          <div class="card-footer">
+            <span class="card-price ${price ? '' : 'consulte'}">${price || 'Consulte'}</span>
+            <a class="card-wa" href="${waLink(product.name)}" target="_blank" rel="noopener">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zm-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884zm8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              WhatsApp
+            </a>
+          </div>
+        </div>`;
+
+      return card;
+    }
+
+    function applyFilter(cat) {
+      activeCategory = cat;
+      filters.querySelectorAll('.filter-pill').forEach(p => {
+        p.classList.toggle('active', p.dataset.cat === cat);
+      });
+      const cards = grid.querySelectorAll('.product-card');
+      let visible = 0;
+      cards.forEach(c => {
+        const show = cat === 'Todos' || c.dataset.category === cat;
+        c.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      updateCount(visible);
+    }
+
+    function updateCount(n) {
+      countEl.textContent = n === 0 ? '' : `${n} produto${n !== 1 ? 's' : ''}`;
+    }
+
+    function renderEmpty() {
+      grid.innerHTML = `
+        <div class="state-center">
+          <svg class="state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <p class="state-title">Catálogo em breve.</p>
+          <p class="state-sub">Nossos produtos serão listados aqui em breve.</p>
+        </div>`;
+      countEl.textContent = '';
+    }
+
+    function renderError() {
+      grid.innerHTML = `
+        <div class="state-center">
+          <p class="state-title">Não foi possível carregar o catálogo.</p>
+          <p class="state-sub">Tente novamente em instantes.</p>
+        </div>`;
+      countEl.textContent = '';
+    }
+
+    async function load() {
+      try {
+        const res = await fetch(`${API_URL}/public/dilorenzo/catalog`, { headers: { Accept: 'application/json' } });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        allProducts = await res.json();
+
+        if (!allProducts.length) { renderEmpty(); return; }
+
+        grid.innerHTML = '';
+        allProducts.forEach((p, i) => grid.appendChild(renderCard(p, i)));
+        updateCount(allProducts.length);
+
+        // Esconde categorias sem produtos nos filtros
+        const cats = new Set(allProducts.map(p => p.category));
+        filters.querySelectorAll('.filter-pill[data-cat]').forEach(pill => {
+          if (pill.dataset.cat !== 'Todos' && !cats.has(pill.dataset.cat)) {
+            pill.style.display = 'none';
+          }
+        });
+      } catch (e) {
+        console.error('[catalog] fetch failed:', e);
+        renderError();
+      }
+    }
+
+    filters.addEventListener('click', e => {
+      const pill = e.target.closest('.filter-pill');
+      if (pill) applyFilter(pill.dataset.cat);
+    });
+
+    load();
+  </script>
+</body>
+</html>
