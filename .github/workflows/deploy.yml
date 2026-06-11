@@ -1,0 +1,58 @@
+name: Deploy → VPS
+
+# Trigger manual ou push na main (apenas caminhos relevantes).
+# Na primeira vez: rodar via workflow_dispatch para validar antes de auto-deploy.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'pwa/**'
+      - 'landing/**'
+      - 'nginx/**'
+      - 'docker-compose.prod.yml'
+
+# Secrets necessários no repositório (Settings → Secrets → Actions):
+#   VPS_HOST   — IP ou hostname do VPS Hostinger
+#   VPS_USER   — usuário SSH (ex: root)
+#   VPS_SSH_KEY — chave privada SSH (par da pública no authorized_keys do VPS)
+#   VPS_PATH    — caminho no servidor (ex: /opt/visaopost)
+
+jobs:
+  deploy:
+    name: Deploy para VPS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+            cd ${{ secrets.VPS_PATH }}
+
+            echo "==> git pull"
+            git pull origin main
+
+            echo "==> Build landing (Astro)"
+            cd landing
+            npm ci --prefer-offline
+            npm run build
+            cd ..
+
+            echo "==> Build PWA (Vite)"
+            cd pwa
+            npm ci --prefer-offline
+            VITE_API_URL=https://api.visaopost.com.br npm run build
+            cd ..
+
+            echo "==> Docker compose up"
+            docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
+
+            echo "==> Prune imagens antigas"
+            docker image prune -f
+
+            echo "==> Deploy OK"

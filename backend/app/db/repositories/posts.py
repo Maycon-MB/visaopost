@@ -11,6 +11,7 @@ from typing import Any
 from uuid import UUID
 
 import asyncpg
+from pydantic import BaseModel
 
 from app.db.pool import acquire
 from app.models.approval import PostApprovalView
@@ -195,6 +196,51 @@ async def mark_as_posted(post_id: UUID, *, instagram_post_id: str, when: datetim
             post_id,
         )
     return status == "UPDATE 1"
+
+
+class PublicPost(BaseModel):
+    id: UUID
+    scheduled_at: datetime
+    status: str
+    image_url: str | None
+    caption: str
+    hashtags: list[str]
+    theme: str
+    approved_at: datetime | None
+
+
+async def list_public_posts(tenant_slug: str, *, limit: int = 30) -> list[PublicPost]:
+    """Posts aprovados/publicados de um tenant, para galeria pública. Sem dados sensíveis."""
+    async with acquire() as conn:
+        rows = await conn.fetch(
+            """
+            SELECT p.id, p.scheduled_at, p.status, p.image_url,
+                   p.caption, p.hashtags, p.theme, p.approved_at
+            FROM posts p
+            JOIN tenants t ON t.id = p.tenant_id
+            WHERE t.slug = $1
+              AND t.is_active = true
+              AND p.status IN ('approved', 'posted')
+              AND p.image_url IS NOT NULL
+            ORDER BY p.scheduled_at DESC
+            LIMIT $2
+            """,
+            tenant_slug,
+            limit,
+        )
+    return [
+        PublicPost(
+            id=row["id"],
+            scheduled_at=row["scheduled_at"],
+            status=row["status"],
+            image_url=row["image_url"],
+            caption=row["caption"],
+            hashtags=list(row["hashtags"]),
+            theme=row["theme"],
+            approved_at=row["approved_at"],
+        )
+        for row in rows
+    ]
 
 
 async def request_regenerate(post_id: UUID, *, feedback: str | None) -> bool:

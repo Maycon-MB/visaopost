@@ -36,6 +36,8 @@ const NAV = [
 
 const ROLE_LABEL = { owner: 'Proprietário', staff: 'Equipe' };
 
+const GALLERY_URL = import.meta.env.VITE_GALLERY_URL ?? 'http://localhost:4321/galeria/';
+
 function Chevron() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -97,6 +99,12 @@ function Sidebar({ open, collapsed, onClose, onLogout, onToggleCollapse, owner }
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
           </svg>
           <span className="logout-text">Landing page</span>
+        </a>
+        <a href={GALLERY_URL} target="_blank" rel="noopener noreferrer" className="sidebar-landing" title="Ver galeria pública">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="16" height="16" aria-hidden>
+            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+          <span className="logout-text">Galeria pública</span>
         </a>
         <div className="user-card">
           <span className="user-avatar">{initial}</span>

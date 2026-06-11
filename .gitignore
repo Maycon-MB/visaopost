@@ -48,3 +48,6 @@ backend/tmp/
 # artefatos de debug temporarios
 backend/_chk*
 backend/import_check.txt
+
+# Brand assets do cliente (binários, não versionados)
+Di lorenzo/
