@@ -8,7 +8,7 @@ Roadmap de execução. Mandatos técnicos em [`CLAUDE.md`](CLAUDE.md). Visão ge
 
 **Modo:** FREE TIER. **Cliente Di Lorenzo fechou** (informal via WhatsApp 2026-05-28, contrato + LGPD a formalizar). Zero gasto com VPS/domínio até estar tudo pronto.
 
-**PRÓXIMO PASSO IMEDIATO:** configurar Meta Business Manager junto com cliente (1h presencial/call) → pegar token Instagram → atacar Fase 10a-instagram.
+**PRÓXIMO PASSO IMEDIATO:** Fase 7c (QR Code de balcão). IG-setup bloqueado no cliente — Marcelo precisa converter conta + vincular FB Page + adicionar marcelo107k@gmail.com como developer do app VisaoPost (ID 891876360640132).
 
 | Fase | Escopo | Status |
 |---|---|---|
@@ -25,16 +25,18 @@ Roadmap de execução. Mandatos técnicos em [`CLAUDE.md`](CLAUDE.md). Visão ge
 | 6e | PWA `/dashboard` ECharts + bento + paleta Di Lorenzo | ✅ |
 | 6f | PWA `/produtos` CRUD + upload foto | ✅ |
 | 6g | Auth login/senha + JWT + guard assinatura | ✅ |
-| 7a | Landing Astro Di Lorenzo (brand real, imagens cliente, hero+catálogo+agendamento+depoimentos) | ✅ 2026-06-09 — `/visaopost/dilorenzo/` |
-| **IG-setup** | **Configurar Meta Business Manager + conta IG Business + token** (Maycon faz junto com cliente) | **🔜 amanhã** |
-| 7b | Galeria pública dos posts aprovados | pendente |
-| 7c | QR Code de balcão + form opt-in recall | pendente |
-| pré-0b | Contrato + LGPD formal + kickoff | **em curso humano** |
-| 0b | Hostinger VPS (~R$33/mês) + domínio + Cloudflare + Backblaze B2 | **pronto pra contratar** |
+| 7a | Landing Astro Di Lorenzo + catálogo público `/catalogo` | ✅ |
+| 7b | Galeria pública dos posts aprovados | ✅ |
+| **IG-setup** | Configurar Meta Business Manager + conta IG Business + token (bloqueado no cliente) | **🔜 aguarda Marcelo** |
+| **7c** | **QR Code de balcão + form opt-in recall** | **⬅ agora** |
+| 10e | Scripts Reels de Autoridade (gerador Gemini + CRUD + PWA `/reels`) | ✅ 2026-06-11 |
+| 10f | Relatório mensal automático + insights Gemini on-demand (PWA `/relatorio`) | ✅ parcial 2026-06-11 — falta PDF |
+| pré-0b | Contrato + LGPD formal + kickoff | em curso humano |
+| 0b | Hostinger VPS (~R$33/mês) + domínio + Cloudflare + Backblaze B2 | pronto pra contratar |
 | 8 | Deploy VPS produção (Docker, Nginx, Let's Encrypt, GH Actions SSH) | depende 0b |
 | 10a-ig | `services/instagram.py` — publicação Graph API + webhook métricas | depende IG-setup + 8 |
 | 10a-wa | Bot WhatsApp + recall (Cloud API Meta — burocracia 2-3 semanas Meta) | depois IG |
-| 10b-j | Demais integrações (GMB, reels, relatório, status page, etc.) | ondas pós-handoff |
+| 10b-j | Demais integrações (GMB, status page, etc.) | ondas pós-handoff |
 | 11 | Operacional contínuo (R$297/mês incluso) | recorrente |
 
 Schema SQL real: `backend/app/db/migrations/0001_initial.sql`. Estrutura do repo: `CLAUDE.md`. Aprendizados Fase 3: commit `83ccab5`.
