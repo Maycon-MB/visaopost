@@ -8,9 +8,8 @@ on:
     branches: [main]
     paths:
       - 'backend/**'
-      - 'pwa/**'
-      - 'landing/**'
-      - 'nginx/**'
+      - 'frontend/**'
+      - 'infra/**'
       - 'docker-compose.prod.yml'
 
 # Secrets necessários no repositório (Settings → Secrets → Actions):
@@ -38,13 +37,13 @@ jobs:
             git pull origin main
 
             echo "==> Build landing (Astro)"
-            cd landing
+            cd frontend/site
             npm ci --prefer-offline
             npm run build
-            cd ..
+            cd ../..
 
             echo "==> Build PWA (Vite)"
-            cd pwa
+            cd frontend/painel
             npm ci --prefer-offline
             VITE_API_URL=https://api.visaopost.com.br npm run build
             cd ..

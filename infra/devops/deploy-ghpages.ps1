@@ -1,9 +1,9 @@
 #!/usr/bin/env pwsh
-# Uso: .\scripts\deploy-ghpages.ps1
-# Builda o PWA com as vars corretas pro GitHub Pages e copia pra docs/app/
+# Uso: .\infra\devops\deploy-ghpages.ps1
+# Builda o painel com as vars corretas pro GitHub Pages e copia pra docs/app/
 
-$root = Split-Path $PSScriptRoot -Parent
-$pwa  = Join-Path $root "pwa"
+$root = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
+$pwa  = Join-Path $root "frontend\painel"
 $dst  = Join-Path $root "docs\app"
 
 Push-Location $pwa

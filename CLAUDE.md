@@ -1,6 +1,22 @@
 # Projeto VisaoPost
 
-SaaS B2B automação Instagram + WhatsApp + landing pra óticas. Cliente piloto Ótica Di Lorenzo (Premium R$297/mês, fechou 2026-05-28). Roadmap em [`PLANO.md`](PLANO.md). Pitch (fonte da verdade do escopo) em [`pitch/`](pitch/).
+SaaS B2B automação Instagram + WhatsApp + landing pra óticas. Cliente piloto Ótica Di Lorenzo (Premium R$297/mês, fechou 2026-05-28). Roadmap em [`PLANO.md`](PLANO.md). Pitch (fonte da verdade do escopo) em [`archive/pitch/`](archive/pitch/).
+
+## Estrutura
+
+```
+backend/          API Python (FastAPI)
+frontend/
+  site/           site público Astro (landing, catálogo, galeria)
+  painel/         painel admin React (aprovações, clientes, relatório, reels)
+infra/
+  nginx/          config reverse proxy
+  devops/         scripts de deploy e screenshot
+archive/          pitch de vendas + código legado
+entregas/         documentos para o cliente
+docs/             output GH Pages
+previews/         screenshots dos posts aprovados
+```
 
 ## Modo
 
