@@ -128,7 +128,7 @@ export default function Approve() {
   useEffect(() => { load(); }, [load]);
 
   const submit = useCallback(async (action) => {
-    if (action === 'regenerate' && !feedback.trim()) {
+    if ((action === 'regenerate' || action === 'reject') && !feedback.trim()) {
       setShowFeedbackFor('regenerate');
       return;
     }
@@ -241,7 +241,7 @@ export default function Approve() {
           {showFeedbackFor && (
             <div className="enter" style={{ marginBottom: 18 }}>
               <label className="label-atelier">
-                {showFeedbackFor === 'regenerate' ? 'O que mudar no próximo?' : 'Por que rejeitar? (opcional)'}
+                {showFeedbackFor === 'regenerate' ? 'O que mudar no próximo?' : 'O que não gostou?'}
               </label>
               <textarea
                 className="textarea-atelier"
@@ -250,7 +250,7 @@ export default function Approve() {
                 maxLength={500}
                 placeholder={showFeedbackFor === 'regenerate'
                   ? 'Ex: caption muito formal, troca o ângulo da foto…'
-                  : 'Ex: imagem não combina com a identidade da marca…'}
+                  : 'Ex: cor feia, foto muito escura, texto confuso, não tem a ver com a loja…'}
                 autoFocus
               />
               <div className="help-atelier" style={{ textAlign: 'right' }}>{feedback.length} / 500</div>
