@@ -263,3 +263,89 @@ async def request_regenerate(post_id: UUID, *, feedback: str | None) -> bool:
             post_id,
         )
     return status == "UPDATE 1"
+
+
+class ApprovedPost(BaseModel):
+    id: UUID
+    tenant_id: UUID
+    tenant_slug: str
+    instagram_access_token: str | None
+    instagram_business_account_id: str | None
+    image_url: str | None
+    caption: str
+    hashtags: list[str]
+    scheduled_at: datetime
+
+
+async def list_approved_due(*, limit: int = 20) -> list[ApprovedPost]:
+    """Posts aprovados cujo scheduled_at já passou. Candidatos pra publicar no IG."""
+    async with acquire() as conn:
+        rows = await conn.fetch(
+            """
+            SELECT p.id, p.tenant_id, p.image_url, p.caption, p.hashtags, p.scheduled_at,
+                   t.slug AS tenant_slug,
+                   t.instagram_access_token,
+                   t.instagram_business_account_id
+            FROM posts p
+            JOIN tenants t ON t.id = p.tenant_id
+            WHERE p.status = 'approved'
+              AND p.scheduled_at <= now()
+              AND t.is_active = true
+            ORDER BY p.scheduled_at ASC
+            LIMIT $1
+            """,
+            limit,
+        )
+    return [
+        ApprovedPost(
+            id=row["id"],
+            tenant_id=row["tenant_id"],
+            tenant_slug=row["tenant_slug"],
+            instagram_access_token=row["instagram_access_token"],
+            instagram_business_account_id=row["instagram_business_account_id"],
+            image_url=row["image_url"],
+            caption=row["caption"],
+            hashtags=list(row["hashtags"]),
+            scheduled_at=row["scheduled_at"],
+        )
+        for row in rows
+    ]
+
+
+async def upsert_instagram_metrics(
+    *,
+    tenant_id: UUID,
+    post_id: UUID,
+    reach: int,
+    impressions: int,
+    likes: int,
+    comments: int,
+    saves: int,
+    shares: int,
+) -> None:
+    """Insere ou atualiza snapshot de métricas do dia em metrics_instagram."""
+    async with acquire() as conn:
+        await conn.execute(
+            """
+            INSERT INTO metrics_instagram
+                (tenant_id, post_id, snapshot_date, reach, impressions, likes, comments, saves, shares)
+            VALUES ($1, $2, current_date, $3, $4, $5, $6, $7, $8)
+            ON CONFLICT (post_id, snapshot_date)
+            DO UPDATE SET
+                reach = EXCLUDED.reach,
+                impressions = EXCLUDED.impressions,
+                likes = EXCLUDED.likes,
+                comments = EXCLUDED.comments,
+                saves = EXCLUDED.saves,
+                shares = EXCLUDED.shares,
+                captured_at = now()
+            """,
+            tenant_id,
+            post_id,
+            reach,
+            impressions,
+            likes,
+            comments,
+            saves,
+            shares,
+        )

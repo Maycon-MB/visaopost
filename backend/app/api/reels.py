@@ -59,7 +59,7 @@ async def get_script(
     return script
 
 
-@router.delete("/{script_id}", status_code=204)
+@router.delete("/{script_id}", status_code=204, response_model=None)
 async def delete_script(
     script_id: UUID,
     tenant_id: UUID = Depends(current_tenant_id),

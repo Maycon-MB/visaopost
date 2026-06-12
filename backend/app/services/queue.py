@@ -10,6 +10,7 @@ falha em `redis.from_url`. Use `get_queue(connection=fake)` em testes.
 from __future__ import annotations
 
 from datetime import date as DateType
+from uuid import UUID
 from typing import Any, cast
 
 import redis
@@ -69,6 +70,69 @@ def enqueue_daily_post(
         result_ttl=RESULT_TTL,
         failure_ttl=RESULT_TTL,
         job_timeout=JOB_TIMEOUT,
+    )
+
+
+def enqueue_instagram_publish(
+    *,
+    post_id: UUID,
+    queue: Queue | None = None,
+) -> Job:
+    """Enfileira publicação de post aprovado no Instagram.
+
+    job_id determinístico = `ig-publish-{post_id}` evita duplicata se
+    o cron de publicação dispara mais de uma vez antes do worker processar.
+    """
+    q = queue or get_queue(QUEUE_PUBLISHING)
+    job_id = f"ig-publish-{post_id}"
+    return q.enqueue(
+        "app.workers.tasks.publish_instagram_post",
+        args=(str(post_id),),
+        job_id=job_id,
+        retry=_build_retry(),
+        result_ttl=RESULT_TTL,
+        failure_ttl=RESULT_TTL,
+        job_timeout=JOB_TIMEOUT,
+    )
+
+
+def enqueue_instagram_metrics(
+    *,
+    post_id: UUID,
+    media_id: str,
+    tenant_id: UUID,
+    queue: Queue | None = None,
+) -> Job:
+    """Enfileira coleta de métricas 24h após publicação."""
+    q = queue or get_queue(QUEUE_PUBLISHING)
+    job_id = f"ig-metrics-{post_id}"
+    return q.enqueue(
+        "app.workers.tasks.collect_instagram_metrics",
+        args=(str(post_id), media_id, str(tenant_id)),
+        job_id=job_id,
+        retry=_build_retry(),
+        result_ttl=RESULT_TTL,
+        failure_ttl=RESULT_TTL,
+        job_timeout=120,
+    )
+
+
+def enqueue_recall_batch(
+    *,
+    tenant_slug: str,
+    queue: Queue | None = None,
+) -> Job:
+    """Enfileira envio de recall WhatsApp pra clientes com exame > 12 meses."""
+    q = queue or get_queue(QUEUE_GENERATION)
+    job_id = f"recall-{tenant_slug}"
+    return q.enqueue(
+        "app.workers.tasks.send_recall_batch",
+        args=(tenant_slug,),
+        job_id=job_id,
+        retry=_build_retry(),
+        result_ttl=RESULT_TTL,
+        failure_ttl=RESULT_TTL,
+        job_timeout=300,
     )
 
 

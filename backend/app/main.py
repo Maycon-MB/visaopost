@@ -12,6 +12,7 @@ from app.api.products import router as products_router
 from app.api.public import router as public_router
 from app.api.recall import router as recall_router
 from app.api.reels import router as reels_router
+from app.api.whatsapp import router as whatsapp_router
 from app.api.reports import router as reports_router
 from app.api.settings import router as settings_router
 from app.config import get_settings
@@ -60,6 +61,7 @@ app.include_router(public_router)
 app.include_router(recall_router)
 app.include_router(reels_router)
 app.include_router(reports_router)
+app.include_router(whatsapp_router)
 
 if _settings.app_env == "dev":
     app.include_router(dev_router)

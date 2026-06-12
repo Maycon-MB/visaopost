@@ -37,19 +37,18 @@ def test_pick_for_theme_deterministico() -> None:
 
 def test_pick_for_theme_tag_match_filtra_pool() -> None:
     """Quando há tag overlap, escolhe entre candidatos filtrados, não pool inteiro."""
+    import base64
+
     _clear_cache()
-    # "verao" combina com rayban_sunglasses_beach.
-    uri_match = sp.pick_for_theme(target_date=DateType(2026, 6, 15), theme="verao")
+    # "lifestyle" combina só com dilorenzo_stories_01.jpg — pool candidato tem 1 elemento.
+    uri_match = sp.pick_for_theme(target_date=DateType(2026, 6, 15), theme="lifestyle")
     # Tema sem nenhuma tag combinando — cai no pool inteiro.
     uri_no_match = sp.pick_for_theme(target_date=DateType(2026, 6, 15), theme="xpto_inexistente")
     assert uri_match is not None
     assert uri_no_match is not None
-    # Resultados podem ou não coincidir (depende do índice no pool maior), mas
-    # match deve ter favorecido foto da tag "verao".
-    rayban_path = sp.STOCK_DIR / "rayban_sunglasses_beach.jpg"
-    import base64
-
-    expected = base64.b64encode(rayban_path.read_bytes()).decode("ascii")
+    # "lifestyle" tem pool de 1 → sempre retorna dilorenzo_stories_01.jpg
+    stories_path = sp.STOCK_DIR / "dilorenzo_stories_01.jpg"
+    expected = base64.b64encode(stories_path.read_bytes()).decode("ascii")
     assert expected in uri_match
 
 

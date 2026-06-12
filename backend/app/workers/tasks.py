@@ -14,6 +14,7 @@ import asyncio
 from datetime import date as DateType
 from pathlib import Path
 from typing import Any
+from uuid import UUID
 
 from app.db.pool import close_pool, init_pool
 from app.logging import configure_logging, get_logger
@@ -74,3 +75,127 @@ async def _run(tenant_slug: str, target: DateType, out_dir: Path) -> dict[str, A
         "holiday_name": post.holiday_name,
         "image_url": post.image_url,
     }
+
+
+# ─── Instagram publish ────────────────────────────────────────────────────────
+
+def publish_instagram_post(post_id_str: str) -> dict[str, Any]:
+    """Publica post aprovado no Instagram via Graph API.
+
+    Chamado pelo worker RQ da fila `instagram_publish`.
+    post_id_str: UUID em string (RQ serializa args como JSON).
+    """
+    return asyncio.run(_run_ig_publish(UUID(post_id_str)))
+
+
+async def _run_ig_publish(post_id: UUID) -> dict[str, Any]:
+    configure_logging()
+    await init_pool()
+    try:
+        from app.db.repositories.posts import list_approved_due, mark_as_posted
+        from app.services.instagram import get_instagram_client
+
+        # Recarrega o post do DB pra pegar credenciais do tenant.
+        posts = await list_approved_due(limit=100)
+        post = next((p for p in posts if p.id == post_id), None)
+        if not post:
+            logger.warning("ig_publish.post_not_found_or_not_due", post_id=str(post_id))
+            return {"status": "skipped", "reason": "not_found_or_not_due", "post_id": str(post_id)}
+
+        if not post.image_url:
+            logger.error("ig_publish.no_image_url", post_id=str(post_id))
+            return {"status": "error", "reason": "no_image_url", "post_id": str(post_id)}
+
+        caption_with_tags = post.caption
+        if post.hashtags:
+            tags = " ".join(f"#{t.lstrip('#')}" for t in post.hashtags)
+            caption_with_tags = f"{post.caption}\n\n{tags}"
+
+        client = get_instagram_client(
+            access_token=post.instagram_access_token or None,
+            account_id=post.instagram_business_account_id or None,
+        )
+        result = await client.publish_photo(
+            image_url=post.image_url,
+            caption=caption_with_tags,
+        )
+        await mark_as_posted(post_id, instagram_post_id=result.media_id)
+        logger.info(
+            "ig_publish.ok",
+            post_id=str(post_id),
+            media_id=result.media_id,
+            permalink=result.permalink,
+        )
+        return {
+            "status": "ok",
+            "post_id": str(post_id),
+            "media_id": result.media_id,
+            "permalink": result.permalink,
+        }
+    except Exception as exc:
+        logger.error("ig_publish.failed", post_id=str(post_id), error=str(exc))
+        raise
+    finally:
+        await close_pool()
+
+
+def collect_instagram_metrics(post_id_str: str, media_id: str, tenant_id_str: str) -> dict[str, Any]:
+    """Snapshot de métricas de um post publicado. Rodar 24h+ após publicação."""
+    return asyncio.run(_run_ig_metrics(UUID(post_id_str), media_id, UUID(tenant_id_str)))
+
+
+async def _run_ig_metrics(post_id: UUID, media_id: str, tenant_id: UUID) -> dict[str, Any]:
+    configure_logging()
+    await init_pool()
+    try:
+        from app.db.repositories.posts import upsert_instagram_metrics
+        from app.services.instagram import get_instagram_client
+
+        client = get_instagram_client()
+        metrics = await client.get_metrics(media_id)
+        await upsert_instagram_metrics(
+            tenant_id=tenant_id,
+            post_id=post_id,
+            reach=metrics.reach,
+            impressions=metrics.impressions,
+            likes=metrics.likes,
+            comments=metrics.comments,
+            saves=metrics.saved,
+            shares=metrics.shares,
+        )
+        logger.info("ig_metrics.ok", post_id=str(post_id), reach=metrics.reach)
+        return {
+            "status": "ok",
+            "post_id": str(post_id),
+            "reach": metrics.reach,
+            "impressions": metrics.impressions,
+            "likes": metrics.likes,
+        }
+    except Exception as exc:
+        logger.error("ig_metrics.failed", post_id=str(post_id), error=str(exc))
+        raise
+    finally:
+        await close_pool()
+
+
+# ─── WhatsApp recall ──────────────────────────────────────────────────────────
+
+def send_recall_batch(tenant_slug: str) -> dict[str, Any]:
+    """Envia recall WhatsApp pra clientes com exame > 12 meses.
+
+    Chamado pelo RQ-Scheduler toda segunda-feira às 10h.
+    """
+    return asyncio.run(_run_recall(tenant_slug))
+
+
+async def _run_recall(tenant_slug: str) -> dict[str, Any]:
+    configure_logging()
+    await init_pool()
+    try:
+        from app.services.whatsapp import send_recall_batch as _recall
+        return await _recall(tenant_slug)
+    except Exception as exc:
+        logger.error("recall.task_failed", tenant=tenant_slug, error=str(exc))
+        raise
+    finally:
+        await close_pool()

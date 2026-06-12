@@ -96,7 +96,7 @@ def test_ttl_default_usa_setting_do_env() -> None:
     """ttl_hours=None → usa jwt_expires_hours do config."""
     settings = get_settings()
     with patch("app.services.jwt.datetime") as mock_dt:
-        fixed = datetime(2026, 6, 1, 12, 0, 0, tzinfo=UTC)
+        fixed = datetime(2027, 6, 1, 12, 0, 0, tzinfo=UTC)
         mock_dt.now.return_value = fixed
         token = sign_approval_token(post_id=uuid4(), tenant_id=uuid4(), ttl_hours=None)
     payload = verify_approval_token(token)

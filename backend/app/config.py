@@ -40,6 +40,7 @@ class Settings(BaseSettings):
     whatsapp_phone_id: str = Field(default="")
     whatsapp_access_token: str = Field(default="")
     whatsapp_verify_token: str = Field(default="")
+    whatsapp_app_secret: str = Field(default="")
 
 
 @lru_cache
