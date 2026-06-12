@@ -1,8 +1,8 @@
-"""Pool de fotos stock pro DEMO enquanto cliente não entrega fotos reais.
+"""Pool de fotos reais da Ótica Di Lorenzo para geração de posts.
 
 Fase 9 substitui isto por leitura da tabela `assets` (type='product', filtrado
-por tags do tema). Mesma slot `theme.product_image_data_uri` — só muda a fonte
-de bytes. Zero refactor no `template_generator`.
+por tags do tema) quando cliente entregar fotos de produtos individuais.
+Mesma slot `theme.product_image_data_uri` — só muda a fonte de bytes.
 
 Rotação determinística por `date.toordinal() % N` evita repetição em janela
 curta. Tags: cada foto carrega lista de moods/temas combinando — quando
@@ -26,13 +26,11 @@ STOCK_DIR = Path(__file__).resolve().parents[1] / "assets" / "stock_photos"
 # `pick_for_theme`, cai no pool inteiro. Lista é placeholder do mapping
 # real que vai morar em `assets.tags` (Fase 9).
 _TAGS: dict[str, tuple[str, ...]] = {
-    "rayban_sunglasses_beach.jpg": ("verao", "sol", "esportivo", "lifestyle"),
-    "oculos_luxo_close.jpg": ("luxo", "detalhe", "elegante", "premium"),
-    "stylish_person_glasses.jpg": ("retrato", "estilo", "moda", "lifestyle"),
-    "hero_otica_premium.jpg": ("ambiente", "premium", "marca"),
-    "optical_shop_display.jpg": ("ambiente", "vitrine", "coleção"),
-    "premium_optical_storefront.jpg": ("ambiente", "fachada", "marca"),
-    "eye_exam_equipment.jpg": ("exame", "saude", "consulta", "tecnologia"),
+    "dilorenzo_vitrine_01.jpg": ("ambiente", "vitrine", "colecao", "marca", "loja"),
+    "dilorenzo_vitrine_02.jpg": ("ambiente", "vitrine", "premium", "elegante", "loja"),
+    "dilorenzo_vitrine_03.jpg": ("ambiente", "vitrine", "luxo", "colecao", "loja"),
+    "dilorenzo_stories_01.jpg": ("lifestyle", "marca", "estilo", "moda"),
+    "dilorenzo_moodboard_01.jpg": ("premium", "elegante", "luxo", "marca", "estilo"),
 }
 
 
