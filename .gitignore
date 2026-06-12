@@ -19,19 +19,16 @@ venv/
 
 # Node
 node_modules/
-pwa/node_modules/
-pwa/dist/
-landing/node_modules/
-landing/dist/
-pitch/node_modules/
-pitch/dist/
+frontend/painel/dist/
+frontend/site/dist/
+archive/pitch/dist/
 dist/
 
 # Build artefacts
-legacy/demo/post.jpg
-legacy/demo/post_*.jpg
-legacy/demo/approval.html
-legacy/demo/_logo_b64.txt
+archive/legacy/demo/post.jpg
+archive/legacy/demo/post_*.jpg
+archive/legacy/demo/approval.html
+archive/legacy/demo/_logo_b64.txt
 backend/tmp/
 
 # Editor / OS
