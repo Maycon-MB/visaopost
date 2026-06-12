@@ -23,7 +23,7 @@ const LandingPage = () => {
   const reviews = [
     { name: 'Ana Beatriz', text: 'O atendimento visagista mudou minha autoestima! Encontrei óculos que realmente combinam comigo.', time: 'Cliente há 3 anos' },
     { name: 'Marcos Oliveira', text: 'Fiz meu exame e escolhi a armação no mesmo dia. Entrega rápida e o óculos é perfeito.', time: 'Cliente satisfeito' },
-    { name: 'Juliana Costa', text: 'Ambiente super elegante e atendimento nota 1000. Não troco a Di Lorenzo por nenhuma outra.', time: 'Cliente fiel' }
+    { name: 'Juliana Costa', text: 'Ambiente super elegante e atendimento nota 1000. Nunca mais fui em outro lugar.', time: 'Cliente fiel' }
   ]
 
   const { landing } = colors;
@@ -135,7 +135,7 @@ const LandingPage = () => {
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '60px' }}>
             <span style={{ color: landing.orange, fontWeight: 800, fontSize: '0.8rem', letterSpacing: '3px', textTransform: 'uppercase' }}>Diferenciais</span>
-            <h2 style={{ fontFamily: fonts.heading, fontSize: '2.8rem', color: landing.green, fontWeight: 900 }}>Por que a Di Lorenzo?</h2>
+            <h2 style={{ fontFamily: fonts.heading, fontSize: '2.8rem', color: landing.green, fontWeight: 900 }}>Por que escolher nossa ótica?</h2>
             <p style={{ color: landing.textMuted, fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>Combinamos 15 anos de história com o que há de mais moderno no mercado óptico mundial.</p>
           </div>
 
@@ -328,7 +328,7 @@ const LandingPage = () => {
               </div>
               <div style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)', fontSize: '0.9rem' }}>
                 <p style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}><Phone size={16} /> (00) 3333-4444</p>
-                <p style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><Instagram size={16} /> @oticadilorenzo</p>
+                <p style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><Instagram size={16} /> @suaótica</p>
               </div>
             </div>
           </div>
@@ -336,16 +336,16 @@ const LandingPage = () => {
       </section>
 
       {/* Footer */}
-      <footer style={{ background: '#05140B', padding: '80px 20px', color: landing.white, textAlign: 'center' }}>
+      <footer style={{ background: '#0B1220', padding: '80px 20px', color: landing.white, textAlign: 'center' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <span style={{ fontFamily: fonts.heading, fontSize: '2rem', fontWeight: 900, marginBottom: '15px', display: 'block' }}>DI LORENZO</span>
+          <span style={{ fontFamily: fonts.heading, fontSize: '2rem', fontWeight: 900, marginBottom: '15px', display: 'block' }}>SUA ÓTICA</span>
           <p style={{ opacity: 0.6 }}>Especialistas em saúde visual e estilo desde 2011.</p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '30px', margin: '30px 0' }}>
             <a href="#" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.8rem' }}>Política de Privacidade</a>
             <a href="#" style={{ color: 'rgba(255,255,255,0.6)', textDecoration: 'none', fontSize: '0.8rem' }}>Termos de Uso</a>
           </div>
           <div style={{ fontSize: '0.75rem', opacity: 0.4, marginTop: '40px', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '40px' }}>
-            &copy; 2026 Ótica Di Lorenzo. Todos os direitos reservados.<br />
+            &copy; 2026 Sua Ótica. Todos os direitos reservados.<br />
             Tecnologia <strong style={{ color: landing.orangeLight }}>Projeto</strong> por Maycon Bruno
           </div>
         </div>

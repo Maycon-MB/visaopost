@@ -92,7 +92,7 @@ export default function WhatsAppSection() {
                     DL
                   </div>
                   <div>
-                    <div style={{ color: '#fff', fontWeight: '700', fontSize: '15px' }}>Ótica Di Lorenzo</div>
+                    <div style={{ color: '#fff', fontWeight: '700', fontSize: '15px' }}>Sua Ótica</div>
                     <div style={{ color: 'rgba(255, 255, 255, 0.75)', fontSize: '11px' }}>online agora</div>
                   </div>
                 </div>

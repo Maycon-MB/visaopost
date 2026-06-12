@@ -43,13 +43,13 @@ export default function EmailMockupSection() {
                   <div style={{ background: '#fff', borderRadius: '15px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
                     <div style={{ background: 'linear-gradient(135deg, #1a472a, #2d6a4f)', aspectRatio: '1.2', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px', textAlign: 'center' }}>
                       <div style={{ fontSize: '32px', marginBottom: '10px' }}>👓</div>
-                      <div style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px', fontWeight: 700, marginBottom: '5px' }}>Ótica Di Lorenzo</div>
+                      <div style={{ color: 'rgba(255,255,255,0.9)', fontSize: '14px', fontWeight: 700, marginBottom: '5px' }}>Sua Ótica</div>
                       <div style={{ color: colors.gold, fontSize: '13px', fontWeight: 800 }}>Dia das Mães 💝</div>
                     </div>
 
                     <div style={{ padding: '16px' }}>
                       <p style={{ fontSize: '11px', color: '#444', lineHeight: 1.6, marginBottom: '16px' }}>
-                        "Mãe merece ver o mundo com mais beleza e clareza ✨ Na Ótica Di Lorenzo, presente certo para quem você mais ama."
+                        "Mãe merece ver o mundo com mais beleza e clareza ✨ Presente certo para quem você mais ama."
                       </p>
                       <div style={{ display: 'flex', gap: '10px' }}>
                         <button style={{ flex: 1, padding: '12px', background: '#22c55e', color: 'white', border: 'none', borderRadius: '10px', fontWeight: 800, fontSize: '11px', cursor: 'pointer' }}>

@@ -157,7 +157,7 @@ export const landingReviews = [
   },
   {
     name: 'Juliana Costa',
-    text: 'Ambiente super elegante e atendimento nota 1000. Não troco a Di Lorenzo por nenhuma outra.',
+    text: 'Ambiente super elegante e atendimento nota 1000. Nunca mais fui em outro lugar.',
     time: 'Cliente fiel',
   },
 ];

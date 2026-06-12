@@ -3,8 +3,8 @@
 
 export const colors = {
   // Dark / SaaS presentation palette
-  dark: '#0B1F0F',
-  primary: '#0D3322',
+  dark: '#0B1220',
+  primary: '#14243D',
   gold: '#D4880A',
   goldLight: '#F5A623',
   white: '#FFFFFF',
@@ -16,13 +16,13 @@ export const colors = {
 
   // Landing page palette (lighter, client-facing)
   landing: {
-    green: '#0D3322',
+    green: '#14243D',
     orange: '#D4880A',
     orangeLight: '#F5A623',
     white: '#ffffff',
     gray: '#F8F9FA',
-    text: '#1A2E1C',
-    textMuted: '#5A7A62',
+    text: '#1A2535',
+    textMuted: '#5A6A7A',
   },
 };
 

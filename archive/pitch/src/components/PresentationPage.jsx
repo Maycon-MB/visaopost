@@ -64,7 +64,7 @@ const PresentationPage = () => {
   const postTemplates = [
     {
       tag: 'PRADA',
-      location: 'Ótica Di Lorenzo - Premium Store',
+      location: 'Sua Ótica - Premium Store',
       img: './stylish_person_glasses_1778289098822.png',
       desc: 'A nova coleção Prada acaba de chegar. Sofisticação e precisão técnica em cada detalhe. ✨ #PradaEyewear #Luxury'
     },
