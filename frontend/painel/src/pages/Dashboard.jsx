@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import ReactECharts from 'echarts-for-react/lib/core';
 import echarts from '../charts/echartsCore.js';
 import { baseChart, lineSeries, axisLine, axisValue, TOKENS, FONT, IT_PALETTE, fmtNum, refreshTokens } from '../charts/theme.js';
@@ -29,6 +29,31 @@ function Icon({ paths }) {
     </svg>
   );
 }
+function CountUp({ value, unit, delay = 0 }) {
+  const clean = String(value).replace(/\./g, '').replace(',', '.');
+  const target = parseFloat(clean) || 0;
+  const hasDecimal = String(value).includes(',');
+  const [cur, setCur] = useState(0);
+  useEffect(() => {
+    let start; let raf;
+    const t = setTimeout(() => {
+      const tick = (ts) => {
+        if (!start) start = ts;
+        const p = Math.min((ts - start) / 1100, 1);
+        const e = 1 - (1 - p) ** 3;
+        setCur(parseFloat((e * target).toFixed(hasDecimal ? 1 : 0)));
+        if (p < 1) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    }, delay);
+    return () => { clearTimeout(t); cancelAnimationFrame(raf); };
+  }, [target, delay, hasDecimal]);
+  const fmt = hasDecimal
+    ? cur.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+    : cur.toLocaleString('pt-BR');
+  return <>{fmt}{unit && <span className="u">{unit}</span>}</>;
+}
+
 const IC = {
   megafone: ['M4 10v4h3l8 4V6L7 10H4Z', 'M18 9a3 3 0 0 1 0 6'],
   olho: ['M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z', 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z'],
@@ -55,18 +80,6 @@ const TOP_POSTS = [
 ];
 
 
-const MONTHLY_GROWTH = [
-  { mes: 'Jan', vistas: 38000 }, { mes: 'Fev', vistas: 46000 }, { mes: 'Mar', vistas: 54000 },
-  { mes: 'Abr', vistas: 62000 }, { mes: 'Mai', vistas: 71000 }, { mes: 'Jun', vistas: 82000 },
-];
-
-const HORA_PICO = [
-  { h: '8h', v: 340 }, { h: '9h', v: 520 }, { h: '10h', v: 680 }, { h: '11h', v: 820 },
-  { h: '12h', v: 1240 }, { h: '13h', v: 980 }, { h: '14h', v: 760 }, { h: '15h', v: 690 },
-  { h: '16h', v: 720 }, { h: '17h', v: 840 }, { h: '18h', v: 1180 }, { h: '19h', v: 1420 },
-  { h: '20h', v: 1100 }, { h: '21h', v: 780 }, { h: '22h', v: 480 },
-];
-
 const TEMAS_PERF = [
   { tema: 'Óculos de sol', score: 94 }, { tema: 'Dica de estilo', score: 87 },
   { tema: 'Lentes especiais', score: 79 }, { tema: 'Promoções', score: 71 },
@@ -76,6 +89,18 @@ const TEMAS_PERF = [
 const CLIENTES_ORIGEM = [
   { name: 'Balcão', value: 148 }, { name: 'QR Code', value: 84 },
   { name: 'WhatsApp', value: 72 }, { name: 'Indicação', value: 44 },
+];
+
+const CLIENTES_SEMANA = [4, 7, 5, 9, 11, 8, 13, 21];
+
+const AGENDA_WEEK = [
+  { dia: 'Seg', label: 'Estilo', status: 'published' },
+  { dia: 'Ter', label: 'Promo', status: 'approved' },
+  { dia: 'Qua', label: 'Dica', status: 'pending' },
+  { dia: 'Qui', label: 'Post', status: 'scheduled' },
+  { dia: 'Sex', label: 'Post', status: 'scheduled' },
+  { dia: 'Sáb', label: 'Post', status: 'scheduled' },
+  { dia: 'Dom', label: '—', status: 'off' },
 ];
 
 const METRICAS = [
@@ -142,8 +167,18 @@ export default function Dashboard() {
 
   function applyPreset(p) {
     setPreset(p);
-    if (p === '7d') { setFrom(isoDaysAgo(6)); setTo(todayISO()); }
-    else if (p === '30d') { setFrom(isoDaysAgo(29)); setTo(todayISO()); }
+    const today = todayISO();
+    if (p === '7d') { setFrom(isoDaysAgo(6)); setTo(today); }
+    else if (p === '30d') { setFrom(isoDaysAgo(29)); setTo(today); }
+    else if (p === 'trimestre') {
+      const startMonth = Math.max(0, now.getMonth() - 2);
+      setFrom(new Date(now.getFullYear(), startMonth, 1).toISOString().slice(0, 10));
+      setTo(today);
+    }
+    else if (p === 'ano') {
+      setFrom(`${now.getFullYear()}-01-01`);
+      setTo(today);
+    }
   }
 
   const { labels, vistas, curtidas, periodoLabel } = useMemo(() => {
@@ -199,8 +234,6 @@ export default function Dashboard() {
     });
   }, [labels, vistas, curtidas, compare, theme]);
 
-
-
   const heatmapOption = useMemo(() => {
     const maxVal = Math.max(...HEATMAP_DATA.filter((d) => d[1] > 0).map((d) => d[1]));
     return {
@@ -232,93 +265,63 @@ export default function Dashboard() {
     };
   }, [theme]);
 
-  const SMALL_GRID = { left: 8, right: 8, top: 28, bottom: 24, containLabel: true };
-
-  const growthOption = useMemo(() => baseChart({
-    grid: SMALL_GRID,
-    xAxis: { ...axisLine(), data: MONTHLY_GROWTH.map((d) => d.mes) },
-    yAxis: axisValue(),
-    series: [{ ...lineSeries('Alcance', MONTHLY_GROWTH.map((d) => d.vistas), TOKENS.primary), yAxisIndex: 0 }],
-    tooltip: {
-      trigger: 'axis',
-      backgroundColor: TOKENS.surface, borderColor: TOKENS.hairline, borderWidth: 1,
-      textStyle: { color: TOKENS.ink, fontFamily: FONT, fontSize: 12 },
-      formatter: (params) => `${params[0].name}: <b>${(params[0].value / 1000).toFixed(0)}k pessoas</b>`,
-    },
-  }), [theme]);
-
-  const horaOption = useMemo(() => baseChart({
-    grid: SMALL_GRID,
-    xAxis: { ...axisLine(), data: HORA_PICO.map((d) => d.h), axisLabel: { ...axisLine().axisLabel, interval: 2 } },
-    yAxis: axisValue(),
-    series: [{
-      type: 'bar', data: HORA_PICO.map((d) => d.v),
-      barWidth: '72%',
-      itemStyle: {
-        color: (p) => [4, 11].includes(p.dataIndex)
-          ? { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#D4880A' }, { offset: 1, color: '#9A5C08' }] }
-          : { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#8BA89A' }, { offset: 1, color: '#638475' }] },
-        borderRadius: [3, 3, 0, 0],
-      },
-    }],
-  }), [theme]);
-
-  const ORIGEM_COLORS = ['#C1750B', '#638475', '#941C2F', '#8C7B5E'];
-  const origemOption = useMemo(() => {
-    const total = CLIENTES_ORIGEM.reduce((s, d) => s + d.value, 0);
+  const clientesSparkOption = useMemo(() => {
+    const xLabels = Array.from({ length: 8 }, (_, i) => {
+      const d = new Date(now);
+      d.setDate(d.getDate() - (7 - i) * 7);
+      const day = d.getDate();
+      const mon = d.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
+      return `${day} ${mon}`;
+    });
+    const fullDates = Array.from({ length: 8 }, (_, i) => {
+      const d = new Date(now);
+      d.setDate(d.getDate() - (7 - i) * 7);
+      return d.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' });
+    });
     return {
+      grid: { left: 4, right: 4, top: 28, bottom: 28, containLabel: true },
+      xAxis: {
+        type: 'category',
+        data: xLabels,
+        boundaryGap: false,
+        axisLine: { show: false }, axisTick: { show: false },
+        axisLabel: { color: TOKENS.inkMute, fontFamily: FONT, fontSize: 9.5, interval: 'auto' },
+      },
+      yAxis: {
+        type: 'value',
+        axisLine: { show: false }, axisTick: { show: false },
+        axisLabel: { show: false },
+        splitLine: { lineStyle: { color: TOKENS.hairline, type: 'dashed' } },
+        min: (v) => Math.max(0, v.min - 2),
+      },
       tooltip: {
-        trigger: 'item',
+        trigger: 'axis',
         backgroundColor: TOKENS.surface, borderColor: TOKENS.hairline, borderWidth: 1,
         textStyle: { color: TOKENS.ink, fontFamily: FONT, fontSize: 12 },
-        formatter: (p) => `${p.name}<br/><b>${p.value}</b> clientes · ${p.percent.toFixed(0)}%`,
+        formatter: (p) => `${fullDates[p[0].dataIndex]}<br/><b>${p[0].value} novos clientes</b>`,
       },
-      legend: {
-        orient: 'horizontal', bottom: 4, left: 'center',
-        itemWidth: 9, itemHeight: 9, itemGap: 14,
-        textStyle: { color: TOKENS.inkSoft, fontFamily: FONT, fontSize: 11.5, fontWeight: 500 },
-        formatter: (name) => {
-          const d = CLIENTES_ORIGEM.find(x => x.name === name);
-          const pct = d ? Math.round(d.value / total * 100) : 0;
-          return `${name}  ${pct}%`;
-        },
-      },
-      color: ORIGEM_COLORS,
       series: [{
-        type: 'pie',
-        radius: [52, 76],
-        center: ['50%', '43%'],
-        avoidLabelOverlap: false,
-        label: { show: false },
-        labelLine: { show: false },
-        emphasis: {
-          scale: true, scaleSize: 4,
-          label: {
-            show: true, position: 'center',
-            formatter: (p) => `{val|${p.value}}\n{name|${p.name}}`,
-            rich: {
-              val:  { fontSize: 18, fontWeight: 700, color: TOKENS.ink, fontFamily: FONT, lineHeight: 24 },
-              name: { fontSize: 11, color: TOKENS.inkMute, fontFamily: FONT, lineHeight: 16 },
-            },
-          },
+        type: 'line',
+        smooth: 0.35,
+        symbol: 'circle', symbolSize: 5,
+        lineStyle: { color: '#C1750B', width: 2.5 },
+        itemStyle: { color: '#C1750B', borderColor: '#fff', borderWidth: 1.5 },
+        areaStyle: {
+          color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+            colorStops: [{ offset: 0, color: 'rgba(193,117,11,0.22)' }, { offset: 1, color: 'rgba(193,117,11,0.02)' }] },
         },
-        data: CLIENTES_ORIGEM.map((d, i) => ({
-          name: d.name, value: d.value,
-          itemStyle: { color: ORIGEM_COLORS[i], borderWidth: 2, borderColor: TOKENS.surface },
-        })),
+        label: {
+          show: true, position: 'top', fontFamily: FONT, fontSize: 10,
+          color: TOKENS.ink, fontWeight: 700, offset: [0, -2],
+          formatter: (p) => p.dataIndex === CLIENTES_SEMANA.length - 1 ? `{last|${p.value}}` : p.value,
+          rich: { last: { color: '#C1750B', fontWeight: 800, fontFamily: FONT, fontSize: 10 } },
+        },
+        data: CLIENTES_SEMANA,
       }],
-      graphic: [
-        {
-          type: 'text', left: 'center', top: '30%',
-          style: { text: String(total), textAlign: 'center', fill: TOKENS.ink, fontSize: 22, fontWeight: '700', fontFamily: FONT },
-        },
-        {
-          type: 'text', left: 'center', top: '46%',
-          style: { text: 'clientes', textAlign: 'center', fill: TOKENS.inkMute, fontSize: 11, fontFamily: FONT },
-        },
-      ],
     };
   }, [theme]);
+
+  const ORIGEM_COLORS = ['#C1750B', '#638475', '#941C2F', '#8C7B5E'];
 
   const temasOption = useMemo(() => baseChart({
     grid: { left: 8, right: 36, top: 16, bottom: 8, containLabel: true },
@@ -335,72 +338,36 @@ export default function Dashboard() {
       formatter: (p) => `${p.name}: <b>${p.value} pts</b>`,
     },
     series: [{
-      type: 'bar', barWidth: 14,
-      data: TEMAS_PERF.map((t, i) => ({
-        value: t.score,
-        itemStyle: { color: IT_PALETTE[i % IT_PALETTE.length], borderRadius: [0, 5, 5, 0] },
-      })).reverse(),
+      type: 'bar', barWidth: '60%',
+      data: TEMAS_PERF.map((t, i) => {
+        const solid = IT_PALETTE[i % IT_PALETTE.length];
+        return {
+          value: t.score,
+          itemStyle: {
+            borderRadius: [0, 6, 6, 0],
+            color: {
+              type: 'linear', x: 0, y: 0, x2: 1, y2: 0,
+              colorStops: [
+                { offset: 0, color: solid },
+                { offset: 1, color: solid + '55' },
+              ],
+            },
+          },
+        };
+      }).reverse(),
       label: { show: true, position: 'right', fontFamily: FONT, fontSize: 11, color: TOKENS.inkMute, formatter: (p) => `${p.value}` },
     }],
   }), [theme]);
 
-  const atendimentoOption = useMemo(() => {
-    const ATEND = [
-      { name: 'Taxa resposta', value: 92 },
-      { name: 'Resolução bot', value: 73 },
-      { name: 'Conversão', value: 28 },
-    ];
-    const RING_GRAD = [
-      ['#9A5C08', '#D4880A'], ['#4A6358', '#8BA89A'], ['#6B1522', '#941C2F'],
-    ];
-    const offsets = ['-38%', '-4%', '30%'];
-    const data = ATEND.map((d, i) => ({
-      value: d.value,
-      name: d.name,
-      itemStyle: {
-        color: { type: 'linear', x: 1, y: 0, x2: 0, y2: 0, colorStops: [{ offset: 0, color: RING_GRAD[i][0] }, { offset: 1, color: RING_GRAD[i][1] }] },
-      },
-      title: { offsetCenter: ['0%', offsets[i]], fontSize: 11, fontFamily: FONT, color: TOKENS.inkSoft },
-      detail: {
-        offsetCenter: ['0%', `${parseInt(offsets[i]) + 18}%`],
-        fontSize: 14, fontWeight: 700, fontFamily: FONT, color: RING_GRAD[i][1],
-        formatter: '{value}%',
-      },
-    }));
-    return {
-      tooltip: {
-        trigger: 'item', backgroundColor: TOKENS.surface, borderColor: TOKENS.hairline, borderWidth: 1,
-        textStyle: { color: TOKENS.ink, fontFamily: FONT, fontSize: 12 },
-        formatter: (p) => `${p.name}: <b>${p.value}%</b>`,
-      },
-      series: [{
-        type: 'gauge', startAngle: 90, endAngle: -270, radius: '100%',
-        pointer: { show: false },
-        progress: { show: true, overlap: false, roundCap: true, clip: false, itemStyle: { borderWidth: 3, borderColor: TOKENS.surface } },
-        axisLine: { lineStyle: { width: 46, color: [[1, TOKENS.hairline]] } },
-        splitLine: { show: false }, axisTick: { show: false }, axisLabel: { show: false },
-        data,
-      }],
-    };
-  }, [theme]);
 
-  const volumeOption = useMemo(() => baseChart({
-    grid: { left: 8, right: 8, top: 28, bottom: 24, containLabel: true },
-    xAxis: { ...axisLine(), data: MONTHLY_GROWTH.map((d) => d.mes) },
-    yAxis: axisValue(),
-    series: [{
-      type: 'bar', data: [8, 10, 11, 12, 14, 26], barWidth: '52%',
-      itemStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: '#D4880A' }, { offset: 1, color: '#9A5C08' }] }, borderRadius: [4, 4, 0, 0] },
-      label: { show: true, position: 'top', fontFamily: FONT, fontSize: 11, color: TOKENS.inkMute },
-    }],
-  }), [theme]);
 
   return (
     <>
       <div className="dash-head">
-        <div>
+        <div className="dash-masthead">
+          <div className="dash-eyebrow">RELATÓRIO · {now.toLocaleString('pt-BR', { month: 'long', year: 'numeric' }).toUpperCase()}</div>
           <h1 className="dash-hello">Olá, <em>Marcelo</em></h1>
-          <p className="dash-sub">Olha só como a Di Lorenzo está indo — {periodoLabel}.</p>
+          <p className="dash-sub">{periodoLabel} · Ótica Di Lorenzo</p>
         </div>
         <div className="filterbar">
           <div className="fb-seg">
@@ -408,16 +375,12 @@ export default function Dashboard() {
               <button key={k} className={`fb-btn ${preset === k ? 'active' : ''}`} onClick={() => applyPreset(k)}>{lbl}</button>
             ))}
           </div>
-          {!monthly && (
-            <>
-              <span className="fb-div" />
-              <div className="range-box">
-                <input type="date" className="date-in" value={from} max={to} onChange={(e) => { setFrom(e.target.value); setPreset('custom'); }} />
-                <span className="sep">até</span>
-                <input type="date" className="date-in" value={to} min={from} max={todayISO()} onChange={(e) => { setTo(e.target.value); setPreset('custom'); }} />
-              </div>
-            </>
-          )}
+          <span className="fb-div" />
+          <div className="range-box">
+            <input type="date" className="date-in" value={from} max={to} onChange={(e) => { setFrom(e.target.value); setPreset('custom'); }} />
+            <span className="sep">até</span>
+            <input type="date" className="date-in" value={to} min={from} max={todayISO()} onChange={(e) => { setTo(e.target.value); setPreset('custom'); }} />
+          </div>
           <span className="fb-div" />
           <button className={`fb-btn ${compare ? 'active' : ''}`} onClick={() => setCompare((c) => !c)} title="Mostrar linha do mês passado para comparar">Mês passado</button>
         </div>
@@ -431,7 +394,7 @@ export default function Dashboard() {
               <span className="metric-label">{m.label}</span>
             </div>
             <div className="metric-value-row">
-              <span className="metric-value">{m.value}{m.unit && <span className="u">{m.unit}</span>}</span>
+              <span className="metric-value"><CountUp value={m.value} unit={m.unit} delay={80 + i * 140} /></span>
               <span className={`metric-delta ${m.pos ? '' : 'neg'}`}>
                 <Icon paths={m.pos ? ['M12 19V5', 'M5 12l7-7 7 7'] : ['M12 5v14', 'M5 12l7 7 7-7']} /> {m.delta}
               </span>
@@ -443,26 +406,12 @@ export default function Dashboard() {
 
       <div className="bento">
 
-        {/* Linha 1: heatmap ano inteiro */}
-        <section className="chart-card span-12 enter">
-          <div className="chart-head" style={{ marginBottom: 4 }}>
-            <div>
-              <div className="chart-title">Atividade do ano inteiro — 2026</div>
-              <div className="chart-note">cada quadrado = 1 dia · mais escuro = mais pessoas viram · meses futuros aparecem vazios</div>
-            </div>
-            <div className="chart-head-actions">
-              <InfoButton text={<>365 dias de atividade. Quadrados escuros = mais alcance naquele dia. Fins de semana naturalmente mais claros. Meses futuros ficam em branco.</>} />
-            </div>
-          </div>
-          <ReactECharts echarts={echarts} option={heatmapOption} style={{ height: 215 }} opts={{ renderer: 'svg' }} notMerge />
-        </section>
-
-        {/* Linha 2: alcance principal + radar WhatsApp */}
-        <section className="chart-card span-8 enter">
+        {/* Linha 1: alcance principal + WhatsApp */}
+        <section className="chart-card span-8 enter" style={{ animationDelay: '60ms' }}>
           <div className="chart-head">
             <div>
               <div className="chart-title">Pessoas alcançadas por dia</div>
-              <div className="chart-note">linha verde = quem viu · barras douradas = curtidas</div>
+              <div className="chart-note">linha = quem viu · barras = curtidas</div>
             </div>
             <div className="chart-head-actions">
               <span className="chart-tag">crescendo</span>
@@ -472,67 +421,120 @@ export default function Dashboard() {
               <button className="zoom-btn" onClick={() => zoomChart('out')} title="Ver tudo" aria-label="Ver tudo">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="15" height="15"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/></svg>
               </button>
-              <InfoButton text={<>Linha verde = quantas pessoas viram seus posts naquele dia. Barras douradas = curtidas. Role com o mouse pra dar zoom em qualquer período.</>} />
+              <InfoButton text={<>Linha = quantas pessoas viram seus posts naquele dia. Barras = curtidas. Role com o mouse pra dar zoom em qualquer período.</>} />
             </div>
           </div>
-          <ReactECharts ref={comboRef} echarts={echarts} option={comboOption} style={{ height: 180 }} opts={{ renderer: 'svg' }} notMerge />
+          <ReactECharts ref={comboRef} echarts={echarts} option={comboOption} style={{ height: 240 }} opts={{ renderer: 'svg' }} notMerge />
         </section>
 
-        <section className="chart-card span-4 enter">
+        <section className="chart-card span-4 enter" style={{ animationDelay: '120ms', background: 'linear-gradient(155deg, rgba(99,132,117,0.07) 0%, transparent 55%), var(--surface)' }}>
           <div className="chart-head">
             <div>
-              <div className="chart-title">Desempenho do atendimento</div>
-              <div className="chart-note">taxa de resposta · resolução pelo bot · conversão em agendamento</div>
+              <div className="chart-title">WhatsApp</div>
+              <div className="chart-note">eficiência do atendimento automático</div>
             </div>
             <div className="chart-head-actions">
               <InfoButton text={<>Taxa resposta = % de conversas atendidas. Resolução bot = % resolvidas sem intervenção humana. Conversão = % que viraram agendamento.</>} />
             </div>
           </div>
-          <ReactECharts echarts={echarts} option={atendimentoOption} style={{ height: 180 }} opts={{ renderer: 'svg' }} notMerge />
+          <div className="wa-kpis">
+            {[
+              { label: 'Taxa de resposta',   value: 92, note: 'conversas atendidas' },
+              { label: 'Resolução pelo bot', value: 73, note: 'sem intervenção humana' },
+              { label: 'Conversão',          value: 28, note: 'viraram agendamento' },
+            ].map((k) => {
+              const color = k.value >= 80 ? '#638475' : k.value >= 50 ? '#C1750B' : '#941C2F';
+              return (
+                <div className="wa-kpi-row" key={k.label}>
+                  <div className="wa-kpi-body">
+                    <div className="wa-kpi-label">{k.label}</div>
+                    <div className="wa-kpi-note">{k.note}</div>
+                  </div>
+                  <div className="wa-kpi-val" style={{ color }}>{k.value}%</div>
+                </div>
+              );
+            })}
+          </div>
         </section>
 
-        {/* Linha 2: volume de posts + crescimento + horário de pico */}
-        <section className="chart-card span-4 enter">
+        {/* Linha 2: recall + novos clientes + agenda */}
+        <section className="chart-card span-4 enter compact" style={{ animationDelay: '180ms', background: 'linear-gradient(145deg, rgba(148,28,47,0.06) 0%, transparent 50%), var(--surface)' }}>
           <div className="chart-head">
             <div>
-              <div className="chart-title">Posts publicados por mês</div>
-              <div className="chart-note">volume de publicações ao longo do ano</div>
+              <div className="chart-title">Recall de clientes</div>
+              <div className="chart-note">funil de reativação — clientes com 1+ ano sem retorno</div>
             </div>
             <div className="chart-head-actions">
-              <InfoButton text={<>Quantos posts a Di Lorenzo publicou em cada mês. Junho já ultrapassou todos os meses anteriores.</>} />
+              <InfoButton text={<>O sistema identifica automaticamente clientes com exame vencido e dispara lembretes pelo WhatsApp.</>} />
             </div>
           </div>
-          <ReactECharts echarts={echarts} option={volumeOption} style={{ height: 160 }} opts={{ renderer: 'svg' }} notMerge />
+          <div className="recall-flow">
+            <div className="rfl-node">
+              <span className="rfl-val" style={{ color: '#941C2F' }}>47</span>
+              <span className="rfl-label">Vencidos</span>
+              <span className="rfl-sub">1+ ano sem exame</span>
+            </div>
+            <div className="rfl-arrow"><span className="rfl-conv">81%</span><span className="rfl-icon">→</span></div>
+            <div className="rfl-node">
+              <span className="rfl-val" style={{ color: '#C1750B' }}>38</span>
+              <span className="rfl-label">Contactados</span>
+              <span className="rfl-sub">recall por WhatsApp</span>
+            </div>
+            <div className="rfl-arrow"><span className="rfl-conv">58%</span><span className="rfl-icon">→</span></div>
+            <div className="rfl-node">
+              <span className="rfl-val" style={{ color: '#638475' }}>22</span>
+              <span className="rfl-label">Voltaram</span>
+              <span className="rfl-sub">taxa de retorno</span>
+            </div>
+          </div>
         </section>
 
-        <section className="chart-card span-4 enter">
+        <section className="chart-card span-4 enter compact" style={{ animationDelay: '240ms', background: 'linear-gradient(225deg, rgba(99,132,117,0.07) 0%, transparent 50%), var(--surface)' }}>
           <div className="chart-head">
             <div>
-              <div className="chart-title">Crescimento do alcance</div>
-              <div className="chart-note">total de pessoas alcançadas mês a mês</div>
+              <div className="chart-title">Novos clientes</div>
+              <div className="chart-note">cadastros por semana · +8 vs anterior</div>
             </div>
             <div className="chart-head-actions">
-              <InfoButton text={<>Crescimento acumulado do alcance mensal. Em 6 meses o alcance mais que dobrou.</>} />
+              <span className="clientes-chip">21<em>esta semana</em></span>
+              <InfoButton text={<>Clientes cadastrados por semana. Última barra (ochre) = semana atual. Barras verde = histórico.</>} />
             </div>
           </div>
-          <ReactECharts echarts={echarts} option={growthOption} style={{ height: 160 }} opts={{ renderer: 'svg' }} notMerge />
+          <ReactECharts echarts={echarts} option={clientesSparkOption} style={{ height: 185 }} opts={{ renderer: 'svg' }} notMerge />
         </section>
 
-        <section className="chart-card span-4 enter">
+        <section className="chart-card span-4 enter compact" style={{ animationDelay: '300ms', background: 'linear-gradient(315deg, rgba(193,117,11,0.06) 0%, transparent 50%), var(--surface)' }}>
           <div className="chart-head">
             <div>
-              <div className="chart-title">Horário de pico</div>
-              <div className="chart-note">quando seu público está mais ativo</div>
+              <div className="chart-title">Posts desta semana</div>
+              <div className="chart-note">status de cada publicação agendada</div>
             </div>
             <div className="chart-head-actions">
-              <InfoButton text={<>Engajamento por hora do dia. Barras douradas = picos. Seus posts saem no momento certo.</>} />
+              <InfoButton text={<>Verde = publicado. Dourado = aprovado, aguarda horário. Âmbar = aguarda sua aprovação. Cinza = agendado.</>} />
             </div>
           </div>
-          <ReactECharts echarts={echarts} option={horaOption} style={{ height: 160 }} opts={{ renderer: 'svg' }} notMerge />
+          <div className="week-grid">
+            {AGENDA_WEEK.map((d) => {
+              const STATUS_ICON = { published: '✓', approved: '→', pending: '!', scheduled: '·', off: '—' };
+              return (
+                <div key={d.dia} className={`wg-day ${d.status}`}
+                data-label={`${d.dia}: ${d.status === 'off' ? 'Folga' : d.label} (${({ published: 'Publicado', approved: 'Aprovado', pending: 'Aprovar', scheduled: 'Agendado', off: '—' })[d.status]})`}>
+                  <span className="wg-dia">{d.dia}</span>
+                  <span className="wg-icon">{STATUS_ICON[d.status]}</span>
+                  <span className="wg-label">{d.label === '—' ? 'Folga' : d.label}</span>
+                </div>
+              );
+            })}
+          </div>
+          <div className="wg-legend">
+            {[['#638475','✓ Publicado'],['#C1750B','→ Aprovado'],['#D4880A','! Aprovar'],['var(--ink-mute)','· Agendado']].map(([c,l]) => (
+              <span key={l} className="wgl-item"><span className="wgl-dot" style={{ background: c }} />{l}</span>
+            ))}
+          </div>
         </section>
 
-        {/* Linha 3: ranking visual + temas + origem */}
-        <section className="chart-card span-4 enter compact">
+        {/* Linha 3: ranking + temas + origem — todos span-4 */}
+        <section className="chart-card span-4 enter compact" style={{ animationDelay: '360ms', background: 'linear-gradient(135deg, rgba(193,117,11,0.07) 0%, transparent 52%), var(--surface)' }}>
           <div className="chart-head">
             <div>
               <div className="chart-title">Ranking de posts</div>
@@ -542,28 +544,30 @@ export default function Dashboard() {
               <InfoButton text={<><strong>Salvamentos</strong> valem mais que curtidas — é quando alguém guarda pra ver depois, sinal de interesse real.</>} />
             </div>
           </div>
-          <table className="rank-table">
-            <thead><tr><th>#</th><th>Publicação</th><th className="num">Curtidas</th><th className="num">Salvos</th></tr></thead>
-            <tbody>
-              {TOP_POSTS.map((p, i) => {
-                const pct = Math.round(p.curtidas / TOP_POSTS[0].curtidas * 100);
-                return (
-                  <tr key={i} style={{ '--bar': `${pct}%` }}>
-                    <td><span className={`rank-badge${i === 0 ? ' gold' : i === 1 ? ' silver' : i === 2 ? ' bronze' : ''}`}>{i + 1}</span></td>
-                    <td className="rank-tema">{p.tema}</td>
-                    <td className="num rank-bar-cell">
-                      <span className="rank-bar-fill" />
-                      <span className="rank-bar-val">{p.curtidas.toLocaleString('pt-BR')}</span>
-                    </td>
-                    <td className="num saved">{p.salvos}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <div className="rank-list">
+            {TOP_POSTS.slice(0, 3).map((p, i) => {
+              const pct = Math.round(p.curtidas / TOP_POSTS[0].curtidas * 100);
+              const color = i === 0 ? '#C1750B' : i === 1 ? '#8C8070' : '#A0745A';
+              return (
+                <div className="rl-row" key={i}>
+                  <span className="rl-rank" style={{ color }}>{i + 1}</span>
+                  <div className="rl-content">
+                    <div className="rl-tema">{p.tema}</div>
+                    <div className="rl-stats">
+                      <span className="rl-curtidas">{p.curtidas.toLocaleString('pt-BR')} curtidas</span>
+                      <span className="rl-salvos">{p.salvos} salvos</span>
+                    </div>
+                    <div className="rl-bar-track">
+                      <div className="rl-bar-fill" style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${color}, ${color}66)` }} />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </section>
 
-        <section className="chart-card span-4 enter compact">
+        <section className="chart-card span-4 enter compact" style={{ animationDelay: '420ms', background: 'linear-gradient(225deg, rgba(99,132,117,0.09) 0%, transparent 52%), var(--surface)' }}>
           <div className="chart-head">
             <div>
               <div className="chart-title">Temas que mais funcionam</div>
@@ -573,10 +577,10 @@ export default function Dashboard() {
               <InfoButton text={<>Performance relativa de cada tema de post. Score combina curtidas, salvamentos e alcance.</>} />
             </div>
           </div>
-          <ReactECharts echarts={echarts} option={temasOption} style={{ height: 170 }} opts={{ renderer: 'svg' }} notMerge />
+          <ReactECharts echarts={echarts} option={temasOption} style={{ height: 140 }} opts={{ renderer: 'svg' }} notMerge />
         </section>
 
-        <section className="chart-card span-4 enter compact">
+        <section className="chart-card span-4 enter compact" style={{ animationDelay: '480ms', background: 'linear-gradient(315deg, rgba(148,28,47,0.07) 0%, transparent 52%), var(--surface)' }}>
           <div className="chart-head">
             <div>
               <div className="chart-title">Clientes por origem</div>
@@ -586,7 +590,43 @@ export default function Dashboard() {
               <InfoButton text={<>De onde vieram seus clientes cadastrados. QR Code do balcão, WhatsApp, indicações e atendimento presencial.</>} />
             </div>
           </div>
-          <ReactECharts echarts={echarts} option={origemOption} style={{ height: 190 }} opts={{ renderer: 'svg' }} notMerge />
+          <div className="origem-list" style={{ marginTop: 8 }}>
+            {(() => {
+              const total = CLIENTES_ORIGEM.reduce((s, d) => s + d.value, 0);
+              return CLIENTES_ORIGEM.map((d, i) => {
+                const pct = Math.round(d.value / total * 100);
+                return (
+                  <div className="origem-row" key={d.name}>
+                    <div className="origem-row-head">
+                      <span className="origem-dot" style={{ background: ORIGEM_COLORS[i] }} />
+                      <span className="origem-label">{d.name}</span>
+                      <div className="origem-stat">
+                        <strong>{d.value}</strong>
+                        <em>{pct}%</em>
+                      </div>
+                    </div>
+                    <div className="origem-track">
+                      <div className="origem-fill" style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${ORIGEM_COLORS[i]}, ${ORIGEM_COLORS[i]}bb)` }} />
+                    </div>
+                  </div>
+                );
+              });
+            })()}
+          </div>
+        </section>
+
+        {/* Linha 4: heatmap anual — contexto, não dado primário */}
+        <section className="chart-card span-12 enter" style={{ animationDelay: '540ms' }}>
+          <div className="chart-head" style={{ marginBottom: 4 }}>
+            <div>
+              <div className="chart-title">Atividade do ano inteiro — 2026</div>
+              <div className="chart-note">cada quadrado = 1 dia · mais escuro = mais pessoas viram · meses futuros aparecem vazios</div>
+            </div>
+            <div className="chart-head-actions">
+              <InfoButton text={<>365 dias de atividade. Quadrados escuros = mais alcance naquele dia. Fins de semana naturalmente mais claros. Meses futuros ficam em branco.</>} />
+            </div>
+          </div>
+          <ReactECharts echarts={echarts} option={heatmapOption} style={{ height: 190 }} opts={{ renderer: 'svg' }} notMerge />
         </section>
 
       </div>

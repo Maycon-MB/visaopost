@@ -6,8 +6,10 @@ const AuthContext = createContext(null);
 
 const DEMO_USER = { id: 'demo', name: 'Marcelo', email: 'marcelo@oticadilorenzo.com.br', role: 'owner', status: 'active' };
 // Credenciais de teste para demonstração ao cliente (sem backend)
-const TEST_EMAIL = 'marcelo';
-const TEST_PASS  = 'dilorenzo2026';
+const TEST_CREDS = [
+  { user: 'marcelo', pass: 'dilorenzo2026' },
+  { user: 'admin',   pass: 'admin' },
+];
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(DEMO ? DEMO_USER : null);
@@ -23,7 +25,8 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function signIn(email, password) {
-    if (email.trim().toLowerCase() === TEST_EMAIL && password === TEST_PASS) {
+    const key = email.trim().toLowerCase();
+    if (TEST_CREDS.some((c) => c.user === key && c.pass === password)) {
       setUser(DEMO_USER);
       return DEMO_USER;
     }

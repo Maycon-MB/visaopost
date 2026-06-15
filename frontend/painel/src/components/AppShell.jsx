@@ -25,7 +25,7 @@ const NAV = [
     icon: <NavIcon paths={['M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2', 'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8', 'M23 21v-2a4 4 0 0 0-3-3.87', 'M16 3.13a4 4 0 0 1 0 7.75']} />,
   },
   {
-    to: '/admin/produtos', label: 'Catálogo',
+    to: '/admin/produtos', label: 'Produtos',
     icon: <NavIcon paths={['M2 6h4l3 9h10l3-9H6', 'M8.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3', 'M18.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3']} />,
   },
   {
@@ -101,33 +101,37 @@ function Sidebar({ open, collapsed, onClose, onLogout, onToggleCollapse, owner }
             <span>{n.label}</span>
           </NavLink>
         ))}
+
+        <div className="sidebar-ext-sep" />
+        <div className="sidebar-ext-grid">
+          <a href="../dilorenzo/" className="sidebar-ext-btn" title="Ver meu site">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span className="logout-text">Meu Site</span>
+          </a>
+          <a href={GALLERY_URL} target="_blank" rel="noopener noreferrer" className="sidebar-ext-btn" title="Ver posts publicados">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
+              <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+            </svg>
+            <span className="logout-text">Posts</span>
+          </a>
+          <a href={CATALOG_URL} target="_blank" rel="noopener noreferrer" className="sidebar-ext-btn" title="Ver vitrine pública">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+            <span className="logout-text">Vitrine</span>
+          </a>
+          <a href={QR_PRINT_URL} target="_blank" rel="noopener noreferrer" className="sidebar-ext-btn" title="Imprimir QR Code do balcão">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="17" y="17" width="4" height="4"/><path d="M14 14h3v3"/><path d="M14 17h.01"/>
+            </svg>
+            <span className="logout-text">QR Balcão</span>
+          </a>
+        </div>
       </nav>
 
       <div className="sidebar-foot">
-        <a href="../dilorenzo/" className="sidebar-landing" title="Ver landing page">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="16" height="16" aria-hidden>
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-          </svg>
-          <span className="logout-text">Landing page</span>
-        </a>
-        <a href={GALLERY_URL} target="_blank" rel="noopener noreferrer" className="sidebar-landing" title="Ver galeria pública">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="16" height="16" aria-hidden>
-            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
-          </svg>
-          <span className="logout-text">Galeria pública</span>
-        </a>
-        <a href={CATALOG_URL} target="_blank" rel="noopener noreferrer" className="sidebar-landing" title="Ver catálogo público">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="16" height="16" aria-hidden>
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
-          </svg>
-          <span className="logout-text">Catálogo público</span>
-        </a>
-        <a href={QR_PRINT_URL} target="_blank" rel="noopener noreferrer" className="sidebar-landing" title="Imprimir QR Code do balcão">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="16" height="16" aria-hidden>
-            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="17" y="17" width="4" height="4"/><path d="M14 14h3v3"/><path d="M14 17h.01"/>
-          </svg>
-          <span className="logout-text">QR Code balcão</span>
-        </a>
         <div className="user-card">
           <span className="user-avatar">{initial}</span>
           <span className="user-meta">
