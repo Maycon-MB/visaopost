@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { login as apiLogin, logout as apiLogout, fetchMe, getToken } from './api.js';
-import { DEMO } from './config.js';
+import { login as apiLogin, logout as apiLogout, fetchMe, getToken } from './api';
+import { DEMO } from './config';
+
+interface User { name?: string; role?: string; [key: string]: unknown }
 
 const AuthContext = createContext(null);
 

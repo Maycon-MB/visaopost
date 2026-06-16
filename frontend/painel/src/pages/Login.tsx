@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../auth-context.jsx';
-import { BrandLogo } from '../components/AppShell.jsx';
+import { BrandLogo } from '../components/BrandLogo';
 
 export default function Login() {
   const { signIn } = useAuth();

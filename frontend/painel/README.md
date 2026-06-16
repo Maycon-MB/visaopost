@@ -1,57 +1,60 @@
-# PWA do dono — VisaoPost
+# VisaoPost — Painel Admin (PWA)
 
-PWA mobile/tablet first pra dono aprovar posts gerados, gerir clientes (Fase 6c), configurar settings (Fase 6d), ver dashboard (Fase 6e) e administrar catálogo (Fase 6f).
+PWA mobile-first para dono da ótica aprovar posts, gerir clientes, ver dashboard e configurar o serviço.
 
-Stack: React 18 + Vite 5 + Bootstrap 5 (CSS) + react-router-dom 6 + vite-plugin-pwa.
+## Stack
 
-## Telas
+- React 18 + Vite 5 + TypeScript
+- Bootstrap 5 (CSS apenas, sem JS)
+- react-router-dom 6, vite-plugin-pwa
+- ECharts (via echarts-for-react)
+- Playwright (E2E)
 
-| Rota | Fase | Status |
-|---|---|---|
-| `/aprovar/:token` | 6b | ✅ feito (esta entrega) |
-| `/clientes` | 6c | pendente |
-| `/settings` | 6d | pendente |
-| `/dashboard` | 6e | pendente (skeleton) |
-| `/produtos` | 6f | pendente |
-
-## Dev local
+## Setup local
 
 ```bash
-cd pwa
+cd frontend/painel
 npm install
-npm run dev   # http://localhost:5173 (proxy /api → :8000)
+npm run dev        # http://localhost:5173
 ```
 
-Pré-requisitos:
-- backend rodando em `localhost:8000` (`uvicorn app.main:app --reload`)
-- CORS já liberado pra `localhost:5173` em `backend/app/main.py`
+Pré-requisito: backend em `localhost:8000` (`uvicorn app.main:app --reload`).
 
-## Build produção
+## Scripts
+
+| Comando | O que faz |
+|---|---|
+| `npm run dev` | Dev server HMR em :5173 |
+| `npm run build` | Bundle de produção em `dist/` |
+| `npm run preview` | Serve `dist/` localmente |
+| `npm run test:e2e` | Testes Playwright (requer dev server rodando) |
+
+## Build de produção
 
 ```bash
-npm run build   # gera pwa/dist/
-npm run preview # serve estático local
+npm run build
+# dist/ vai para /app no VPS via nginx
 ```
 
-Fase 8 publica `pwa/dist/` em `/app` no Nginx VPS. Hoje, build vai pro GitHub Pages.
+Meta de bundle: < 200 KB gzip total.
 
-## Critérios mobile/tablet first (PLANO.md)
+## Qualidade
 
-- Touch targets ≥ 56px (acima do mínimo 48dp).
-- Bootstrap CSS only (sem JS bootstrap, sem popper.js) → bundle leve.
-- Service worker via vite-plugin-pwa: cache `NetworkFirst` em `/api/posts/`, `CacheFirst` em imagens.
-- Manifest + ícones SVG → instalável (Add to Home Screen no iOS/Android).
-- `safe-area-inset-bottom` respeitado pra notch iPhone.
+- TypeScript em todos os componentes
+- Playwright E2E em `e2e/`
+- `npm audit` sem vulnerabilidades críticas/altas
+- CSP configurado em `index.html`
+- PWA instalável (Add to Home Screen iOS/Android)
+- Dark mode via `[data-theme="dark"]`
+- `prefers-reduced-motion` respeitado
 
-## E2E com email (Resend)
+## Variáveis de ambiente
 
-Pra Resend mandar email com URL pública, expor backend via ngrok:
+Copie `.env.example` para `.env.local`:
 
-```bash
-ngrok http 8000
-# copiar URL e usar em backend/.env como FRONTEND_URL=https://<ngrok>.ngrok.app
 ```
-
-## Ícones
-
-`public/icon-192.svg` e `public/icon-512.svg` são placeholders. Antes de produção, gerar PNGs reais com o logo final do cliente.
+VITE_API_URL=http://localhost:8000
+VITE_GALLERY_URL=http://localhost:4321/galeria/
+VITE_CATALOG_URL=http://localhost:4321/catalogo/
+VITE_QR_PRINT_URL=http://localhost:8000/recall/qr/dilorenzo/print
+```

@@ -1,10 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { type ReactNode } from 'react';
 import ReactECharts from 'echarts-for-react/lib/core';
 import echarts from '../charts/echartsCore.js';
-import { baseChart, lineSeries, axisLine, axisValue, TOKENS, FONT, IT_PALETTE, fmtNum, refreshTokens } from '../charts/theme.js';
-import { useTheme } from '../theme-context.jsx';
+import { baseChart, lineSeries, axisLine, axisValue, TOKENS as _TOKENS, FONT, IT_PALETTE, fmtNum, refreshTokens } from '../charts/theme.js';
+const TOKENS = _TOKENS as Record<string, string>;
+import { useTheme } from '../theme-context';
 
-function InfoButton({ text }) {
+interface InfoButtonProps { text: ReactNode }
+
+function InfoButton({ text }: InfoButtonProps) {
   const [open, setOpen] = useState(false);
   return (
     <span style={{ position: 'relative', display: 'inline-flex' }}>
@@ -22,22 +26,24 @@ function InfoButton({ text }) {
 const MES_ABBR = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
 // Ícones de traço (sem emoji). currentColor, 24x24.
-function Icon({ paths }) {
+function Icon({ paths }: { paths: string[] }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       {paths.map((p, i) => <path key={i} d={p} />)}
     </svg>
   );
 }
-function CountUp({ value, unit, delay = 0 }) {
+interface CountUpProps { value: string; unit?: string; delay?: number }
+
+function CountUp({ value, unit, delay = 0 }: CountUpProps) {
   const clean = String(value).replace(/\./g, '').replace(',', '.');
   const target = parseFloat(clean) || 0;
   const hasDecimal = String(value).includes(',');
   const [cur, setCur] = useState(0);
   useEffect(() => {
-    let start; let raf;
+    let start: number; let raf: number;
     const t = setTimeout(() => {
-      const tick = (ts) => {
+      const tick = (ts: number) => {
         if (!start) start = ts;
         const p = Math.min((ts - start) / 1100, 1);
         const e = 1 - (1 - p) ** 3;
@@ -146,7 +152,7 @@ export default function Dashboard() {
   const [compare, setCompare] = useState(false);
   const comboRef = useRef(null);
 
-  function zoomChart(direction) {
+  function zoomChart(direction: 'in' | 'out') {
     const inst = comboRef.current?.getEchartsInstance();
     if (!inst) return;
     const opt = inst.getOption();
@@ -165,7 +171,7 @@ export default function Dashboard() {
 
   const monthly = preset === 'ano' || preset === 'trimestre';
 
-  function applyPreset(p) {
+  function applyPreset(p: string) {
     setPreset(p);
     const today = todayISO();
     if (p === '7d') { setFrom(isoDaysAgo(6)); setTo(today); }
@@ -192,7 +198,7 @@ export default function Dashboard() {
         periodoLabel: preset === 'trimestre' ? 'últimos 3 meses' : `${now.getFullYear()}`,
       };
     }
-    const days = Math.max(1, Math.min(31, Math.round((new Date(to) - new Date(from)) / 86400000) + 1));
+    const days = Math.max(1, Math.min(31, Math.round((new Date(to).getTime() - new Date(from).getTime()) / 86400000) + 1));
     const lbl = Array.from({ length: days }, (_, i) => {
       const d = new Date(from); d.setDate(d.getDate() + i);
       return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
@@ -207,7 +213,7 @@ export default function Dashboard() {
 
   // Combo: ÁREA (quem viu) + BARRAS (curtidas). Compare = linha fantasma do período anterior.
   const comboOption = useMemo(() => {
-    const series = [
+    const series: any[] = [
       { ...lineSeries('Pessoas que viram', vistas, TOKENS.primary), yAxisIndex: 0, z: 3 },
       {
         name: 'Curtidas', type: 'bar', data: curtidas, yAxisIndex: 1,

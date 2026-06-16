@@ -1,22 +1,22 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
-import Approve from './pages/Approve.jsx';
-import Login from './pages/Login.jsx';
-import { BrandLogo } from './components/AppShell.jsx';
-import { useAuth } from './auth-context.jsx';
-import { DEMO } from './config.js';
+import Approve from './pages/Approve';
+import Login from './pages/Login';
+import { BrandLogo } from './components/BrandLogo';
+import { useAuth } from './auth-context';
+import { DEMO } from './config';
 
-const AppShell = lazy(() => import('./components/AppShell.jsx'));
-const Dashboard = lazy(() => import('./pages/Dashboard.jsx'));
-const Clientes = lazy(() => import('./pages/Clientes.jsx'));
-const Produtos = lazy(() => import('./pages/Produtos.jsx'));
-const Apresentacao = lazy(() => import('./pages/Apresentacao.jsx'));
-const Settings = lazy(() => import('./pages/Settings.jsx'));
-const Aprovacoes = lazy(() => import('./pages/Aprovacoes.jsx'));
-const ForgotPassword = lazy(() => import('./pages/ForgotPassword.jsx'));
-const ResetPassword = lazy(() => import('./pages/ResetPassword.jsx'));
-const Reels = lazy(() => import('./pages/Reels.jsx'));
-const Relatorio = lazy(() => import('./pages/Relatorio.jsx'));
+const AppShell = lazy(() => import('./components/AppShell'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Clientes = lazy(() => import('./pages/Clientes'));
+const Produtos = lazy(() => import('./pages/Produtos'));
+const Apresentacao = lazy(() => import('./pages/Apresentacao'));
+const Settings = lazy(() => import('./pages/Settings'));
+const Aprovacoes = lazy(() => import('./pages/Aprovacoes'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+const Reels = lazy(() => import('./pages/Reels'));
+const Relatorio = lazy(() => import('./pages/Relatorio'));
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();

@@ -1,4 +1,5 @@
-import { DEMO } from './config.js';
+// @ts-nocheck
+import { DEMO } from './config';
 
 const BASE = import.meta.env.VITE_API_URL || '';
 const TOKEN_KEY = 'dl_token';

@@ -981,6 +981,11 @@ h1, h2, h3, h4 {
 }
 @media (min-width: 992px) { .topbar { display: none; } }
 
+:root[data-theme="dark"] .topbar {
+  background: rgba(12, 24, 28, 0.88);
+  border-bottom-color: var(--hairline);
+}
+
 .hamburger {
   width: 44px; height: 44px;
   border-radius: 12px;
@@ -1719,4 +1724,14 @@ h1, h2, h3, h4 {
   .app-frame.collapsed .sidebar-landing { padding: 10px 0; }
   .app-frame.collapsed .sidebar-logout { padding: 11px 0; }
   .app-frame.collapsed .sidebar-collapse svg { transform: rotate(180deg); }
+}
+
+/* Respeita preferência do usuário por menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

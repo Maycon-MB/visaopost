@@ -1,8 +1,14 @@
 import { useEffect, useState } from 'react';
+import type { SVGAttributes } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../auth-context.jsx';
+import { useAuth } from '../auth-context';
+import { BrandLogo } from './BrandLogo';
 
-function NavIcon({ paths, ...props }) {
+interface NavIconProps extends SVGAttributes<SVGElement> {
+  paths: string[];
+}
+
+function NavIcon({ paths, ...props }: NavIconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
       strokeLinecap="round" strokeLinejoin="round" width="18" height="18" aria-hidden {...props}>
@@ -63,19 +69,19 @@ function LogoutIcon() {
   );
 }
 
-export function BrandLogo({ onDark = false }) {
-  return (
-    <span className={`brand-logo ${onDark ? 'on-dark' : ''}`}>
-      <span className={`brand-seal ${onDark ? 'on-dark' : ''}`}>DL</span>
-      <span className="brand-words">
-        <span className="name">Di <em>Lorenzo</em></span>
-        <span className="kicker">@oticadilorenzo</span>
-      </span>
-    </span>
-  );
+export { BrandLogo } from './BrandLogo';
+
+interface OwnerInfo { name: string; role: string; business: string }
+interface SidebarProps {
+  open: boolean;
+  collapsed: boolean;
+  onClose: () => void;
+  onLogout: () => void;
+  onToggleCollapse: () => void;
+  owner: OwnerInfo;
 }
 
-function Sidebar({ open, collapsed, onClose, onLogout, onToggleCollapse, owner }) {
+function Sidebar({ open, collapsed, onClose, onLogout, onToggleCollapse, owner }: SidebarProps) {
   const initial = (owner.name || '?').trim().charAt(0).toUpperCase();
   return (
     <aside className={`sidebar-v2 ${open ? 'open' : ''}`}>

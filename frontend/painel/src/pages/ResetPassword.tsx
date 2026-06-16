@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { resetPassword } from '../api.js';
-import { BrandLogo } from '../components/AppShell.jsx';
+import { BrandLogo } from '../components/BrandLogo';
 
 export default function ResetPassword() {
   const [params] = useSearchParams();

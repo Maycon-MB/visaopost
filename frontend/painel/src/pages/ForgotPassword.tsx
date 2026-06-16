@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { forgotPassword } from '../api.js';
-import { BrandLogo } from '../components/AppShell.jsx';
+import { BrandLogo } from '../components/BrandLogo';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
