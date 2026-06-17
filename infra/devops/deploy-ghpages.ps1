@@ -9,6 +9,8 @@ $dst  = Join-Path $root "docs\app"
 Push-Location $pwa
 $env:VITE_BASE = "/visaopost/app/"
 $env:VITE_DEMO = "1"
+$env:VITE_GALLERY_URL = "/visaopost/dilorenzo/galeria/"
+$env:VITE_CATALOG_URL = "/visaopost/dilorenzo/catalogo/"
 npm run build
 if ($LASTEXITCODE -ne 0) { Pop-Location; exit 1 }
 Pop-Location

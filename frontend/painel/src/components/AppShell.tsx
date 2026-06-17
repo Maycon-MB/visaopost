@@ -3,6 +3,7 @@ import type { SVGAttributes } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth-context';
 import { BrandLogo } from './BrandLogo';
+import { DEMO } from '../config';
 
 interface NavIconProps extends SVGAttributes<SVGElement> {
   paths: string[];
@@ -133,12 +134,14 @@ function Sidebar({ open, collapsed, onClose, onLogout, onToggleCollapse, owner }
             </svg>
             <span className="logout-text">Vitrine</span>
           </a>
-          <a href={QR_PRINT_URL} target="_blank" rel="noopener noreferrer" className="sidebar-ext-btn" title="Imprimir QR Code do balcão">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
-              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="17" y="17" width="4" height="4"/><path d="M14 14h3v3"/><path d="M14 17h.01"/>
-            </svg>
-            <span className="logout-text">QR Balcão</span>
-          </a>
+          {!DEMO && (
+            <a href={QR_PRINT_URL} target="_blank" rel="noopener noreferrer" className="sidebar-ext-btn" title="Imprimir QR Code do balcão">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="17" y="17" width="4" height="4"/><path d="M14 14h3v3"/><path d="M14 17h.01"/>
+              </svg>
+              <span className="logout-text">QR Balcão</span>
+            </a>
+          )}
         </div>
       </nav>
 

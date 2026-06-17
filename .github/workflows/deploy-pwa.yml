@@ -30,6 +30,8 @@ jobs:
         env:
           VITE_BASE: /visaopost/app/
           VITE_DEMO: '1'
+          VITE_GALLERY_URL: /visaopost/dilorenzo/galeria/
+          VITE_CATALOG_URL: /visaopost/dilorenzo/catalogo/
 
       - name: Sync to docs/app/
         run: |
