@@ -1,43 +1,28 @@
 import * as echarts from 'echarts/core';
-import { LineChart, BarChart, PieChart, HeatmapChart, FunnelChart, RadarChart, GaugeChart, TreemapChart, PictorialBarChart } from 'echarts/charts';
+import { LineChart, BarChart, HeatmapChart } from 'echarts/charts';
 import {
   GridComponent,
   TooltipComponent,
   LegendComponent,
-  TitleComponent,
-  ToolboxComponent,
   DataZoomComponent,
   CalendarComponent,
   VisualMapComponent,
-  RadarComponent,
-  PolarComponent,
-  DatasetComponent,
-  GraphicComponent,
 } from 'echarts/components';
 import { SVGRenderer } from 'echarts/renderers';
 
+// Só os tipos de gráfico realmente usados no painel (line/bar/heatmap).
+// Pie/Funnel/Radar/Gauge/Treemap/PictorialBar nunca foram usados — tirar
+// derrubou o chunk de ~814KB pra uma fração disso.
 echarts.use([
   LineChart,
   BarChart,
-  PieChart,
   HeatmapChart,
-  FunnelChart,
-  RadarChart,
-  GaugeChart,
-  TreemapChart,
-  PictorialBarChart,
   GridComponent,
   TooltipComponent,
   LegendComponent,
-  TitleComponent,
-  ToolboxComponent,
   DataZoomComponent,
   CalendarComponent,
   VisualMapComponent,
-  RadarComponent,
-  PolarComponent,
-  DatasetComponent,
-  GraphicComponent,
   SVGRenderer,
 ]);
 
