@@ -13,5 +13,6 @@ npm run build
 if ($LASTEXITCODE -ne 0) { Pop-Location; exit 1 }
 Pop-Location
 
+Remove-Item -Recurse -Force "$dst\assets"
 Copy-Item -Recurse -Force "$pwa\dist\*" "$dst\"
 Write-Host "Deploy pronto em docs/app/. Commitar e dar push."

@@ -6,7 +6,7 @@ const FALLBACK = {
   primary: '#C1750B', primaryDeep: '#9A5C08', primaryLight: '#D4880A',
   secondary: '#638475', secondarySoft: '#8BA89A',
   champagne: '#638475', champagneSoft: '#8BA89A',
-  ivory: '#F0F2FA', surface: '#FAFBFF',
+  ivory: '#F0F2FA', surface: '#FAFBFF', danger: '#941C2F',
 };
 const VARMAP = {
   ink: '--ink', inkSoft: '--ink-soft', inkMute: '--ink-mute',
@@ -14,6 +14,7 @@ const VARMAP = {
   primary: '--primary', primaryDeep: '--primary-deep', primaryLight: '--primary-light',
   secondary: '--secondary', secondarySoft: '--secondary-soft',
   champagne: '--champagne', champagneSoft: '--champagne-soft', ivory: '--ivory', surface: '--surface',
+  danger: '--danger',
 };
 
 let C = { ...FALLBACK };

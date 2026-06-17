@@ -96,6 +96,8 @@ const CLIENTES_ORIGEM = [
   { name: 'Balcão', value: 148 }, { name: 'QR Code', value: 84 },
   { name: 'WhatsApp', value: 72 }, { name: 'Indicação', value: 44 },
 ];
+// Tan sem token de marca dedicado — acento isolado pra 4ª categoria, fora da paleta principal.
+const ORIGEM_ACCENT = '#8C7B5E';
 
 const CLIENTES_SEMANA = [4, 7, 5, 9, 11, 8, 13, 21];
 
@@ -259,8 +261,8 @@ export default function Dashboard() {
         top: 28, bottom: 28, left: 32, right: 16,
         splitLine: { show: false },
         itemStyle: { borderWidth: 1, borderColor: TOKENS.surface, borderRadius: 2 },
-        dayLabel: { firstDay: 1, nameMap: 'pt-br', color: TOKENS.inkMute, fontFamily: FONT, fontSize: 10 },
-        monthLabel: { nameMap: 'pt-br', color: TOKENS.inkSoft, fontFamily: FONT, fontSize: 11 },
+        dayLabel: { firstDay: 1, nameMap: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'], color: TOKENS.inkMute, fontFamily: FONT, fontSize: 10 },
+        monthLabel: { nameMap: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'], color: TOKENS.inkSoft, fontFamily: FONT, fontSize: 11 },
         yearLabel: { show: true, color: TOKENS.inkMute, fontFamily: FONT, fontSize: 12 },
         cellSize: ['auto', 'auto'],
       },
@@ -310,8 +312,8 @@ export default function Dashboard() {
         type: 'line',
         smooth: 0.35,
         symbol: 'circle', symbolSize: 5,
-        lineStyle: { color: '#C1750B', width: 2.5 },
-        itemStyle: { color: '#C1750B', borderColor: '#fff', borderWidth: 1.5 },
+        lineStyle: { color: TOKENS.primary, width: 2.5 },
+        itemStyle: { color: TOKENS.primary, borderColor: TOKENS.surface, borderWidth: 1.5 },
         areaStyle: {
           color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
             colorStops: [{ offset: 0, color: 'rgba(193,117,11,0.22)' }, { offset: 1, color: 'rgba(193,117,11,0.02)' }] },
@@ -320,14 +322,14 @@ export default function Dashboard() {
           show: true, position: 'top', fontFamily: FONT, fontSize: 10,
           color: TOKENS.ink, fontWeight: 700, offset: [0, -2],
           formatter: (p) => p.dataIndex === CLIENTES_SEMANA.length - 1 ? `{last|${p.value}}` : p.value,
-          rich: { last: { color: '#C1750B', fontWeight: 800, fontFamily: FONT, fontSize: 10 } },
+          rich: { last: { color: TOKENS.primary, fontWeight: 800, fontFamily: FONT, fontSize: 10 } },
         },
         data: CLIENTES_SEMANA,
       }],
     };
   }, [theme]);
 
-  const ORIGEM_COLORS = ['#C1750B', '#638475', '#941C2F', '#8C7B5E'];
+  const ORIGEM_COLORS = [TOKENS.primary, TOKENS.secondary, TOKENS.danger, ORIGEM_ACCENT];
 
   const temasOption = useMemo(() => baseChart({
     grid: { left: 8, right: 36, top: 16, bottom: 8, containLabel: true },
@@ -449,7 +451,7 @@ export default function Dashboard() {
               { label: 'Resolução pelo bot', value: 73, note: 'sem intervenção humana' },
               { label: 'Conversão',          value: 28, note: 'viraram agendamento' },
             ].map((k) => {
-              const color = k.value >= 80 ? '#638475' : k.value >= 50 ? '#C1750B' : '#941C2F';
+              const color = k.value >= 80 ? TOKENS.secondary : k.value >= 50 ? TOKENS.primary : TOKENS.danger;
               return (
                 <div className="wa-kpi-row" key={k.label}>
                   <div className="wa-kpi-body">
@@ -476,19 +478,19 @@ export default function Dashboard() {
           </div>
           <div className="recall-flow">
             <div className="rfl-node">
-              <span className="rfl-val" style={{ color: '#941C2F' }}>47</span>
+              <span className="rfl-val" style={{ color: TOKENS.danger }}>47</span>
               <span className="rfl-label">Vencidos</span>
               <span className="rfl-sub">1+ ano sem exame</span>
             </div>
             <div className="rfl-arrow"><span className="rfl-conv">81%</span><span className="rfl-icon">→</span></div>
             <div className="rfl-node">
-              <span className="rfl-val" style={{ color: '#C1750B' }}>38</span>
+              <span className="rfl-val" style={{ color: TOKENS.primary }}>38</span>
               <span className="rfl-label">Contactados</span>
               <span className="rfl-sub">recall por WhatsApp</span>
             </div>
             <div className="rfl-arrow"><span className="rfl-conv">58%</span><span className="rfl-icon">→</span></div>
             <div className="rfl-node">
-              <span className="rfl-val" style={{ color: '#638475' }}>22</span>
+              <span className="rfl-val" style={{ color: TOKENS.secondary }}>22</span>
               <span className="rfl-label">Voltaram</span>
               <span className="rfl-sub">taxa de retorno</span>
             </div>
@@ -533,7 +535,7 @@ export default function Dashboard() {
             })}
           </div>
           <div className="wg-legend">
-            {[['#638475','✓ Publicado'],['#C1750B','→ Aprovado'],['#D4880A','! Aprovar'],['var(--ink-mute)','· Agendado']].map(([c,l]) => (
+            {[[TOKENS.secondary,'✓ Publicado'],[TOKENS.primary,'→ Aprovado'],[TOKENS.primaryLight,'! Aprovar'],['var(--ink-mute)','· Agendado']].map(([c,l]) => (
               <span key={l} className="wgl-item"><span className="wgl-dot" style={{ background: c }} />{l}</span>
             ))}
           </div>
@@ -553,7 +555,7 @@ export default function Dashboard() {
           <div className="rank-list">
             {TOP_POSTS.slice(0, 3).map((p, i) => {
               const pct = Math.round(p.curtidas / TOP_POSTS[0].curtidas * 100);
-              const color = i === 0 ? '#C1750B' : i === 1 ? '#8C8070' : '#A0745A';
+              const color = i === 0 ? TOKENS.primary : i === 1 ? '#8C8070' : '#A0745A';
               return (
                 <div className="rl-row" key={i}>
                   <span className="rl-rank" style={{ color }}>{i + 1}</span>
@@ -632,7 +634,9 @@ export default function Dashboard() {
               <InfoButton text={<>365 dias de atividade. Quadrados escuros = mais alcance naquele dia. Fins de semana naturalmente mais claros. Meses futuros ficam em branco.</>} />
             </div>
           </div>
-          <ReactECharts echarts={echarts} option={heatmapOption} style={{ height: 190 }} opts={{ renderer: 'svg' }} notMerge />
+          <div className="heatmap-scroll">
+            <ReactECharts echarts={echarts} option={heatmapOption} style={{ height: 190, minWidth: 760 }} opts={{ renderer: 'svg' }} notMerge />
+          </div>
         </section>
 
       </div>
