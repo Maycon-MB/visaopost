@@ -15,7 +15,7 @@ class Settings(BaseSettings):
         description="URL pública do PWA — usada pra montar `approval_url` no email.",
     )
     cors_origins: str = Field(
-        default="http://localhost:5173,http://127.0.0.1:5173",
+        default="http://localhost:5173,http://127.0.0.1:5173,http://localhost:4321,http://127.0.0.1:4321",
         description="Lista CSV de origens liberadas pelo CORSMiddleware.",
     )
 
