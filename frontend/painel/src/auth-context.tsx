@@ -28,7 +28,7 @@ export function AuthProvider({ children }) {
 
   async function signIn(email, password) {
     const key = email.trim().toLowerCase();
-    if (TEST_CREDS.some((c) => c.user === key && c.pass === password)) {
+    if (DEMO && TEST_CREDS.some((c) => c.user === key && c.pass === password)) {
       setUser(DEMO_USER);
       return DEMO_USER;
     }
