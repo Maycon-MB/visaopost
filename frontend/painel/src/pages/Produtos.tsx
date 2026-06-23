@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { createProduct, deleteProduct, listProducts, updateProduct, uploadProductImage } from '../api.js';
 import { DEMO } from '../config.js';
 
@@ -227,10 +226,6 @@ export default function Produtos() {
           <p className="dash-sub">As fotos que aparecem no seu site público.</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <Link to="/apresentacao" className="btn-touch btn-ghost-atelier" style={{ minHeight: 44, padding: '0 16px', fontSize: 13, display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none' }}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-            Apresentar
-          </Link>
           <button className="btn-touch btn-primary-atelier" style={{ minHeight: 44, padding: '0 18px', fontSize: 13 }} onClick={() => setModal('new')}>
             + Adicionar
           </button>

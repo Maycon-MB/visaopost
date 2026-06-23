@@ -115,6 +115,7 @@ function Sidebar({ open, collapsed, onClose, onLogout, onToggleCollapse, owner }
         ))}
 
         <div className="sidebar-ext-sep" />
+        <div className="sidebar-eyebrow" style={{ marginBottom: 6 }}>Ver site</div>
         <div className="sidebar-ext-grid">
           <a href="../dilorenzo/" className="sidebar-ext-btn" title="Ver meu site">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
@@ -134,21 +135,37 @@ function Sidebar({ open, collapsed, onClose, onLogout, onToggleCollapse, owner }
             </svg>
             <span className="logout-text">Vitrine</span>
           </a>
+        </div>
+
+        <div className="sidebar-eyebrow" style={{ marginTop: 10, marginBottom: 6 }}>Apresentar</div>
+        <div className="sidebar-ext-grid">
+          <NavLink to="/apresentacao" onClick={onClose} className="sidebar-ext-btn" title="Apresentar produtos da loja">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+            <span className="logout-text">Produtos</span>
+          </NavLink>
           <NavLink to="/apresentacao-fornecedor" onClick={onClose} className="sidebar-ext-btn" title="Apresentação Shinedux pro balcão">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
               <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
             </svg>
-            <span className="logout-text">Catálogo Lentes</span>
+            <span className="logout-text">Lentes Shinedux</span>
           </NavLink>
-          {!DEMO && (
-            <a href={QR_PRINT_URL} target="_blank" rel="noopener noreferrer" className="sidebar-ext-btn" title="Imprimir QR Code do balcão">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
-                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="17" y="17" width="4" height="4"/><path d="M14 14h3v3"/><path d="M14 17h.01"/>
-              </svg>
-              <span className="logout-text">QR Balcão</span>
-            </a>
-          )}
         </div>
+
+        {!DEMO && (
+          <>
+            <div className="sidebar-eyebrow" style={{ marginTop: 10, marginBottom: 6 }}>Recall</div>
+            <div className="sidebar-ext-grid">
+              <a href={QR_PRINT_URL} target="_blank" rel="noopener noreferrer" className="sidebar-ext-btn" title="Imprimir QR Code do balcão">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
+                  <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="17" y="17" width="4" height="4"/><path d="M14 14h3v3"/><path d="M14 17h.01"/>
+                </svg>
+                <span className="logout-text">QR Balcão</span>
+              </a>
+            </div>
+          </>
+        )}
       </nav>
 
       <div className="sidebar-foot">
