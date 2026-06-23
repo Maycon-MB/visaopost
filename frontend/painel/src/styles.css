@@ -1649,6 +1649,15 @@ h1, h2, h3, h4 {
 .set-section-title { font-family: var(--font-display); font-weight: 500; font-size: 20px; color: var(--ink); letter-spacing: 0.01em; }
 .set-section-desc { font-size: 13.5px; color: var(--ink-mute); margin-top: 3px; }
 
+.set-link-row {
+  display: flex; align-items: center; min-height: 44px;
+  padding: 0 14px; border-radius: 10px;
+  font-size: 14px; color: var(--ink); text-decoration: none;
+  background: var(--ivory-soft); border: 1px solid var(--hairline-strong);
+  transition: background 150ms, border-color 150ms;
+}
+.set-link-row:hover { background: rgba(193,117,11,0.08); border-color: rgba(193,117,11,0.35); }
+
 /* Editor de avatar */
 .avatar-row { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
 .avatar-edit {

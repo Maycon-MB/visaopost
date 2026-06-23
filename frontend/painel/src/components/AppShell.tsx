@@ -51,10 +51,6 @@ const NAV = [
 
 const ROLE_LABEL = { owner: 'Proprietário', staff: 'Equipe' };
 
-const GALLERY_URL  = import.meta.env.VITE_GALLERY_URL  ?? 'http://localhost:4321/galeria/';
-const CATALOG_URL  = import.meta.env.VITE_CATALOG_URL  ?? 'http://localhost:4321/catalogo/';
-const QR_PRINT_URL = import.meta.env.VITE_QR_PRINT_URL ?? 'http://localhost:8000/recall/qr/dilorenzo/print';
-
 function Chevron() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -115,57 +111,12 @@ function Sidebar({ open, collapsed, onClose, onLogout, onToggleCollapse, owner }
         ))}
 
         <div className="sidebar-ext-sep" />
-        <div className="sidebar-eyebrow" style={{ marginBottom: 6 }}>Ver site</div>
-        <div className="sidebar-ext-grid">
-          <a href="../dilorenzo/" className="sidebar-ext-btn" title="Ver meu site">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-            </svg>
-            <span className="logout-text">Meu Site</span>
-          </a>
-          <a href={GALLERY_URL} target="_blank" rel="noopener noreferrer" className="sidebar-ext-btn" title="Ver posts publicados">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
-              <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
-            </svg>
-            <span className="logout-text">Posts</span>
-          </a>
-          <a href={CATALOG_URL} target="_blank" rel="noopener noreferrer" className="sidebar-ext-btn" title="Ver vitrine pública">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
-              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
-            </svg>
-            <span className="logout-text">Vitrine</span>
-          </a>
-        </div>
-
-        <div className="sidebar-eyebrow" style={{ marginTop: 10, marginBottom: 6 }}>Apresentar</div>
-        <div className="sidebar-ext-grid">
-          <NavLink to="/apresentacao" onClick={onClose} className="sidebar-ext-btn" title="Apresentar produtos da loja">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
-              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-            </svg>
-            <span className="logout-text">Produtos</span>
-          </NavLink>
-          <NavLink to="/apresentacao-fornecedor" onClick={onClose} className="sidebar-ext-btn" title="Apresentação Shinedux pro balcão">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
-              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
-            </svg>
-            <span className="logout-text">Lentes Shinedux</span>
-          </NavLink>
-        </div>
-
-        {!DEMO && (
-          <>
-            <div className="sidebar-eyebrow" style={{ marginTop: 10, marginBottom: 6 }}>Recall</div>
-            <div className="sidebar-ext-grid">
-              <a href={QR_PRINT_URL} target="_blank" rel="noopener noreferrer" className="sidebar-ext-btn" title="Imprimir QR Code do balcão">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
-                  <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="17" y="17" width="4" height="4"/><path d="M14 14h3v3"/><path d="M14 17h.01"/>
-                </svg>
-                <span className="logout-text">QR Balcão</span>
-              </a>
-            </div>
-          </>
-        )}
+        <NavLink to="/apresentacao-fornecedor" onClick={onClose} className="sidebar-ext-btn" title="Apresentação Shinedux pro balcão" style={{ width: '100%' }}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" width="15" height="15" aria-hidden>
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
+          </svg>
+          <span className="logout-text">Lentes Shinedux</span>
+        </NavLink>
       </nav>
 
       <div className="sidebar-foot">

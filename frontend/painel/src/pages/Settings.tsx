@@ -1,8 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTheme } from '../theme-context.jsx';
 import { useAuth } from '../auth-context.jsx';
 import { fetchSettings, updateSettings, updateProfile } from '../api.js';
 import { DEMO } from '../config.js';
+
+const GALLERY_URL  = import.meta.env.VITE_GALLERY_URL  ?? 'http://localhost:4321/galeria/';
+const CATALOG_URL  = import.meta.env.VITE_CATALOG_URL  ?? 'http://localhost:4321/catalogo/';
+const QR_PRINT_URL = import.meta.env.VITE_QR_PRINT_URL ?? 'http://localhost:8000/recall/qr/dilorenzo/print';
 
 // Domingo=0, Segunda=1 ... Sábado=6 (índice UI)
 // ISO: Segunda=1 ... Domingo=7
@@ -312,6 +317,21 @@ export default function Settings() {
             <textarea className="textarea-atelier" style={{ minHeight: 140 }} value={botFree} onChange={(e) => setBotFree(e.target.value)} maxLength={4000} placeholder="Horários, convênios aceitos, política de garantia, tempo de entrega…" />
             <div className="help-atelier">Quanto mais detalhe, menos ele precisa te chamar.</div>
           </div>
+        </div>
+      </section>
+
+      {/* Links úteis */}
+      <section className="set-section">
+        <div className="set-section-head">
+          <div className="set-section-title">Links úteis</div>
+          <div className="set-section-desc">Acesso rápido a páginas e ferramentas que você não usa todo dia.</div>
+        </div>
+        <div className="card-aotelier" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <a href="../dilorenzo/" className="set-link-row">Ver meu site</a>
+          <a href={GALLERY_URL} target="_blank" rel="noopener noreferrer" className="set-link-row">Ver posts publicados</a>
+          <a href={CATALOG_URL} target="_blank" rel="noopener noreferrer" className="set-link-row">Ver vitrine pública</a>
+          <Link to="/apresentacao" className="set-link-row">Apresentar produtos da loja (tela cheia)</Link>
+          {!DEMO && <a href={QR_PRINT_URL} target="_blank" rel="noopener noreferrer" className="set-link-row">Imprimir QR Code do balcão (recall)</a>}
         </div>
       </section>
 
