@@ -331,6 +331,7 @@ export default function Settings() {
           <a href={GALLERY_URL} target="_blank" rel="noopener noreferrer" className="set-link-row">Ver posts publicados</a>
           <a href={CATALOG_URL} target="_blank" rel="noopener noreferrer" className="set-link-row">Ver vitrine pública</a>
           <Link to="/apresentacao" className="set-link-row">Apresentar produtos da loja (tela cheia)</Link>
+          <Link to="/apresentacao-fornecedor" className="set-link-row">Catálogo Shinedux pro balcão (tela cheia)</Link>
           {!DEMO && <a href={QR_PRINT_URL} target="_blank" rel="noopener noreferrer" className="set-link-row">Imprimir QR Code do balcão (recall)</a>}
         </div>
       </section>
