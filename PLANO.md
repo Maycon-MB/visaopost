@@ -241,6 +241,13 @@ Dono sobe fotos dos produtos pelo painel admin. Aparecem no site público (Fase 
 - [ ] Storage: dev local em `backend/tmp/products/{tenant_id}/`. Fase 8 migra pra Backblaze B2.
 - [ ] Migration 0005: tabela `products (id, tenant_id, name, category, description, price_brl, image_url, tags, position, is_active, created_at)`.
 
+### Fase 6h — Apresentação institucional do fornecedor (NOVO, não estava no plano original)
+Marcelo vai comprar tablet pra explicar tecnologia de lente (Shinedux/ShineHD) pro cliente no balcão. Diferente da Fase 6f: aqui não é catálogo de produto vendável da ótica, é material de venda do laboratório (capa + cada design de lente + tratamentos antirreflexo/hidrofóbico/etc), pra passar em sequência tipo slide.
+
+- [x] Rota `/apresentacao-fornecedor` no painel: slideshow fullscreen das páginas do catálogo Shinedux, ordem fixa (capa → linha de lentes Easy→Top → Office → V.S Zen → Myojoy → tratamentos), swipe/seta, sem texto extraído (a imagem já tem tudo).
+- [x] Imagens estáticas em `frontend/painel/public/catalogo-fornecedor/` (não é dado de tenant, não vai pro banco — é material genérico do fornecedor, reusável pra qualquer cliente Premium que também compre Shinedux).
+- [ ] Trocar/atualizar quando fornecedor mandar catálogo novo (sem código — só substitui arquivo).
+
 **Sinal de pronto Fase 6:** Maycon recebe email mockup, aprova no celular. Cliente fictício cadastrado via tela + CSV. Settings persiste. Dashboard mostra contagens reais (não-IG ainda). Catálogo navega + exporta PDF.
 
 ---

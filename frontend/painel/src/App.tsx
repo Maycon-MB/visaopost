@@ -11,6 +11,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Clientes = lazy(() => import('./pages/Clientes'));
 const Produtos = lazy(() => import('./pages/Produtos'));
 const Apresentacao = lazy(() => import('./pages/Apresentacao'));
+const ApresentacaoFornecedor = lazy(() => import('./pages/ApresentacaoFornecedor'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Aprovacoes = lazy(() => import('./pages/Aprovacoes'));
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
@@ -113,6 +114,7 @@ export default function App() {
           <Route path="settings" element={<Settings />} />
         </Route>
         <Route path="/apresentacao" element={<ProtectedRoute><Apresentacao /></ProtectedRoute>} />
+        <Route path="/apresentacao-fornecedor" element={<ProtectedRoute><ApresentacaoFornecedor /></ProtectedRoute>} />
         <Route path="/dashboard" element={<Navigate to="/admin" replace />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
