@@ -36,6 +36,10 @@ const NAV = [
     icon: <NavIcon paths={['M2 6h4l3 9h10l3-9H6', 'M8.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3', 'M18.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3']} />,
   },
   {
+    to: '/admin/cotacao', label: 'Simulador',
+    icon: <NavIcon paths={['M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8', 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6']} />,
+  },
+  {
     to: '/admin/relatorio', label: 'Relatório',
     icon: <NavIcon paths={['M18 20V10', 'M12 20V4', 'M6 20v-6']} />,
   },

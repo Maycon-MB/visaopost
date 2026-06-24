@@ -18,6 +18,7 @@ const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const Reels = lazy(() => import('./pages/Reels'));
 const Relatorio = lazy(() => import('./pages/Relatorio'));
+const Cotacao = lazy(() => import('./pages/Cotacao'));
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -109,6 +110,7 @@ export default function App() {
           <Route path="aprovacoes" element={<Aprovacoes />} />
           <Route path="clientes" element={<Clientes />} />
           <Route path="produtos" element={<Produtos />} />
+          <Route path="cotacao" element={<Cotacao />} />
           <Route path="reels" element={<Reels />} />
           <Route path="relatorio" element={<Relatorio />} />
           <Route path="settings" element={<Settings />} />
