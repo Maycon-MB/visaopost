@@ -328,8 +328,8 @@ const R = {
     padding: 12,
   },
   img: {
-    maxWidth: '100%',
-    maxHeight: '100%',
+    width: '100%',
+    height: '100%',
     objectFit: 'contain' as const,
     borderRadius: 6,
     boxShadow: '0 8px 40px rgba(0,0,0,0.5)',
@@ -397,8 +397,8 @@ const R = {
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-    gap: 16,
+    gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+    gap: 24,
   },
   cardImgWrapper: {
     position: 'relative' as const,
@@ -412,9 +412,9 @@ const R = {
     border: '1px solid rgba(255,255,255,0.04)',
   },
   cardImg: {
-    maxWidth: '90%',
-    maxHeight: '90%',
-    objectFit: 'contain' as const,
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover' as const,
   },
   cardBadge: {
     position: 'absolute' as const,

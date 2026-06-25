@@ -364,7 +364,7 @@ export default function Cotacao() {
           <span className="eyebrow-num">01</span>
           <span className="eyebrow">Tipo de lente</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12, marginBottom: 20 }}>
           {LENSES.map(l => (
             <LensCard
               key={l.id} lens={l}
@@ -376,6 +376,68 @@ export default function Cotacao() {
             />
           ))}
         </div>
+
+        {/* Visualizador de Especificações da Lente (Ocupa toda a largura disponível ao lado do sidebar) */}
+        {selectedLens && lens && (
+          <div style={{
+            background: '#0d1d22',
+            borderRadius: 'var(--r-card)',
+            border: '1.5px solid var(--primary)',
+            overflow: 'hidden',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+            display: 'flex',
+            flexDirection: 'column',
+          }}>
+            <div style={{
+              padding: '12px 16px',
+              borderBottom: '1px solid rgba(255,255,255,0.08)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              background: 'rgba(0,0,0,0.2)'
+            }}>
+              <span style={{ fontWeight: 600, color: 'var(--primary)', fontSize: 14 }}>
+                Especificações: Lente {lens.name}
+              </span>
+              {lens.image && (
+                <span style={{ fontSize: 11, color: 'var(--ink-mute)' }}>
+                  Toque na imagem para ampliar em tela cheia
+                </span>
+              )}
+            </div>
+            <div
+              style={{
+                width: '100%',
+                aspectRatio: '16/9',
+                maxHeight: '520px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: '#071216',
+                position: 'relative',
+              }}
+            >
+              {lens.image ? (
+                <img
+                  src={lens.image}
+                  alt={lens.name}
+                  onClick={() => setLightbox({ src: lens.image!, alt: lens.name })}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    display: 'block',
+                    cursor: 'zoom-in',
+                  }}
+                />
+              ) : (
+                <div style={{ width: '50%', maxWidth: '360px', padding: 20 }}>
+                  <LensVision4K />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ── 02 · Tratamentos ────────────────────────────────────────────────── */}
