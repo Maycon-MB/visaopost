@@ -364,7 +364,7 @@ export default function Cotacao() {
           <span className="eyebrow-num">01</span>
           <span className="eyebrow">Tipo de lente</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
           {LENSES.map(l => (
             <LensCard
               key={l.id} lens={l}
