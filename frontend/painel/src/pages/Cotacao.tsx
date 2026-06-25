@@ -107,9 +107,10 @@ interface LensCardProps {
   price: string;
   onSelect: () => void;
   onPrice: (v: string) => void;
+  onViewImg: (src: string, alt: string) => void;
 }
 
-function LensCard({ lens, selected, price, onSelect, onPrice }: LensCardProps) {
+function LensCard({ lens, selected, price, onSelect, onPrice, onViewImg }: LensCardProps) {
   return (
     <div
       role="button" tabIndex={0} aria-pressed={selected}
@@ -127,10 +128,19 @@ function LensCard({ lens, selected, price, onSelect, onPrice }: LensCardProps) {
       }}
     >
       {/* Fundo escuro + contain = slide completo visível */}
-      <div style={{
-        background: '#0d1d22', aspectRatio: '4/3', overflow: 'hidden',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
+      <div
+        onClick={(e) => {
+          if (lens.image) {
+            e.stopPropagation();
+            onViewImg(lens.image, lens.name);
+          }
+        }}
+        style={{
+          background: '#0d1d22', aspectRatio: '4/3', overflow: 'hidden',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: lens.image ? 'zoom-in' : 'default',
+        }}
+      >
         {lens.image
           ? <img src={lens.image} alt={lens.name} loading="lazy"
               style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }} />
@@ -354,7 +364,7 @@ export default function Cotacao() {
           <span className="eyebrow-num">01</span>
           <span className="eyebrow">Tipo de lente</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(148px, 1fr))', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
           {LENSES.map(l => (
             <LensCard
               key={l.id} lens={l}
@@ -362,6 +372,7 @@ export default function Cotacao() {
               price={lensPrices[l.id] ?? ''}
               onSelect={() => setSelectedLens(selectedLens === l.id ? null : l.id)}
               onPrice={v => updateLensPrice(l.id, v)}
+              onViewImg={(src, alt) => setLightbox({ src, alt })}
             />
           ))}
         </div>

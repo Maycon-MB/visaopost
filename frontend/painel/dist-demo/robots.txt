@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dev/
+Allow: /
+
+Sitemap: https://app.oticadilorenzo.com.br/sitemap.xml
