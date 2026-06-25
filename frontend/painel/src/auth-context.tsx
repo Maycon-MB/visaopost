@@ -38,6 +38,7 @@ export function AuthProvider({ children }) {
   }
 
   function signOut() {
+    if (DEMO) { setUser(DEMO_USER); return; }
     apiLogout();
     setUser(null);
   }
