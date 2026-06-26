@@ -112,74 +112,79 @@ interface LensCardProps {
 
 function LensCard({ lens, selected, price, onSelect, onPrice, onViewImg }: LensCardProps) {
   return (
-    <div
-      role="button" tabIndex={0} aria-pressed={selected}
-      onClick={onSelect}
-      onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') onSelect(); }}
-      style={{
-        border: `1.5px solid ${selected ? 'var(--primary)' : 'var(--hairline)'}`,
-        borderRadius: 'var(--r-card)',
-        padding: '0 0 14px',
-        cursor: 'pointer',
-        background: selected ? 'rgba(193,117,11,0.04)' : 'var(--surface)',
-        boxShadow: selected ? '0 0 0 3px rgba(193,117,11,0.14)' : 'none',
-        transition: 'border-color 160ms, box-shadow 160ms, background 160ms',
-        display: 'flex', flexDirection: 'column', overflow: 'hidden', userSelect: 'none',
-      }}
-    >
-      {/* Fundo escuro + contain = slide completo visível */}
+    <div>
+      {/* Linha: radio + nome + benefícios + preço */}
       <div
-        onClick={(e) => {
-          if (lens.image) {
-            e.stopPropagation();
-            onViewImg(lens.image, lens.name);
-          }
-        }}
         style={{
-          background: '#0d1d22', aspectRatio: '4/3', overflow: 'hidden',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: lens.image ? 'zoom-in' : 'default',
+          display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px',
+          background: selected ? 'rgba(193,117,11,0.035)' : 'transparent',
+          cursor: 'pointer', userSelect: 'none', transition: 'background 140ms',
         }}
+        onClick={onSelect} role="radio" aria-checked={selected} tabIndex={0}
+        onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') onSelect(); }}
       >
-        {lens.image
-          ? <img src={lens.image} alt={lens.name} loading="lazy"
-              style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }} />
-          : <LensVision4K />
-        }
+        <div style={{
+          width: 22, height: 22, borderRadius: '50%', flexShrink: 0,
+          border: `2px solid ${selected ? 'var(--primary)' : 'var(--hairline-strong)'}`,
+          background: selected ? 'var(--primary)' : 'transparent',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'all 150ms',
+        }}>
+          {selected && <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'white' }} />}
+        </div>
+
+        <span style={{ flex: 1, fontSize: 15, color: selected ? 'var(--ink)' : 'var(--ink-soft)', fontWeight: selected ? 600 : 400 }}>
+          {lens.name}
+        </span>
+
+        <span style={{ fontSize: 11, color: 'var(--ink-mute)', display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'flex-end', maxWidth: 200 }}>
+          {lens.benefits.map((b, i) => (
+            <span key={b}>{i > 0 && <span style={{ opacity: 0.4 }}>·</span>} {b}</span>
+          ))}
+        </span>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }} onClick={(e) => e.stopPropagation()}>
+          <span style={{ fontSize: 12, color: 'var(--ink-mute)' }}>R$</span>
+          <input
+            type="number" min={0} step={10}
+            value={price} placeholder="0"
+            onChange={(e) => onPrice(e.target.value)}
+            style={{
+              width: 72, textAlign: 'right', border: 'none',
+              borderBottom: `1px solid ${selected ? 'var(--primary)' : 'var(--hairline)'}`,
+              background: 'transparent', fontSize: 15, fontWeight: 500,
+              color: selected ? 'var(--primary)' : 'var(--ink-mute)',
+              padding: '2px 0', outline: 'none', fontFamily: 'var(--font-body)',
+            }}
+            aria-label={`Preço ${lens.name}`}
+          />
+        </div>
       </div>
 
-      <div style={{
-        margin: '10px 12px 5px', fontWeight: 600, fontSize: 14,
-        color: selected ? 'var(--primary)' : 'var(--ink)',
-      }}>
-        {lens.name}
-      </div>
-
-      <ul style={{ margin: '0 12px 10px', padding: 0, listStyle: 'none', fontSize: 11, color: 'var(--ink-mute)', lineHeight: 1.7 }}>
-        {lens.benefits.map(b => (
-          <li key={b} style={{ display: 'flex', gap: 4, alignItems: 'baseline' }}>
-            <span style={{ color: selected ? 'var(--primary)' : 'var(--champagne)', fontSize: 8 }}>▪</span>
-            {b}
-          </li>
-        ))}
-      </ul>
-
-      <div style={{ padding: '0 12px', display: 'flex', alignItems: 'center', gap: 4 }}
-        onClick={(e) => e.stopPropagation()}>
-        <span style={{ fontSize: 11, color: 'var(--ink-mute)', flexShrink: 0 }}>R$</span>
-        <input
-          type="number" min={0} step={10}
-          value={price} placeholder="0"
-          onChange={(e) => onPrice(e.target.value)}
-          style={{
-            width: '100%', border: 'none',
-            borderBottom: `1px solid ${selected ? 'var(--primary)' : 'var(--hairline)'}`,
-            background: 'transparent', fontSize: 16, fontWeight: 700,
-            color: selected ? 'var(--primary)' : 'var(--ink)',
-            padding: '2px 0', outline: 'none', fontFamily: 'var(--font-body)',
-          }}
-          aria-label={`Preço ${lens.name}`}
-        />
+      {/* Imagem full-width — toque abre lightbox */}
+      <div style={{ padding: '0 16px 14px' }}>
+        {lens.image ? (
+          <button
+            onClick={() => onViewImg(lens.image!, lens.name)}
+            style={{
+              display: 'block', width: '100%', padding: 0,
+              border: `1px solid ${selected ? 'rgba(193,117,11,0.25)' : 'var(--hairline)'}`,
+              borderRadius: 8, overflow: 'hidden', cursor: 'zoom-in',
+              background: '#0d1d22', transition: 'border-color 160ms',
+            }}
+            title={`Ampliar: ${lens.name}`}
+          >
+            <img src={lens.image} alt={lens.name} loading="lazy"
+              style={{ width: '100%', display: 'block', objectFit: 'contain' }} />
+          </button>
+        ) : (
+          <div style={{
+            border: `1px solid ${selected ? 'rgba(193,117,11,0.25)' : 'var(--hairline)'}`,
+            borderRadius: 8, overflow: 'hidden', background: '#0d1d22', padding: '20px 10%',
+          }}>
+            <LensVision4K />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -364,80 +369,20 @@ export default function Cotacao() {
           <span className="eyebrow-num">01</span>
           <span className="eyebrow">Tipo de lente</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12, marginBottom: 20 }}>
-          {LENSES.map(l => (
-            <LensCard
-              key={l.id} lens={l}
-              selected={selectedLens === l.id}
-              price={lensPrices[l.id] ?? ''}
-              onSelect={() => setSelectedLens(selectedLens === l.id ? null : l.id)}
-              onPrice={v => updateLensPrice(l.id, v)}
-              onViewImg={(src, alt) => setLightbox({ src, alt })}
-            />
+        <div style={{ background: 'var(--surface)', borderRadius: 'var(--r-card)', border: '1px solid var(--hairline)', overflow: 'hidden' }}>
+          {LENSES.map((l, i) => (
+            <div key={l.id} style={{ borderTop: i > 0 ? '1px solid var(--hairline)' : 'none' }}>
+              <LensCard
+                lens={l}
+                selected={selectedLens === l.id}
+                price={lensPrices[l.id] ?? ''}
+                onSelect={() => setSelectedLens(selectedLens === l.id ? null : l.id)}
+                onPrice={v => updateLensPrice(l.id, v)}
+                onViewImg={(src, alt) => setLightbox({ src, alt })}
+              />
+            </div>
           ))}
         </div>
-
-        {/* Visualizador de Especificações da Lente (Ocupa toda a largura disponível ao lado do sidebar) */}
-        {selectedLens && lens && (
-          <div style={{
-            background: '#0d1d22',
-            borderRadius: 'var(--r-card)',
-            border: '1.5px solid var(--primary)',
-            overflow: 'hidden',
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
-            display: 'flex',
-            flexDirection: 'column',
-          }}>
-            <div style={{
-              padding: '12px 16px',
-              borderBottom: '1px solid rgba(255,255,255,0.08)',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              background: 'rgba(0,0,0,0.2)'
-            }}>
-              <span style={{ fontWeight: 600, color: 'var(--primary)', fontSize: 14 }}>
-                Especificações: Lente {lens.name}
-              </span>
-              {lens.image && (
-                <span style={{ fontSize: 11, color: 'var(--ink-mute)' }}>
-                  Toque na imagem para ampliar em tela cheia
-                </span>
-              )}
-            </div>
-            <div
-              style={{
-                width: '100%',
-                aspectRatio: '16/9',
-                maxHeight: '520px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: '#071216',
-                position: 'relative',
-              }}
-            >
-              {lens.image ? (
-                <img
-                  src={lens.image}
-                  alt={lens.name}
-                  onClick={() => setLightbox({ src: lens.image!, alt: lens.name })}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                    display: 'block',
-                    cursor: 'zoom-in',
-                  }}
-                />
-              ) : (
-                <div style={{ width: '50%', maxWidth: '360px', padding: 20 }}>
-                  <LensVision4K />
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </section>
 
       {/* ── 02 · Tratamentos ────────────────────────────────────────────────── */}
