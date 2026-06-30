@@ -182,8 +182,10 @@ export default function AppShell() {
         owner={owner}
       />
 
-      <main className="app-main enter" key={loc.pathname}>
-        <Outlet />
+      <main className="app-main">
+        <div className="enter" key={loc.pathname}>
+          <Outlet />
+        </div>
       </main>
     </div>
   );
