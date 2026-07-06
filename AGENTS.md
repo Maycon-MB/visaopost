@@ -10,8 +10,9 @@ Arquivo de mandatos pra ferramentas de IA (Antigravity, Codex, Cursor, etc.).
 
 ## Ponto crítico pra qualquer AI
 
-`pitch/` ≠ `pwa/`. Não confundir:
-- `pitch/` = apresentação institucional **já existente** (React+Vite+Framer Motion). Canal ativo de venda. Build vai pra `docs/`, publicado em https://maycon-mb.github.io/visaopost/.
-- `pwa/` = PWA de aprovação do cliente, **ainda não criado** (Fase 6 vai criar com React+Vite+Bootstrap 5).
+`archive/pitch/` ≠ `frontend/painel/`. Não confundir:
+- `archive/pitch/` = apresentação institucional de venda (React+Vite+Framer Motion), fonte da verdade do escopo prometido ao cliente. Não é produto rodando, é material comercial arquivado.
+- `frontend/painel/` = PWA admin real do dono (React+Vite+Bootstrap 5) — aprovação de posts, clientes, relatório, reels. Isso é o produto.
+- `frontend/site/` = landing pública Astro (catálogo, galeria, institucional da ótica).
 
 Leia `CLAUDE.md` antes de propor mudanças.

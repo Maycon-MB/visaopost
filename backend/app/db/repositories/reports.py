@@ -6,7 +6,7 @@ import datetime
 from uuid import UUID
 
 from app.db.pool import acquire
-from app.models.report import MonthlyReport, ThemeStat
+from app.models.report import MonthlyReport, PostMetricStat, ThemeStat
 
 
 def _month_range(year: int, month: int) -> tuple[datetime.date, datetime.date]:
@@ -59,6 +59,47 @@ async def get_monthly_report(
             tenant_id, start, end,
         )
 
+        # métricas Instagram — último snapshot de cada post publicado no mês
+        metrics_row = await conn.fetchrow(
+            """
+            SELECT
+                COALESCE(SUM(m.reach), 0)                                       AS reach_total,
+                COALESCE(AVG(m.likes + m.comments + m.saves + m.shares), 0.0)   AS engagement_avg
+            FROM posts p
+            JOIN LATERAL (
+                SELECT * FROM metrics_instagram mi
+                WHERE mi.post_id = p.id
+                ORDER BY mi.snapshot_date DESC
+                LIMIT 1
+            ) m ON true
+            WHERE p.tenant_id = $1
+              AND p.scheduled_at >= $2
+              AND p.scheduled_at <  $3
+              AND p.status = 'posted'
+            """,
+            tenant_id, start, end,
+        )
+
+        top_metric_rows = await conn.fetch(
+            """
+            SELECT p.id, p.theme, p.caption, m.reach, m.likes, m.saves
+            FROM posts p
+            JOIN LATERAL (
+                SELECT * FROM metrics_instagram mi
+                WHERE mi.post_id = p.id
+                ORDER BY mi.snapshot_date DESC
+                LIMIT 1
+            ) m ON true
+            WHERE p.tenant_id = $1
+              AND p.scheduled_at >= $2
+              AND p.scheduled_at <  $3
+              AND p.status = 'posted'
+            ORDER BY m.reach DESC
+            LIMIT 3
+            """,
+            tenant_id, start, end,
+        )
+
         # clientes
         client_row = await conn.fetchrow(
             """
@@ -83,6 +124,18 @@ async def get_monthly_report(
 
     top_themes = [ThemeStat(theme=r["theme"], count=r["cnt"]) for r in theme_rows]
 
+    top_posts_by_reach = [
+        PostMetricStat(
+            post_id=str(r["id"]),
+            theme=r["theme"],
+            caption_preview=(r["caption"] or "")[:80],
+            reach=r["reach"],
+            likes=r["likes"],
+            saves=r["saves"],
+        )
+        for r in top_metric_rows
+    ]
+
     return MonthlyReport(
         year=year,
         month=month,
@@ -91,6 +144,9 @@ async def get_monthly_report(
         posts_total_month=total_posts,
         posts_approval_rate=approval_rate,
         top_themes=top_themes,
+        reach_total=metrics_row["reach_total"] or 0,
+        engagement_avg=round(float(metrics_row["engagement_avg"] or 0.0), 1),
+        top_posts_by_reach=top_posts_by_reach,
         clients_total_active=client_row["total_active"] or 0,
         clients_new_month=client_row["new_month"] or 0,
         clients_from_qr_month=client_row["from_qr"] or 0,

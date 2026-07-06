@@ -241,6 +241,10 @@ Dono sobe fotos dos produtos pelo painel admin. Aparecem no site público (Fase 
 - [ ] Storage: dev local em `backend/tmp/products/{tenant_id}/`. Fase 8 migra pra Backblaze B2.
 - [ ] Migration 0005: tabela `products (id, tenant_id, name, category, description, price_brl, image_url, tags, position, is_active, created_at)`.
 
+### Fase 6f.1 — Contador de clique "Falar WhatsApp" no catálogo (NOVO, sinal de interesse barato)
+- [x] Migration 0014: `products.whatsapp_click_count`. Endpoint público `POST /public/{tenant}/catalog/{product_id}/whatsapp-click` (sempre 204, não expõe se produto existe). Landing (`catalogo.astro`) dispara fire-and-forget no clique do botão, sem atrasar abertura do WhatsApp.
+- [x] Não depende do bot WhatsApp (Fase 10a-wa, bloqueado) nem do Instagram real — dá insight de "qual produto interessa mais" imediato, mesmo antes de qualquer publicação real.
+
 ### Fase 6h — Apresentação institucional do fornecedor (NOVO, não estava no plano original)
 Marcelo vai comprar tablet pra explicar tecnologia de lente (Shinedux/ShineHD) pro cliente no balcão. Diferente da Fase 6f: aqui não é catálogo de produto vendável da ótica, é material de venda do laboratório (capa + cada design de lente + tratamentos antirreflexo/hidrofóbico/etc), pra passar em sequência tipo slide.
 
@@ -419,6 +423,15 @@ Não obrigatório. Pitch menciona como diferencial ("3x alcance vs foto genéric
 - [ ] Filtra por sentimento positivo + ortografia mínima.
 - [ ] Gera template post "depoimento" via Gemini com a citação real + nome (com consentimento ou primeiro nome só).
 - [ ] Enfileira pra aprovação normal Fase 6.
+
+### Fase 10k — ML de alcance (scikit-learn, depende 10a-ig rodando com dado real por semanas)
+Objetivo: aprender com histórico de posts + métricas reais pra sugerir horário/tema de melhor alcance. Hoje (2026-07-06) zero dado real — plano reconhece isso e faz cada sub-fase render valor mesmo com pouco dado, sem esperar volume artificial.
+
+- [x] **10k.1** — Relatório expõe métricas já coletadas: `reach_total`, `engagement_avg`, top 3 posts por alcance em `MonthlyReport` (`backend/app/db/repositories/reports.py`, `backend/app/models/report.py`, `frontend/painel/src/pages/Relatorio.tsx`). Zerado até publicação real, mas painel já pronto pra mostrar assim que Fase 10a-ig rodar.
+- [ ] **10k.2** — Instrumentação + retenção (importante pra VPS pequena, não é servidor de big data de verdade): `_run_ig_metrics` (`backend/app/workers/tasks.py:147`) passa a capturar em checkpoints fixos D+1/D+3/D+7 (não snapshot diário indefinido — 3 linhas/post, não 1/dia pra sempre). Job de retenção mensal (mesmo padrão RQ scheduler): ao post atingir maturidade (D+7 capturado), apaga as linhas D+1/D+3 imaturas e zera a coluna `raw jsonb` da linha final (só serve debug perto da publicação, não é usada no ML — só os campos estruturados int importam). Volume real é pequeno (poucos MB/ano por tenant mesmo sem isso), mas mantém disco limpo por princípio e evita hábito de guardar bruto pra sempre. **Dataset de treino nunca é persistido em arquivo** — lido direto da view `post_features` pra memória no job de treino mensal e descartado; único artefato em disco é o modelo `.joblib` (poucas dezenas de KB).
+- [ ] **10k.3** — View `post_features` (migration nova) juntando `posts` (theme, mood, dia da semana, hora, holiday, tamanho caption, contagem hashtag) + `metrics_instagram` (snapshot mais recente). Repo `ml_features.py`.
+- [ ] **10k.4** — Heurística estatística (`services/ml/heuristics.py`): média de reach por tema/hora, com aviso de baixa confiança se `n_samples < 3`. Plugada em `report_insights.py` (insight extra) e em `post_generator.py` (sugestão de `publish_hour`, com fallback pro horário fixo). **Não mexe na escolha do tema** — isso é decisão de produto (quebraria garantia de zero-repetição do pool determinístico), fica pra decisão consciente futura.
+- [ ] **10k.5** — Modelo scikit-learn real. Gate explícito no código: `can_train(n) -> n >= 30`. Ridge como ponto de partida (robusto a pouco dado), GradientBoosting só se CV mostrar ganho real sobre Ridge. Módulo `services/ml/` (features.py, train.py, predict.py, model_store.py) — scikit-learn/joblib isolados ali, nunca importados no resto do backend. Treino batch mensal via RQ job novo (mesmo padrão de `workers/tasks.py`), só substitui a heurística se MAE em holdout for estritamente melhor. Persistência local `backend/app/ml_models/{tenant_id}/`. Um modelo por tenant — nunca mistura dado entre tenants.
 
 ### Fase 10j — Posts contextuais por tendência (item 21 pitch)
 - [ ] Scraper RSS de blogs ópticos BR (CRO-SP, ABO, Vision Monday BR) — 1x/semana.

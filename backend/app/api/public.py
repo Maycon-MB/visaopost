@@ -11,10 +11,10 @@ from pathlib import Path
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 
 from app.db.repositories.posts import PublicPost, list_public_posts
-from app.db.repositories.products import list_products
+from app.db.repositories.products import increment_whatsapp_click, list_products
 from app.db.repositories.tenants import get_tenant_id_by_slug
 from app.logging import get_logger
 from app.models.product import Product
@@ -44,6 +44,17 @@ async def catalog(tenant_slug: str) -> list[Product]:
     if tid is None:
         return []
     return await list_products(tid)
+
+
+@router.post("/public/{tenant_slug}/catalog/{product_id}/whatsapp-click", status_code=204)
+async def catalog_whatsapp_click(tenant_slug: str, product_id: UUID) -> Response:
+    """Registra clique em 'Falar WhatsApp' no catálogo público. Sinal de interesse
+    por produto — não depende de bot WhatsApp nem Instagram real pra ter valor."""
+    tid = await get_tenant_id_by_slug(tenant_slug)
+    if tid is not None:
+        await increment_whatsapp_click(tid, product_id)
+    # Sempre 204: clique de UI anônimo não deve expor se tenant/produto existe.
+    return Response(status_code=204)
 
 
 @router.get("/posts/{post_id}.jpg")

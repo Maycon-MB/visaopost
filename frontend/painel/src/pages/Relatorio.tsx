@@ -284,6 +284,42 @@ export default function Relatorio() {
               </div>
             </div>
 
+            {/* ── Instagram ── */}
+            <div className="rpt-card">
+              <div className="rpt-card-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                </svg>
+                Instagram
+              </div>
+              <div className="rpt-stats">
+                <Stat label="alcance total" value={report.reach_total} accent/>
+                <Stat label="engajamento médio" value={report.engagement_avg}/>
+              </div>
+            </div>
+
+            {/* ── Top posts ── */}
+            {report.top_posts_by_reach.length > 0 && (
+              <div className="rpt-card rpt-card-wide">
+                <div className="rpt-card-title">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                  Top posts por alcance
+                </div>
+                <div className="rpt-themes">
+                  {report.top_posts_by_reach.map(p => (
+                    <div key={p.post_id} className="rpt-theme-row">
+                      <span className="rpt-theme-name" style={{ minWidth: 160, flex: 1 }} title={p.caption_preview}>
+                        {p.caption_preview || p.theme?.replace(/_/g, ' ') || 'sem legenda'}
+                      </span>
+                      <span className="rpt-theme-count">{p.reach} alcance · {p.likes} likes · {p.saves} salvos</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* ── Temas ── */}
             {report.top_themes.length > 0 && (
               <div className="rpt-card rpt-card-wide">

@@ -50,4 +50,5 @@ class Product(BaseModel):
     features: list[str]
     position: int
     is_active: bool
+    whatsapp_click_count: int
     created_at: datetime

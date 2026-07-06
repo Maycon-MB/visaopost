@@ -10,7 +10,10 @@ import asyncpg
 from app.db.pool import acquire
 from app.models.product import Product, ProductCreate, ProductUpdate
 
-_COLS = "id, tenant_id, name, category, description, price_brl, image_url, tags, features, position, is_active, created_at"
+_COLS = (
+    "id, tenant_id, name, category, description, price_brl, image_url, tags, features, "
+    "position, is_active, whatsapp_click_count, created_at"
+)
 
 
 def _row_to_product(row: asyncpg.Record) -> Product:
@@ -27,6 +30,7 @@ def _row_to_product(row: asyncpg.Record) -> Product:
         features=list(row["features"] or []),
         position=row["position"],
         is_active=row["is_active"],
+        whatsapp_click_count=row["whatsapp_click_count"],
         created_at=row["created_at"],
     )
 
@@ -116,6 +120,14 @@ async def set_product_image(tenant_id: UUID, product_id: UUID, image_url: str) -
     async with acquire() as conn:
         row = await conn.fetchrow(q, image_url, product_id, tenant_id)
     return _row_to_product(row) if row else None
+
+
+async def increment_whatsapp_click(tenant_id: UUID, product_id: UUID) -> bool:
+    """Incrementa contador de clique 'Falar WhatsApp' no catálogo público."""
+    q = "UPDATE products SET whatsapp_click_count = whatsapp_click_count + 1 WHERE id = $1 AND tenant_id = $2"
+    async with acquire() as conn:
+        result: str = await conn.execute(q, product_id, tenant_id)
+    return result == "UPDATE 1"
 
 
 async def delete_product(tenant_id: UUID, product_id: UUID) -> bool:

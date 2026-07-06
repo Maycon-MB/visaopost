@@ -10,6 +10,15 @@ class ThemeStat(BaseModel):
     count: int
 
 
+class PostMetricStat(BaseModel):
+    post_id: str
+    theme: str | None
+    caption_preview: str
+    reach: int
+    likes: int
+    saves: int
+
+
 class MonthlyReport(BaseModel):
     year: int
     month: int
@@ -20,6 +29,11 @@ class MonthlyReport(BaseModel):
     posts_total_month: int
     posts_approval_rate: float  # 0-100
     top_themes: list[ThemeStat]
+
+    # métricas Instagram (metrics_instagram — vazio até publicação real, Fase 10a-ig)
+    reach_total: int = 0
+    engagement_avg: float = 0.0  # média de (likes+comments+saves+shares) por post
+    top_posts_by_reach: list[PostMetricStat] = []
 
     # clientes
     clients_total_active: int
