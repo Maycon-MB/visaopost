@@ -1,5 +1,11 @@
 # Configuração Instagram — Ótica Di Lorenzo
 
+> **Passos 5-8 (gerar token manual, salvar no `.env`) viraram fallback.**
+> O fluxo normal agora é o botão "Conectar Instagram" no painel (`backend/app/api/instagram_auth.py`,
+> Facebook Login for Business) — Marcelo faz login, escolhe a Page, pronto. Passos 1-4
+> abaixo (conta Profissional, vincular Page, Business Manager) continuam obrigatórios
+> antes de clicar em "Conectar Instagram", só o jeito de pegar o token que mudou.
+
 **Duração estimada:** 30–45 min (com Marcelo na chamada ou presencial)  
 **Quem faz o quê:**
 
@@ -101,8 +107,10 @@ Antes de começar, confirmar com Marcelo:
 No campo de busca do Graph API Explorer, executar:
 
 ```
-GET /oauth/access_token?grant_type=fb_exchange_token&client_id=891876360640132&client_secret=286c99a26f15ca30e0e49bb6fc10b3d8&fb_exchange_token={TOKEN_CURTO}
+GET /oauth/access_token?grant_type=fb_exchange_token&client_id={APP_ID}&client_secret={APP_SECRET}&fb_exchange_token={TOKEN_CURTO}
 ```
+
+> `{APP_ID}` e `{APP_SECRET}` ficam em `backend/.env` (`META_APP_ID`/`META_APP_SECRET`) — nunca colar valor literal aqui ou em qualquer arquivo versionado.
 
 Substituir `{TOKEN_CURTO}` pelo token gerado acima.  
 Resposta: `{"access_token": "EAA...", "token_type": "bearer"}`  
@@ -186,5 +194,4 @@ A data de expiração pode ser verificada em:
 GET /debug_token?input_token={TOKEN}&access_token={APP_ID}|{APP_SECRET}
 ```
 
-Valor de `APP_ID`: `891876360640132`  
-Valor de `APP_SECRET`: `286c99a26f15ca30e0e49bb6fc10b3d8`
+`{APP_ID}` e `{APP_SECRET}` — mesmos valores de `backend/.env`, nunca colar aqui.

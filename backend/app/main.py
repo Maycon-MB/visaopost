@@ -7,14 +7,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.auth import router as auth_router
 from app.api.clients import router as clients_router
 from app.api.dev import router as dev_router
+from app.api.instagram_auth import router as instagram_auth_router
 from app.api.posts import router as posts_router
 from app.api.products import router as products_router
 from app.api.public import router as public_router
 from app.api.recall import router as recall_router
 from app.api.reels import router as reels_router
-from app.api.whatsapp import router as whatsapp_router
 from app.api.reports import router as reports_router
 from app.api.settings import router as settings_router
+from app.api.whatsapp import router as whatsapp_router
 from app.config import get_settings
 from app.db.pool import acquire, close_pool, init_pool
 from app.logging import configure_logging, get_logger
@@ -53,6 +54,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(instagram_auth_router)
 app.include_router(posts_router)
 app.include_router(clients_router)
 app.include_router(products_router)

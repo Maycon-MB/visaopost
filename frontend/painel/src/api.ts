@@ -226,6 +226,35 @@ export async function updateProfile(patch) {
   return request('/api/auth/me', { method: 'PATCH', body: JSON.stringify(patch) });
 }
 
+// ── Instagram (Facebook Login for Business) ───────────────────────────────────
+export async function fetchInstagramStatus() {
+  if (DEMO) return { connected: false, page_name: null, expires_at: null, days_until_expiry: null };
+  return request('/auth/facebook/status');
+}
+
+export async function connectInstagram() {
+  if (DEMO) return { authorize_url: '#' };
+  return request('/auth/facebook/connect');
+}
+
+export async function fetchInstagramPageOptions(selectionToken) {
+  if (DEMO) return [];
+  return request(`/auth/facebook/select-options?selection_token=${encodeURIComponent(selectionToken)}`);
+}
+
+export async function selectInstagramPage(selectionToken, pageId) {
+  if (DEMO) return { connected: true, page_name: 'Ótica Di Lorenzo (demo)' };
+  return request('/auth/facebook/select', {
+    method: 'POST',
+    body: JSON.stringify({ selection_token: selectionToken, page_id: pageId }),
+  });
+}
+
+export async function testInstagramPost() {
+  if (DEMO) return { status: 'ok', media_id: 'demo', permalink: '#' };
+  return request('/auth/facebook/test-post', { method: 'POST' });
+}
+
 // ── Produtos (catálogo) ───────────────────────────────────────────────────────
 const DEMO_PRODUCTS = [
   { id: 'd1', tenant_id: 'demo', name: 'Aurora Tortoise', category: 'Solar', description: 'Armação de acetato italiano premium.', price_brl: 890, image_url: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?auto=format&fit=crop&w=600&q=85', tags: [], features: ['Proteção UV 400', 'Polarizado', 'Leve e resistente'], position: 0, is_active: true, created_at: '2025-01-01T00:00:00Z' },

@@ -13,7 +13,7 @@ from __future__ import annotations
 import asyncio
 from datetime import date as DateType
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from uuid import UUID
 
 from app.db.pool import close_pool, init_pool
@@ -178,6 +178,37 @@ async def _run_ig_metrics(post_id: UUID, media_id: str, tenant_id: UUID) -> dict
         await close_pool()
 
 
+# ─── Instagram publish dispatcher ──────────────────────────────────────────────
+
+def dispatch_due_instagram_publishes() -> dict[str, Any]:
+    """Varre posts aprovados com `scheduled_at` já vencido e enfileira a publicação.
+
+    Enfileirar direto na ação de aprovar seria errado: o post pode estar
+    agendado pra mais tarde, e `_run_ig_publish` só publica o que já está
+    devido (via `list_approved_due`). Esse dispatcher fecha o loop — roda
+    periódico (cron RQ-Scheduler, wiring real na Fase 8; `job_id`
+    determinístico em `enqueue_instagram_publish` evita duplicata se rodar
+    mais de uma vez antes do worker processar).
+    """
+    return asyncio.run(_run_dispatch_due_publishes())
+
+
+async def _run_dispatch_due_publishes() -> dict[str, Any]:
+    configure_logging()
+    await init_pool()
+    try:
+        from app.db.repositories.posts import list_approved_due
+        from app.services.queue import enqueue_instagram_publish
+
+        due = await list_approved_due(limit=100)
+        for post in due:
+            enqueue_instagram_publish(post_id=post.id)
+        logger.info("ig_publish.dispatched", count=len(due))
+        return {"status": "ok", "dispatched": len(due)}
+    finally:
+        await close_pool()
+
+
 # ─── WhatsApp recall ──────────────────────────────────────────────────────────
 
 def send_recall_batch(tenant_slug: str) -> dict[str, Any]:
@@ -197,5 +228,40 @@ async def _run_recall(tenant_slug: str) -> dict[str, Any]:
     except Exception as exc:
         logger.error("recall.task_failed", tenant=tenant_slug, error=str(exc))
         raise
+    finally:
+        await close_pool()
+
+
+# ─── Instagram OAuth token expiry ──────────────────────────────────────────────
+
+def check_instagram_token_expiry() -> dict[str, Any]:
+    """Avisa (log estruturado) sobre tokens Instagram perto de expirar.
+
+    Fase 10g ainda vai decidir o canal de alerta pro Maycon (WhatsApp/email) —
+    este job só produz o sinal, não notifica ninguém sozinho. Rodar via cron
+    semanal (wiring do RQ-Scheduler acontece na Fase 8, junto com o resto).
+    """
+    return asyncio.run(_run_check_token_expiry())
+
+
+async def _run_check_token_expiry() -> dict[str, Any]:
+    configure_logging()
+    await init_pool()
+    try:
+        from datetime import datetime as _datetime
+
+        from app.db.repositories.tenants import list_tenants_with_expiring_instagram_token
+
+        expiring = await list_tenants_with_expiring_instagram_token(within_days=7)
+        for tenant in expiring:
+            expires_at = cast(_datetime, tenant["instagram_token_expires_at"])
+            logger.warning(
+                "ig_token.expiring_soon",
+                tenant_id=str(tenant["id"]),
+                slug=tenant["slug"],
+                business_name=tenant["business_name"],
+                expires_at=expires_at.isoformat(),
+            )
+        return {"status": "ok", "expiring_count": len(expiring)}
     finally:
         await close_pool()

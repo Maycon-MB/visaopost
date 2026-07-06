@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useTheme } from '../theme-context.jsx';
 import { useAuth } from '../auth-context.jsx';
-import { fetchSettings, updateSettings, updateProfile } from '../api.js';
+import {
+  fetchSettings, updateSettings, updateProfile,
+  fetchInstagramStatus, connectInstagram, fetchInstagramPageOptions, selectInstagramPage, testInstagramPost,
+} from '../api.js';
 import { DEMO } from '../config.js';
 
 const GALLERY_URL  = import.meta.env.VITE_GALLERY_URL  ?? 'http://localhost:4321/galeria/';
@@ -94,6 +97,161 @@ function AvatarEditor() {
         <span className="avatar-hint">{src ? 'Arraste a foto dentro do círculo pra enquadrar.' : 'Quadrada fica melhor. Você ajusta o enquadramento.'}</span>
       </div>
     </div>
+  );
+}
+
+function InstagramSection() {
+  const [params, setParams] = useSearchParams();
+  const [status, setStatus] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [connecting, setConnecting] = useState(false);
+  const [pageOptions, setPageOptions] = useState(null); // null = sem seleção pendente
+  const [testing, setTesting] = useState(false);
+  const [testResult, setTestResult] = useState(null);
+
+  async function loadStatus() {
+    setLoading(true);
+    setError(null);
+    try {
+      setStatus(await fetchInstagramStatus());
+    } catch (e) {
+      setError(e.message || 'Não foi possível carregar o status do Instagram.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => { loadStatus(); }, []);
+
+  // Trata o retorno do redirect do /auth/facebook/callback
+  useEffect(() => {
+    const igError = params.get('ig_error');
+    const igConnected = params.get('ig_connected');
+    const selectionToken = params.get('ig_select');
+
+    if (igError) {
+      setError({
+        invalid_state: 'Login expirou, tente conectar de novo.',
+        meta_api_failed: 'O Facebook recusou a conexão. Tente novamente.',
+        no_pages: 'Nenhuma Página do Facebook com Instagram vinculado foi encontrada. Confirme os passos 1-3 do guia de configuração antes de conectar.',
+      }[igError] || 'Erro ao conectar Instagram.');
+    }
+    if (igConnected) {
+      loadStatus();
+    }
+    if (selectionToken) {
+      fetchInstagramPageOptions(selectionToken)
+        .then((pages) => setPageOptions({ selectionToken, pages }))
+        .catch((e) => setError(e.message || 'Não foi possível carregar as páginas.'));
+    }
+    if (igError || igConnected || selectionToken) {
+      params.delete('ig_error'); params.delete('ig_connected'); params.delete('ig_select');
+      setParams(params, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function handleConnect() {
+    setConnecting(true);
+    setError(null);
+    try {
+      const { authorize_url } = await connectInstagram();
+      window.location.href = authorize_url;
+    } catch (e) {
+      setError(e.message || 'Não foi possível iniciar a conexão.');
+      setConnecting(false);
+    }
+  }
+
+  async function handleSelectPage(pageId) {
+    setError(null);
+    try {
+      const updated = await selectInstagramPage(pageOptions.selectionToken, pageId);
+      setStatus(updated);
+      setPageOptions(null);
+    } catch (e) {
+      setError(e.message || 'Não foi possível confirmar a página.');
+    }
+  }
+
+  async function handleTest() {
+    setTesting(true);
+    setTestResult(null);
+    try {
+      const result = await testInstagramPost();
+      setTestResult({ ok: true, ...result });
+    } catch (e) {
+      setTestResult({ ok: false, message: e.message || 'Falha no teste de publicação.' });
+    } finally {
+      setTesting(false);
+    }
+  }
+
+  return (
+    <section className="set-section">
+      <div className="set-section-head">
+        <div className="set-section-title">Instagram</div>
+        <div className="set-section-desc">Conecte a conta pra gente publicar os posts aprovados automaticamente.</div>
+      </div>
+      <div className="card-aotelier">
+        {error && <div className="alert-atelier" style={{ marginBottom: 16 }}>{typeof error === 'string' ? error : error.message}</div>}
+
+        {loading && <div className="muted" style={{ fontSize: 13 }}>Carregando…</div>}
+
+        {!loading && pageOptions && (
+          <div>
+            <div className="label-atelier" style={{ marginBottom: 10 }}>Em qual ótica você quer que o robô poste?</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {pageOptions.pages.map((p) => (
+                <button
+                  key={p.page_id}
+                  className="btn-touch btn-ghost-atelier"
+                  style={{ minHeight: 48, justifyContent: 'flex-start', padding: '0 16px' }}
+                  onClick={() => handleSelectPage(p.page_id)}
+                >
+                  {p.page_name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {!loading && !pageOptions && status && !status.connected && (
+          <button className="btn-touch btn-primary-atelier" onClick={handleConnect} disabled={connecting}>
+            {connecting ? 'Abrindo Facebook…' : 'Conectar Instagram'}
+          </button>
+        )}
+
+        {!loading && !pageOptions && status && status.connected && (
+          <div>
+            <div className="field-grid two">
+              <div>
+                <div className="label-atelier">Página conectada</div>
+                <div style={{ fontSize: 15, fontWeight: 600 }}>{status.page_name}</div>
+              </div>
+              <div>
+                <div className="label-atelier">Conexão expira em</div>
+                <div style={{ fontSize: 15, fontWeight: 600 }}>
+                  {status.days_until_expiry != null ? `${status.days_until_expiry} dias` : '—'}
+                </div>
+              </div>
+            </div>
+            <hr className="hairline" style={{ margin: '18px 0' }} />
+            <button className="btn-touch btn-ghost-atelier" onClick={handleTest} disabled={testing}>
+              {testing ? 'Publicando teste…' : 'Testar Publicação'}
+            </button>
+            {testResult && (
+              <div className="help-atelier" style={{ marginTop: 10 }}>
+                {testResult.ok
+                  ? <>Teste publicado com sucesso. {testResult.permalink && <a href={testResult.permalink} target="_blank" rel="noopener noreferrer">Ver no Instagram</a>}</>
+                  : testResult.message}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
 
@@ -252,6 +410,8 @@ export default function Settings() {
           </div>
         </div>
       </section>
+
+      <InstagramSection />
 
       {/* Agenda */}
       <section className="set-section">

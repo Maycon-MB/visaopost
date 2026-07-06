@@ -152,6 +152,22 @@ async def dev_enqueue_daily(body: GeneratePostBody) -> dict[str, object]:
     return {"job_id": job.id, "queue": job.origin, "status": job.get_status()}
 
 
+@router.post("/instagram/dispatch-due")
+async def dev_dispatch_due_publishes() -> dict[str, object]:
+    """Roda manualmente o dispatcher de publicações devidas (real: cron RQ-Scheduler, Fase 8)."""
+    from app.workers.tasks import _run_dispatch_due_publishes
+
+    return await _run_dispatch_due_publishes()
+
+
+@router.post("/instagram/check-token-expiry")
+async def dev_check_token_expiry() -> dict[str, object]:
+    """Roda manualmente a checagem de tokens Instagram perto de expirar."""
+    from app.workers.tasks import _run_check_token_expiry
+
+    return await _run_check_token_expiry()
+
+
 @router.post("/instagram/publish-test")
 async def dev_instagram_publish_test(body: IGPublishTestBody) -> dict[str, object]:
     """Publica post de teste no Instagram real. Requer IG_ACCESS_TOKEN + IG_ACCOUNT_ID no .env.

@@ -68,13 +68,18 @@ Schema SQL real: `backend/app/db/migrations/0001_initial.sql`. Estrutura do repo
    - Permissões necessárias: `instagram_basic`, `instagram_content_publish`, `instagram_manage_insights`, `pages_read_engagement`.
    - Gerar token de longa duração (60 dias) via OAuth.
 
-5. **Salvar no backend**
-   - Token vai em `backend/.env` como `IG_ACCESS_TOKEN` + `IG_ACCOUNT_ID`.
-   - Refresh automático antes de expirar (cron mensal).
+5. **Salvar no backend — SUPERADO pelo fluxo OAuth**
+   - Passos 4-6 antigos (criar Meta App manual, copiar token pro `.env`, testar via curl) viram fallback.
+   - Fluxo real hoje: dono clica "Conectar Instagram" no painel (`/auth/facebook/connect`,
+     `backend/app/api/instagram_auth.py`) → login Facebook → escolhe a Page → token salvo sozinho,
+     já de longa duração (troca automática short-lived → long-lived).
+   - Passos 1-3 acima (conta Profissional, vincular Page, Business Manager) continuam
+     obrigatórios antes de clicar em "Conectar Instagram" — só o jeito de pegar o token mudou.
+   - Detalhe completo (inclusive fallback manual): `entregas/ig-setup-tecnico.md`.
 
 6. **Teste de publicação**
-   - `POST /dev/instagram/test` → publica post de teste na conta.
-   - Verificar que apareceu no perfil.
+   - Botão "Testar Publicação" no painel (pós-conexão) publica imagem de teste e confirma
+     que token + conta certa funcionam de ponta a ponta.
 
 **Obs WhatsApp:** Cloud API Meta exige verificação de negócio (CNPJ + domínio) → processo separado, 2-3 semanas. Não bloqueia Instagram.
 
