@@ -1,62 +1,83 @@
-# Como conectar seu Instagram na VisaoPost
+# Configuração do Instagram — o que preparar
 
-Oi! Pra gente começar a postar automaticamente no seu Instagram, você precisa fazer 3 coisinhas rápidas. Leva uns 10 minutos.
+Marcelo, vamos fazer isso juntos, pessoalmente, **tudo no seu celular**. Você não precisa entender nada de técnico — quem mexe sou eu. Só preciso que você chegue com quatro coisas resolvidas, senão a gente trava no meio e perde a viagem.
 
----
-
-## Passo 1 — Transformar seu Instagram em conta Profissional
-
-1. Abra o Instagram no seu celular.
-2. Toque na sua foto de perfil (canto inferior direito).
-3. Toque no ícone ☰ (três linhas, canto superior direito).
-4. Toque em **Configurações e privacidade**.
-5. Toque em **Tipo de conta e ferramentas**.
-6. Toque em **Mudar para conta profissional**.
-7. Escolha a categoria **Loja de óptica** (ou "Produto/serviço" se não aparecer).
-8. Escolha o tipo **Empresa** (não "Criador de conteúdo").
-
-✅ **Pronto quando:** aparecer o botão "Impulsionar publicação" no seu perfil.
+Leia só a primeira parte. O resto é pra você consultar se quiser saber o que vai acontecer.
 
 ---
 
-## Passo 2 — Vincular seu Instagram a uma Página do Facebook
+## As 4 coisas pra resolver ANTES do dia
 
-1. Ainda em **Configurações e privacidade** do Instagram.
-2. Toque em **Conta** → **Contas vinculadas** → **Facebook**.
-3. Faça login no Facebook (o mesmo que você usa sempre).
-4. Quando perguntar qual Página vincular, escolha a Página da sua ótica.
-   - **Não tem Página ainda?** Toque em "Criar nova Página", coloque o nome da sua ótica, e continue.
+### 1. A senha do seu Facebook
 
-✅ **Pronto quando:** em "Contas vinculadas" aparecer o nome da sua Página do Facebook.
+Essa é a mais importante. Muita gente não loga no Facebook há anos e não lembra a senha.
+
+**Faça este teste agora, leva 1 minuto:** abra `facebook.com` no navegador do celular (não o app — o navegador mesmo) e veja se entra.
+
+- **Entrou?** Perfeito, não precisa fazer mais nada.
+- **Não entrou?** Recupere a senha agora, com calma, e não no dia. Se descobrirmos isso na hora, a recuperação vem por SMS ou e-mail e pode levar horas — a reunião acaba sem terminar.
+
+### 2. A senha do seu Instagram
+
+Mesma coisa. Confirme que consegue entrar.
+
+### 3. Aceitar um convite que vou te mandar
+
+Vou te enviar, pelo sistema da Meta (a dona do Instagram e do Facebook), um convite de autorização. Ele chega no e-mail **marcelo107k@gmail.com**, com remetente **Facebook** ou **Meta for Developers**.
+
+**Confira o spam.** Esse e-mail cai na caixa de spam com frequência.
+
+- **Achou?** Abre e clica em confirmar. Pronto.
+- **Não achou?** Sem problema — entra em `developers.facebook.com/requests` pelo navegador do celular, logado no seu Facebook. O convite está lá esperando, com um botão pra confirmar.
+
+**O que esse convite é, na prática:** enquanto nosso sistema está em fase de testes, a Meta exige que cada conta seja autorizada individualmente. É uma medida de segurança deles. Você não está dando acesso a nada seu — é o contrário: é você autorizando o nosso sistema a publicar na conta da ótica.
+
+Sem esse aceite, o último passo da configuração não funciona. É o item que mais faz esse tipo de configuração falhar, então prefiro que você já deixe resolvido antes.
+
+### 4. Confirmar se a conta está com alguma restrição
+
+Você comentou que já teve serviço bloqueado pela Meta. Preciso saber se ainda está valendo, porque se estiver, o último passo não funciona e não adianta tentar.
+
+No Instagram: **Configurações → Central de Contas → Senha e segurança**. Se aparecer algum aviso de restrição, alerta ou "sua conta tem limitações", **tire print e me manda**.
+
+Se aparecer, não é problema — só muda o plano. A gente resolve a restrição primeiro e configura depois. O que não pode é descobrir na hora.
 
 ---
 
-## Passo 3 — Clicar em "Conectar Instagram" no painel
+## O que vai acontecer no dia
 
-1. Entre no painel da VisaoPost, no seu celular ou computador.
-2. Vá em **Configurações**.
-3. Aperte o botão laranja **"Conectar Instagram"**.
-4. Vai abrir uma tela do Facebook pedindo login — entre com sua conta.
-5. O Facebook vai perguntar se você autoriza a VisaoPost a publicar por você — aperte **Continuar** / **Permitir**.
-6. **Se aparecer uma lista de Páginas pra escolher:** toque no nome da sua ótica.
-7. Pronto — a tela vai mostrar "Página conectada" com o nome do seu negócio.
+Reserve **1 hora**. Na prática costuma dar 30 minutos, mas prefiro sobrar.
 
-✅ **Pronto quando:** aparecer o nome da sua ótica na tela, junto com "Página conectada".
+**O que VOCÊ faz** (uns 10 minutos, no seu celular, eu do seu lado te guiando):
 
----
+1. Transformar o Instagram da ótica em conta Profissional — são 4 toques.
+2. Vincular o Instagram à Página da ótica no Facebook. Se não existir Página, a gente cria na hora.
+3. Aceitar um convite que vou te mandar por e-mail. É uma autorização pra que o sistema possa postar pela ótica. Chega no `marcelo107k@gmail.com`.
+4. Digitar sua senha do Facebook uma vez, na tela oficial do Facebook.
 
-## Passo 4 — Testar (opcional, mas recomendado)
+**O que EU faço:** o resto. Configuração, conexão, teste.
 
-Depois de conectar, aperte o botão **"Testar Publicação"**. Isso publica uma imagem de teste simples no seu Instagram, só pra confirmar que está tudo funcionando. Você pode apagar esse post de teste depois — ele não é um post de verdade da sua ótica.
+**Como termina:** publico uma imagem de teste no Instagram da ótica, na sua frente, pra você ver funcionando. Depois a gente apaga esse post — não é conteúdo de verdade, é só a prova de que a ponte está de pé.
 
 ---
 
-## Deu algum problema?
+## Perguntas que você provavelmente tem
 
-| O que aconteceu | O que fazer |
-|---|---|
-| Não apareceu nenhuma Página pra escolher / deu erro "nenhuma página encontrada" | Volta no Passo 1 e 2 — provavelmente o Instagram ainda não virou Profissional, ou não foi vinculado à Página certa |
-| Pediu senha e travou / não deixou continuar | Chama a gente no WhatsApp, a gente resolve junto com você em uma chamada rápida |
-| Apareceu "aviso de restrição" no Facebook | Pode ignorar — não impede a publicação |
+**"Vou ter que dar minha senha pra você?"**
+Não. É tudo no **seu celular**, do começo ao fim — você não digita nada no meu computador. A senha você digita na tela do próprio Facebook. Eu não vejo, não guardo e não tenho acesso a ela em momento nenhum.
 
-Qualquer dúvida, é só chamar no WhatsApp de suporte. 🙂
+**"Isso dá acesso ao quê, exatamente?"**
+A publicar no Instagram da ótica e a ler os números dos posts — alcance, curtidas, salvamentos. Só isso. Não dá acesso ao seu Facebook pessoal, às suas mensagens, aos seus amigos, nem a nada de pessoal.
+
+**"E se eu quiser cancelar depois?"**
+Você revoga sozinho quando quiser, em Facebook → Configurações → Aplicativos e sites. Um clique e o acesso acaba na hora.
+
+**"Conta profissional muda alguma coisa pros meus seguidores?"**
+Não. Ninguém é avisado, nada some, você não perde seguidor. Muda só pra você: passa a ver estatísticas dos posts e ganha o botão de contato no perfil.
+
+**"E se der errado no meio?"**
+Aí a gente para, eu descubro o motivo e resolvo depois — sem pressa e sem custo pra você. Não tem risco de estragar nada na sua conta.
+
+---
+
+Qualquer dúvida antes do dia, me chama no WhatsApp.

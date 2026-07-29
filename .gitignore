@@ -48,3 +48,12 @@ backend/import_check.txt
 
 # Brand assets do cliente (binários, não versionados)
 Di lorenzo/
+
+# Documentos com dado pessoal — repo é PÚBLICO.
+# Contrato e termo LGPD carregam nome completo, endereço, CPF e CNPJ das partes.
+# Ficam só na máquina local. Templates sem dado preenchido podem ser versionados
+# com sufixo -modelo.
+entregas/contrato-prestacao-servicos.md
+entregas/contrato-prestacao-servicos.pdf
+entregas/termo-lgpd-clientes.md
+entregas/termo-lgpd-clientes.pdf

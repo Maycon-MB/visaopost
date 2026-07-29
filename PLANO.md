@@ -4,11 +4,24 @@ Roadmap de execução. Mandatos técnicos em [`CLAUDE.md`](CLAUDE.md). Visão ge
 
 ---
 
-## Status (2026-06-09)
+## Status (2026-07-29)
 
-**Modo:** FREE TIER. **Cliente Di Lorenzo fechou** (informal via WhatsApp 2026-05-28, contrato + LGPD a formalizar). Zero gasto com VPS/domínio até estar tudo pronto.
+**Modo:** FREE TIER. **Cliente Di Lorenzo fechou** (informal via WhatsApp 2026-05-28). Já pagou setup R$1.500 + mensalidades. Zero gasto com VPS/domínio **até o Instagram estar provado funcionando** — decisão consciente: não contratar infra antes de existir risco de cancelamento coberto.
 
-**PRÓXIMO PASSO IMEDIATO:** Fase 7c (QR Code de balcão). IG-setup bloqueado no cliente — Marcelo precisa converter conta + vincular FB Page + adicionar marcelo107k@gmail.com como developer do app VisaoPost (ID 891876360640132).
+**PRÓXIMO PASSO IMEDIATO:** IG-setup presencial. Roteiro em [`runbooks/instagram-presencial.md`](runbooks/instagram-presencial.md), preparo do cliente em [`entregas/INSTRUCOES_CLIENTE.md`](entregas/INSTRUCOES_CLIENTE.md).
+
+Backend público sem VPS: túnel ngrok com domínio fixo (plano grátis dá 1). `META_OAUTH_REDIRECT_URI` e `API_BASE_URL` apontando pro mesmo host — `GET /auth/facebook/preflight` confere isso e o resto da configuração.
+
+**Bloqueios reais hoje:**
+
+| Bloqueio | Quem resolve | Detalhe |
+|---|---|---|
+| Marcelo sem cargo no app VisaoPost (ID 891876360640132) | Maycon convida, Marcelo aceita | App em modo dev: sem cargo, OAuth falha pra ele |
+| Conta IG já foi restringida pela Meta | Cliente confirma status | Se restrição ativa, não marcar o presencial |
+| Conta ainda não é Profissional + Página FB vinculada | Marcelo, no celular | Não tem API. É na mão mesmo |
+| Contrato não assinado | Maycon + Marcelo | [`entregas/contrato-prestacao-servicos.md`](entregas/contrato-prestacao-servicos.md) pronto. Assinar via Gov.br (grátis) |
+
+**Reordenação de prioridade (2026-07-29):** cliente pediu presença no Google ("boto ótica Dilorenzo e não aparece em Madureira"). **Perfil da Empresa no Google** é grátis, não depende de código, VPS nem Meta, e resolve a dor declarada — sobe na fila, na frente da Fase 7c. O QR Code de balcão desce: o adesivo impresso carrega URL, e imprimir antes do domínio final vira retrabalho.
 
 | Fase | Escopo | Status |
 |---|---|---|
@@ -27,14 +40,15 @@ Roadmap de execução. Mandatos técnicos em [`CLAUDE.md`](CLAUDE.md). Visão ge
 | 6g | Auth login/senha + JWT + guard assinatura | ✅ |
 | 7a | Landing Astro Di Lorenzo + catálogo público `/catalogo` | ✅ |
 | 7b | Galeria pública dos posts aprovados | ✅ |
-| **IG-setup** | Configurar Meta Business Manager + conta IG Business + token (bloqueado no cliente) | **🔜 aguarda Marcelo** |
-| **7c** | **QR Code de balcão + form opt-in recall** | **⬅ agora** |
+| **IG-setup** | Configurar Meta Business Manager + conta IG Business + token | **⬅ agora** — roteiro pronto, aguarda agendar |
+| 7d | Perfil da Empresa no Google (item 10 pitch, primeira parte) | 🔜 depois do IG — grátis, sem dependência técnica |
+| 7c | QR Code de balcão + form opt-in recall | adiado até ter domínio (adesivo impresso carrega URL) |
 | 10e | Scripts Reels de Autoridade (gerador Gemini + CRUD + PWA `/reels`) | ✅ 2026-06-11 |
 | 10f | Relatório mensal automático + insights Gemini on-demand (PWA `/relatorio`) | ✅ parcial 2026-06-11 — falta PDF |
-| pré-0b | Contrato + LGPD formal + kickoff | em curso humano |
+| pré-0b | Contrato + LGPD formal + kickoff | contrato reescrito 2026-07-29, **falta assinar** |
 | 0b | Hostinger VPS (~R$33/mês) + domínio + Cloudflare + Backblaze B2 | pronto pra contratar |
 | 8 | Deploy VPS produção (Docker, Nginx, Let's Encrypt, GH Actions SSH) | depende 0b |
-| 10a-ig | `services/instagram.py` — publicação Graph API + webhook métricas | depende IG-setup + 8 |
+| 10a-ig | `services/instagram.py` — publicação Graph API + webhook métricas | código pronto; tratamento de erro Meta ✅ 2026-07-29; falta IG-setup |
 | 10a-wa | Bot WhatsApp + recall (Cloud API Meta — burocracia 2-3 semanas Meta) | depois IG |
 | 10b-j | Demais integrações (GMB, status page, etc.) | ondas pós-handoff |
 | 11 | Operacional contínuo (R$297/mês incluso) | recorrente |
@@ -75,7 +89,8 @@ Schema SQL real: `backend/app/db/migrations/0001_initial.sql`. Estrutura do repo
      já de longa duração (troca automática short-lived → long-lived).
    - Passos 1-3 acima (conta Profissional, vincular Page, Business Manager) continuam
      obrigatórios antes de clicar em "Conectar Instagram" — só o jeito de pegar o token mudou.
-   - Detalhe completo (inclusive fallback manual): `entregas/ig-setup-tecnico.md`.
+   - Roteiro da reunião: [`runbooks/instagram-presencial.md`](runbooks/instagram-presencial.md).
+   - Fallback manual (token na mão): [`runbooks/instagram-token-manual.md`](runbooks/instagram-token-manual.md).
 
 6. **Teste de publicação**
    - Botão "Testar Publicação" no painel (pós-conexão) publica imagem de teste e confirma
@@ -374,7 +389,9 @@ Cliente Di Lorenzo precisa entregar:
 Quebrada em sub-entregas porque cada uma é independente e pode subir em ondas pro cliente.
 
 ### Fase 10a — Instagram + Bot WhatsApp + Recall (núcleo Premium)
-- [ ] `services/instagram.py`: publica via Graph API. Container endpoint + media publish + agendamento.
+- [x] `services/instagram.py`: publica via Graph API. Container endpoint + media publish + agendamento.
+- [x] **Tratamento de erro da Meta (2026-07-29).** `InstagramPermanentError` vs `InstagramTransientError` classificados por `error.code`. Bloqueio de política (368), token morto (190), permissão (3/9/10/200) e cota (4/17/32/613) **não são retentados** — `_run_ig_publish` devolve `status: "blocked"` em vez de levantar exceção, senão o `Retry(max=3)` do RQ batia 3× numa conta restrita e escalava a punição. 4xx desconhecido cai no lado permanente por padrão. Erro carrega `code`, `subcode` e `fbtrace_id` (o `fbtrace_id` é o que a Meta pede em recurso de conta bloqueada). 18 testes.
+- [x] **Pré-checagem de configuração (2026-07-29).** `GET /auth/facebook/preflight` + `services/instagram_preflight.py`: confere app id/secret, se `META_OAUTH_REDIRECT_URI` e `API_BASE_URL` são HTTPS públicos e apontam pro mesmo host. Pega o erro clássico de trocar de túnel e atualizar só uma variável. `explain_ig_error` traduz 12 códigos da Graph API pra português acionável, usado no retorno do teste de publicação. 13 testes.
 - [ ] Webhook IG: captura métricas (reach/impressions/likes/saves/comments/shares/profile_visits) pra `metrics_instagram`.
 - [ ] `services/whatsapp.py`: webhook Cloud API + parser intenção via Gemini + resposta automatizada.
 - [ ] Bot FAQ alimentado por `tenants.whatsapp_faq` (Fase 9 entrega).
@@ -484,7 +501,9 @@ Depois: reunião com cliente → coleta Fase 9 → tenant real → 7 dias em pro
 
 Hoje → 4 ✅ → 5 ✅ (cron GH Actions) → 6a ✅ backend → **6b/c/d/e/f PWA** → 7 (landing + galeria + QR code) → **pré-0b (kickoff)** → 0b (VPS) → 8 (deploy) → 9 (cliente entrega tokens + brand + FAQ) → 10a-j (integração ondas) → 11 (operacional contínuo).
 
-**Cliente Di Lorenzo já fechou (2026-05-28).** pré-0b oficialmente done — contrato/LGPD ainda precisam ser formalizados por escrito.
+**Cliente Di Lorenzo já fechou (2026-05-28).** Setup R$1.500 + mensalidades pagos. Contrato reescrito em 2026-07-29 e pronto pra assinatura eletrônica via Gov.br — **ainda não assinado**.
+
+**Ordem revisada (2026-07-29):** IG-setup presencial → Perfil da Empresa no Google → contrato assinado → decidir VPS com o Instagram já funcionando na mão. Contratar infra antes de provar o Instagram é assumir custo recorrente num projeto que o cliente ainda pode cancelar.
 
 **Fast-track ativo:** Fase 6a backend done. Fase 6b PWA `/aprovar` é próxima entrega. Quando rodando, Maycon manda email mockup pro cliente ver no celular dele → cliente já vê o produto vivo + começa a juntar tokens.
 
