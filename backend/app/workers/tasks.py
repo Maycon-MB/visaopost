@@ -18,6 +18,7 @@ from uuid import UUID
 
 from app.db.pool import close_pool, init_pool
 from app.logging import configure_logging, get_logger
+from app.services.instagram import InstagramPermanentError
 from app.services.post_generator import TenantNotFound, generate_post
 
 logger = get_logger(__name__)
@@ -79,6 +80,7 @@ async def _run(tenant_slug: str, target: DateType, out_dir: Path) -> dict[str, A
 
 # ─── Instagram publish ────────────────────────────────────────────────────────
 
+
 def publish_instagram_post(post_id_str: str) -> dict[str, Any]:
     """Publica post aprovado no Instagram via Graph API.
 
@@ -132,6 +134,27 @@ async def _run_ig_publish(post_id: UUID) -> dict[str, Any]:
             "media_id": result.media_id,
             "permalink": result.permalink,
         }
+    except InstagramPermanentError as exc:
+        # Bloqueio de política, cota estourada, token morto ou permissão ausente.
+        # Devolve status em vez de levantar: exceção faria o RQ retentar 3x contra
+        # uma conta já restrita, que é justamente o que escala punição na Meta.
+        logger.error(
+            "ig_publish.blocked",
+            post_id=str(post_id),
+            ig_error_code=exc.code,
+            ig_error_subcode=exc.subcode,
+            fbtrace_id=exc.fbtrace_id,
+            error=exc.raw_message,
+        )
+        return {
+            "status": "blocked",
+            "post_id": str(post_id),
+            "retryable": False,
+            "ig_error_code": exc.code,
+            "ig_error_subcode": exc.subcode,
+            "fbtrace_id": exc.fbtrace_id,
+            "reason": exc.raw_message,
+        }
     except Exception as exc:
         logger.error("ig_publish.failed", post_id=str(post_id), error=str(exc))
         raise
@@ -139,7 +162,9 @@ async def _run_ig_publish(post_id: UUID) -> dict[str, Any]:
         await close_pool()
 
 
-def collect_instagram_metrics(post_id_str: str, media_id: str, tenant_id_str: str) -> dict[str, Any]:
+def collect_instagram_metrics(
+    post_id_str: str, media_id: str, tenant_id_str: str
+) -> dict[str, Any]:
     """Snapshot de métricas de um post publicado. Rodar 24h+ após publicação."""
     return asyncio.run(_run_ig_metrics(UUID(post_id_str), media_id, UUID(tenant_id_str)))
 
@@ -180,6 +205,7 @@ async def _run_ig_metrics(post_id: UUID, media_id: str, tenant_id: UUID) -> dict
 
 # ─── Instagram publish dispatcher ──────────────────────────────────────────────
 
+
 def dispatch_due_instagram_publishes() -> dict[str, Any]:
     """Varre posts aprovados com `scheduled_at` já vencido e enfileira a publicação.
 
@@ -211,6 +237,7 @@ async def _run_dispatch_due_publishes() -> dict[str, Any]:
 
 # ─── WhatsApp recall ──────────────────────────────────────────────────────────
 
+
 def send_recall_batch(tenant_slug: str) -> dict[str, Any]:
     """Envia recall WhatsApp pra clientes com exame > 12 meses.
 
@@ -224,6 +251,7 @@ async def _run_recall(tenant_slug: str) -> dict[str, Any]:
     await init_pool()
     try:
         from app.services.whatsapp import send_recall_batch as _recall
+
         return await _recall(tenant_slug)
     except Exception as exc:
         logger.error("recall.task_failed", tenant=tenant_slug, error=str(exc))
@@ -233,6 +261,7 @@ async def _run_recall(tenant_slug: str) -> dict[str, Any]:
 
 
 # ─── Instagram OAuth token expiry ──────────────────────────────────────────────
+
 
 def check_instagram_token_expiry() -> dict[str, Any]:
     """Avisa (log estruturado) sobre tokens Instagram perto de expirar.

@@ -34,7 +34,8 @@ from app.db.repositories.tenants import (
 from app.logging import get_logger
 from app.models.instagram_oauth import ConnectedPage, InstagramConnectionStatus
 from app.services import instagram_oauth as oauth_svc
-from app.services.instagram import get_instagram_client
+from app.services.instagram import InstagramApiError, get_instagram_client
+from app.services.instagram_preflight import PreflightCheck, check_config, explain_ig_error
 from app.services.jwt import (
     InvalidOAuthState,
     sign_oauth_state,
@@ -165,6 +166,28 @@ async def status(tenant_id: UUID = Depends(current_tenant_id)) -> InstagramConne
     return await get_instagram_connection_status(tenant_id)
 
 
+class PreflightResponse(BaseModel):
+    ready: bool
+    checks: list[PreflightCheck]
+
+
+@router.get("/preflight", response_model=PreflightResponse)
+async def preflight(tenant_id: UUID = Depends(current_tenant_id)) -> PreflightResponse:
+    """Confere a configuração antes de alguém clicar em Conectar Instagram.
+
+    Existe pra que erro de configuração apareça na preparação, e não na frente do
+    dono da ótica. Nunca devolve valor de credencial — só se está preenchida.
+    """
+    settings = get_settings()
+    checks = check_config(
+        app_id=settings.meta_app_id or "",
+        app_secret=settings.meta_app_secret or "",
+        redirect_uri=settings.meta_oauth_redirect_uri or "",
+        api_base_url=settings.api_base_url or "",
+    )
+    return PreflightResponse(ready=all(c.ok for c in checks), checks=checks)
+
+
 def _build_test_image() -> bytes:
     """Tela branca 1080x1080 com 'Teste' no centro — só pra confirmar que a
     ponte de publicação funciona, não é conteúdo real de post."""
@@ -199,9 +222,32 @@ async def test_post(tenant_id: UUID = Depends(current_tenant_id)) -> dict[str, o
 
     try:
         client = get_instagram_client(access_token=access_token, account_id=account_id)
-        result = await client.publish_photo(image_url=image_url, caption="Teste de conexão VisaoPost ✅")
+        result = await client.publish_photo(
+            image_url=image_url, caption="Teste de conexão VisaoPost ✅"
+        )
+    except InstagramApiError as exc:
+        # Quem lê isso é o dono da ótica, no meio da reunião de configuração.
+        # Código numérico da Meta não ajuda ninguém — devolve o que fazer.
+        logger.error(
+            "ig_oauth.test_post_failed",
+            tenant_id=str(tenant_id),
+            ig_error_code=exc.code,
+            fbtrace_id=exc.fbtrace_id,
+        )
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "hint": explain_ig_error(exc.code),
+                "ig_error_code": exc.code,
+                "fbtrace_id": exc.fbtrace_id,
+                "raw": exc.raw_message,
+            },
+        ) from exc
     except RuntimeError as exc:
-        raise HTTPException(status_code=502, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=502,
+            detail={"hint": explain_ig_error(None), "raw": str(exc)},
+        ) from exc
 
     logger.info("ig_oauth.test_post_ok", tenant_id=str(tenant_id), media_id=result.media_id)
     return {"status": "ok", "media_id": result.media_id, "permalink": result.permalink}
