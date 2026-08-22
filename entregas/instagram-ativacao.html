@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ativação Instagram — Ótica Di Lorenzo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* ─── NORMAS ABNT NBR 6022 ───────────────────────
+       Margens: 3cm superior, 2cm inferior, 3cm esquerda, 2cm direita
+       Fonte: 12pt (Arial/equivalente)
+       Entrelinhas: 1,5
+       Paginação: canto superior direito
+    ──────────────────────────────────────────────── */
+
+    :root {
+      --ochre:      #C1750B;
+      --ochre-pale: #FBF6EF;
+      --black:      #03191E;
+      --ink:        #1C2E35;
+      --muted:      #55666D;
+      --pale:       #F5F3F0;
+      --border:     #DDD8D1;
+      --green-bg:   rgba(28,90,50,0.07);
+      --green-ink:  #1C5A32;
+      --warn-bg:    rgba(140,30,50,0.07);
+      --warn-ink:   #7A1A2A;
+      --info-bg:    rgba(193,117,11,0.08);
+      --serif:      'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+      --sans:       'Jost', Arial, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { -webkit-font-smoothing: antialiased; }
+
+    body {
+      font-family: var(--sans);
+      font-size: 12pt;
+      line-height: 1.5;
+      color: var(--ink);
+      background: #fff;
+      max-width: 210mm;
+      margin: 0 auto;
+    }
+
+    /* ─── PAGINAÇÃO ──────────────────────────────── */
+    @page {
+      size: A4 portrait;
+      margin: 3cm 2cm 2cm 3cm;
+      @top-right {
+        content: counter(page);
+        font-family: Arial, sans-serif;
+        font-size: 10pt;
+        color: #888;
+      }
+    }
+
+    /* ─── CAPA (sem paginação) ───────────────────── */
+    @page :first { @top-right { content: none; } }
+
+    /* ═══════════════════════════════════════════════
+       CAPA
+    ══════════════════════════════════════════════════ */
+    .capa {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 3cm 2cm 2cm 3cm;
+      page-break-after: always;
+      position: relative;
+    }
+
+    .capa-topo {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: auto;
+    }
+
+    .capa-inst {
+      font-size: 10pt;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    .capa-inst strong { color: var(--ink); display: block; font-size: 11pt; }
+
+    .capa-ornamento {
+      width: 48px;
+      flex-shrink: 0;
+    }
+    .capa-ornamento-line {
+      width: 2px;
+      height: 48px;
+      background: var(--ochre);
+      margin-left: auto;
+    }
+
+    .capa-centro {
+      text-align: center;
+      padding: 0 1cm;
+    }
+
+    .capa-titulo {
+      font-family: var(--serif);
+      font-size: 36pt;
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--black);
+      letter-spacing: -0.01em;
+      margin-bottom: 0.4cm;
+    }
+    .capa-titulo em {
+      display: block;
+      font-style: italic;
+      color: var(--ochre);
+    }
+
+    .capa-divisor {
+      width: 48px;
+      height: 2px;
+      background: var(--ochre);
+      margin: 0.5cm auto;
+    }
+
+    .capa-subtitulo {
+      font-family: var(--serif);
+      font-size: 14pt;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .capa-rodape {
+      margin-top: auto;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      padding-top: 0.5cm;
+    }
+    .capa-rodape-local {
+      font-size: 11pt;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: 0.05em;
+    }
+    .capa-rodape-ano {
+      font-size: 10pt;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       CORPO DO DOCUMENTO
+    ══════════════════════════════════════════════════ */
+    .corpo {
+      padding: 3cm 2cm 2cm 3cm;
+    }
+
+    /* ─── SEÇÕES ──────────────────────────────────── */
+    .secao { margin-bottom: 1.2cm; }
+    .secao + .secao { margin-top: 0.8cm; }
+
+    .secao-num {
+      font-size: 10pt;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ochre);
+      margin-bottom: 0.15cm;
+    }
+
+    .secao-titulo {
+      font-family: var(--serif);
+      font-size: 18pt;
+      font-weight: 400;
+      color: var(--black);
+      line-height: 1.2;
+      margin-bottom: 0.4cm;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.2cm;
+    }
+
+    /* ─── PARÁGRAFO ───────────────────────────────── */
+    p {
+      font-size: 12pt;
+      line-height: 1.5;
+      color: var(--ink);
+      margin-bottom: 0.3cm;
+      text-align: justify;
+    }
+
+    /* ─── NOTA DE CONTEXTO ────────────────────────── */
+    .nota-contexto {
+      border-left: 3px solid var(--ochre);
+      background: var(--ochre-pale);
+      padding: 0.4cm 0.6cm;
+      margin-bottom: 0.8cm;
+      border-radius: 0 4px 4px 0;
+    }
+    .nota-contexto p { margin-bottom: 0; }
+    .nota-contexto p + p { margin-top: 0.2cm; }
+    .nota-rotulo {
+      font-size: 8pt;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ochre);
+      margin-bottom: 0.2cm;
+    }
+
+    /* ─── CHECKLIST PRÉ-REQUISITOS ────────────────── */
+    .pre-lista {
+      list-style: none;
+      border-top: 1px solid var(--border);
+    }
+    .pre-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.4cm;
+      padding: 0.25cm 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12pt;
+    }
+    .pre-check {
+      flex-shrink: 0;
+      width: 14px; height: 14px;
+      border: 1.5px solid var(--ochre);
+      border-radius: 2px;
+      margin-top: 1px;
+    }
+
+    /* ─── ETAPAS ──────────────────────────────────── */
+    .etapas { margin-top: 0.3cm; }
+
+    .etapa {
+      margin-bottom: 1cm;
+      break-inside: avoid;
+    }
+
+    .etapa-cabecalho {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4cm;
+      margin-bottom: 0.35cm;
+    }
+
+    .etapa-num {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--ochre);
+      color: #fff;
+      font-family: var(--serif);
+      font-size: 16pt;
+      font-weight: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(193,117,11,0.25);
+    }
+
+    .etapa-meta { flex: 1; }
+
+    .etapa-onde {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 8pt;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 20px;
+      border: 1px solid currentColor;
+      margin-bottom: 5px;
+    }
+    .etapa-onde.celular    { color: var(--ochre); background: rgba(193,117,11,0.08); }
+    .etapa-onde.navegador  { color: var(--muted); background: var(--pale); border-color: var(--border); }
+
+    .etapa-titulo {
+      font-family: var(--serif);
+      font-size: 16pt;
+      font-weight: 400;
+      color: var(--black);
+      line-height: 1.2;
+    }
+
+    /* ─── LISTA DE PROCEDIMENTOS ──────────────────── */
+    .proc-lista {
+      list-style: none;
+      counter-reset: proc;
+      margin-top: 0.3cm;
+      border-top: 1px solid var(--border);
+    }
+    .proc-item {
+      counter-increment: proc;
+      display: flex;
+      align-items: baseline;
+      gap: 0.5cm;
+      padding: 0.22cm 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12pt;
+      line-height: 1.5;
+    }
+    .proc-item::before {
+      content: counter(proc) ".";
+      flex-shrink: 0;
+      min-width: 0.8cm;
+      font-family: var(--serif);
+      font-size: 11pt;
+      color: var(--ochre);
+      font-weight: 600;
+      text-align: right;
+    }
+    .proc-item strong { font-weight: 600; color: var(--black); }
+    .proc-item code {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 10pt;
+      background: var(--pale);
+      padding: 1px 4px;
+      border-radius: 2px;
+      border: 1px solid var(--border);
+    }
+
+    /* ─── OBSERVAÇÕES ─────────────────────────────── */
+    .obs {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4cm;
+      padding: 0.3cm 0.45cm;
+      border-radius: 4px;
+      margin-top: 0.35cm;
+      font-size: 11pt;
+      line-height: 1.5;
+    }
+    .obs-icone { flex-shrink: 0; font-size: 13pt; }
+    .obs.sucesso { background: var(--green-bg); color: var(--green-ink); }
+    .obs.atencao { background: var(--warn-bg);  color: var(--warn-ink);  }
+    .obs.info    { background: var(--info-bg);  color: #7a4d08;         }
+
+    /* ─── QUADRO FINAL ────────────────────────────── */
+    .quadro-final {
+      background: var(--pale);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--ochre);
+      border-radius: 0 0 6px 6px;
+      padding: 0.5cm 0.7cm;
+      margin-top: 0.8cm;
+      break-inside: avoid;
+    }
+    .quadro-final-titulo {
+      font-family: var(--serif);
+      font-size: 14pt;
+      font-weight: 400;
+      color: var(--black);
+      margin-bottom: 0.3cm;
+    }
+    .quadro-final p {
+      font-size: 11pt;
+      text-align: left;
+      color: var(--muted);
+    }
+
+    /* ─── SEPARADOR ───────────────────────────────── */
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0.8cm 0;
+    }
+
+    /* ═══════════════════════════════════════════════
+       SCREEN PREVIEW (não vai pro PDF)
+    ══════════════════════════════════════════════════ */
+    @media screen {
+      body { padding: 0; box-shadow: 0 0 40px rgba(0,0,0,0.1); }
+      .capa { padding: 3cm; min-height: 29.7cm; background: #fff; }
+      .corpo { min-height: 29.7cm; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       IMPRESSÃO
+    ══════════════════════════════════════════════════ */
+    @media print {
+      body { max-width: 100%; }
+      .capa { min-height: 0; padding: 0; }
+      .corpo { padding: 0; }
+      a { color: inherit; text-decoration: none; }
+      .etapa { break-inside: avoid; }
+      .quadro-final { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       CAPA
+  ════════════════════════════════════════════════ -->
+  <div class="capa">
+    <div class="capa-topo">
+      <div class="capa-inst">
+        <strong>Ótica Di Lorenzo</strong>
+        Sistema VisaoPost de Presença Digital
+      </div>
+      <div class="capa-ornamento">
+        <div class="capa-ornamento-line"></div>
+      </div>
+    </div>
+
+    <div class="capa-centro">
+      <h1 class="capa-titulo">
+        Ativação do<br/>
+        <em>Instagram</em>
+      </h1>
+      <div class="capa-divisor"></div>
+      <p class="capa-subtitulo">
+        Procedimento de configuração inicial<br/>
+        a ser realizado pelo titular da conta
+      </p>
+    </div>
+
+    <div class="capa-rodape">
+      <div class="capa-rodape-local">Rio de Janeiro</div>
+      <div class="capa-rodape-ano">2026</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       CORPO
+  ════════════════════════════════════════════════ -->
+  <div class="corpo">
+
+    <!-- 1. Contextualização -->
+    <div class="secao">
+      <div class="secao-num">Seção 1</div>
+      <h2 class="secao-titulo">Contextualização</h2>
+
+      <div class="nota-contexto">
+        <div class="nota-rotulo">Por que este procedimento é necessário</div>
+        <p>A Meta — empresa responsável pelo Instagram e Facebook — exige que o <strong>titular da conta</strong> autorize pessoalmente qualquer sistema externo que vá publicar conteúdo. Não existe forma legal de realizar essa autorização por um terceiro, ainda que seja o desenvolvedor do sistema.</p>
+        <p>Após a conclusão deste procedimento, o sistema passa a publicar de forma completamente automática, <strong>sem necessidade de intervenção do celular do proprietário.</strong></p>
+      </div>
+
+      <p>O presente documento descreve, em linguagem acessível, os procedimentos que devem ser realizados pelo proprietário da conta <strong>@oticadilorenzo</strong>. O tempo estimado para a execução completa é de <strong>aproximadamente 20 minutos.</strong></p>
+    </div>
+
+    <hr/>
+
+    <!-- 2. Pré-requisitos -->
+    <div class="secao">
+      <div class="secao-num">Seção 2</div>
+      <h2 class="secao-titulo">Pré-requisitos</h2>
+
+      <p>Antes de iniciar os procedimentos, confirme a disponibilidade dos seguintes itens:</p>
+
+      <ul class="pre-lista">
+        <li class="pre-item">
+          <span class="pre-check"></span>
+          <span>Celular com o aplicativo <strong>Instagram</strong> aberto na conta <strong>@oticadilorenzo</strong></span>
+        </li>
+        <li class="pre-item">
+          <span class="pre-check"></span>
+          <span>Senha do <strong>Facebook</strong> associada ao endereço <strong>marcelo107k@gmail.com</strong></span>
+        </li>
+        <li class="pre-item">
+          <span class="pre-check"></span>
+          <span>Conexão à internet estável — Wi-Fi de preferência</span>
+        </li>
+        <li class="pre-item">
+          <span class="pre-check"></span>
+          <span>Disponibilidade de <strong>20 minutos</strong> sem interrupção</span>
+        </li>
+      </ul>
+    </div>
+
+    <hr/>
+
+    <!-- 3. Procedimentos -->
+    <div class="secao">
+      <div class="secao-num">Seção 3</div>
+      <h2 class="secao-titulo">Procedimentos</h2>
+
+      <p>Os procedimentos estão organizados em quatro etapas sequenciais. Cada etapa indica o dispositivo necessário e os passos a seguir na ordem apresentada.</p>
+
+      <div class="etapas">
+
+        <!-- Etapa 1 -->
+        <div class="etapa">
+          <div class="etapa-cabecalho">
+            <div class="etapa-num">1</div>
+            <div class="etapa-meta">
+              <span class="etapa-onde celular">📱 Celular · Aplicativo Instagram</span>
+              <div class="etapa-titulo">Conversão para conta Empresa</div>
+            </div>
+          </div>
+
+          <ol class="proc-lista">
+            <li class="proc-item">Abrir o Instagram e tocar na <strong>foto de perfil</strong> (canto inferior direito da tela)</li>
+            <li class="proc-item">Tocar no ícone de <strong>três linhas</strong> (≡) no canto superior direito</li>
+            <li class="proc-item">Acessar <strong>Configurações e privacidade</strong></li>
+            <li class="proc-item">Selecionar <strong>Tipo de conta e ferramentas</strong></li>
+            <li class="proc-item">Tocar em <strong>Mudar para conta profissional</strong></li>
+            <li class="proc-item">Selecionar a categoria <strong>Loja de óptica</strong> (ou "Produto/serviço", caso não apareça)</li>
+            <li class="proc-item">Selecionar o tipo <strong>Empresa</strong> — não "Criador de conteúdo"</li>
+            <li class="proc-item">Confirmar e concluir o processo</li>
+          </ol>
+
+          <div class="obs sucesso">
+            <span class="obs-icone">✓</span>
+            <span><strong>Indicador de sucesso:</strong> o botão "Impulsionar publicação" passa a aparecer no perfil e a opção "Insights" fica visível nas publicações.</span>
+          </div>
+          <div class="obs info">
+            <span class="obs-icone">ℹ</span>
+            <span>Caso a conta já seja do tipo Profissional/Empresa, esta etapa está concluída e pode ser ignorada.</span>
+          </div>
+        </div>
+
+        <!-- Etapa 2 -->
+        <div class="etapa">
+          <div class="etapa-cabecalho">
+            <div class="etapa-num">2</div>
+            <div class="etapa-meta">
+              <span class="etapa-onde celular">📱 Celular · Aplicativo Instagram</span>
+              <div class="etapa-titulo">Vinculação à Página do Facebook</div>
+            </div>
+          </div>
+
+          <ol class="proc-lista">
+            <li class="proc-item">Permanecer em <strong>Configurações e privacidade</strong> no Instagram</li>
+            <li class="proc-item">Acessar <strong>Conta</strong> → <strong>Contas vinculadas</strong> → <strong>Facebook</strong></li>
+            <li class="proc-item">Realizar login no Facebook com <code>marcelo107k@gmail.com</code></li>
+            <li class="proc-item">Quando solicitado, selecionar a Página <strong>"Ótica Di Lorenzo"</strong> para vinculação</li>
+          </ol>
+
+          <div class="obs sucesso">
+            <span class="obs-icone">✓</span>
+            <span><strong>Indicador de sucesso:</strong> em "Contas vinculadas", o nome "Ótica Di Lorenzo" aparece abaixo do ícone do Facebook.</span>
+          </div>
+          <div class="obs atencao">
+            <span class="obs-icone">!</span>
+            <span><strong>Atenção:</strong> caso não exista uma Página "Ótica Di Lorenzo" no Facebook, será necessário criá-la antes de prosseguir. Neste caso, interrompa o procedimento e entre em contato.</span>
+          </div>
+        </div>
+
+        <!-- Etapa 3 -->
+        <div class="etapa">
+          <div class="etapa-cabecalho">
+            <div class="etapa-num">3</div>
+            <div class="etapa-meta">
+              <span class="etapa-onde navegador">💻 Navegador · business.facebook.com</span>
+              <div class="etapa-titulo">Registro no Meta Business Manager</div>
+            </div>
+          </div>
+
+          <ol class="proc-lista">
+            <li class="proc-item">Acessar <strong>business.facebook.com</strong> com o login <code>marcelo107k@gmail.com</code></li>
+            <li class="proc-item">Se for o primeiro acesso: clicar em <strong>Criar conta</strong> e utilizar o nome "Ótica Di Lorenzo"</li>
+            <li class="proc-item">No menu lateral, acessar <strong>Configurações do negócio</strong></li>
+            <li class="proc-item">Navegar até <strong>Contas → Contas do Instagram</strong></li>
+            <li class="proc-item">Clicar em <strong>Adicionar → Conectar uma conta do Instagram</strong></li>
+            <li class="proc-item">Realizar login com a conta <strong>@oticadilorenzo</strong></li>
+          </ol>
+
+          <div class="obs sucesso">
+            <span class="obs-icone">✓</span>
+            <span><strong>Indicador de sucesso:</strong> "@oticadilorenzo" aparece listada nas Contas do Instagram dentro do painel do Business Manager.</span>
+          </div>
+          <div class="obs info">
+            <span class="obs-icone">ℹ</span>
+            <span>Eventuais avisos sobre "restrição de anúncios" podem ser ignorados — não afetam a publicação orgânica de posts pelo sistema.</span>
+          </div>
+        </div>
+
+        <!-- Etapa 4 -->
+        <div class="etapa">
+          <div class="etapa-cabecalho">
+            <div class="etapa-num">4</div>
+            <div class="etapa-meta">
+              <span class="etapa-onde celular">📲 WhatsApp ou ligação</span>
+              <div class="etapa-titulo">Comunicação de conclusão</div>
+            </div>
+          </div>
+
+          <p>Após a conclusão das três etapas anteriores, comunicar ao desenvolvedor. As etapas seguintes — obtenção das chaves de acesso e integração ao sistema — são realizadas remotamente, sem necessidade de acesso ao celular do proprietário.</p>
+          <p>Ao término, será publicado um post de teste em <strong>@oticadilorenzo</strong> para validação do funcionamento.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <hr/>
+
+    <!-- 4. Vigência -->
+    <div class="secao">
+      <div class="secao-num">Seção 4</div>
+      <h2 class="secao-titulo">Vigência da Autorização</h2>
+
+      <p>A autorização de acesso gerada ao término deste procedimento possui validade de <strong>60 dias</strong>. Próximo ao vencimento, o proprietário receberá um aviso pelo sistema. A renovação segue processo análogo ao da Etapa 3, com duração estimada de 5 minutos.</p>
+
+      <div class="quadro-final">
+        <div class="quadro-final-titulo">Após a ativação — funcionamento automático</div>
+        <p>Uma vez concluída a configuração, o sistema publica no Instagram de forma completamente autônoma. A intervenção do proprietário resume-se à aprovação de conteúdo pelo painel — um toque no celular. O restante é automatizado.</p>
+      </div>
+    </div>
+
+  </div><!-- /corpo -->
+
+</body>
+</html>

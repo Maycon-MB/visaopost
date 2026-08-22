@@ -1,0 +1,47 @@
+name: Deploy PWA → GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: frontend/painel/package-lock.json
+
+      - name: Install
+        run: npm ci
+        working-directory: frontend/painel
+
+      - name: Build
+        run: npm run build
+        working-directory: frontend/painel
+        env:
+          VITE_BASE: /visaopost/app/
+          VITE_DEMO: '1'
+          VITE_GALLERY_URL: /visaopost/dilorenzo/galeria/
+          VITE_CATALOG_URL: /visaopost/dilorenzo/catalogo/
+
+      - name: Sync to docs/app/
+        run: |
+          mkdir -p docs/app
+          rsync -a --delete frontend/painel/dist/ docs/app/
+
+      - name: Commit docs/
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/app/
+          git diff --cached --quiet || git commit -m "deploy: atualiza docs/app/ [skip ci]"
+          git push

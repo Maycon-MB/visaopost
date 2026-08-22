@@ -1,12 +1,59 @@
+# Env
 .env
+.env.local
+.env.*.local
+!.env.example
+
+# Python
 *.pyc
+*.pyo
 __pycache__/
-demo/post.jpg
-demo/post_*.jpg
-demo/approval.html
-demo/_logo_b64.txt
-.claude/
-.vercel
-node_modules
-dist
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+*.egg-info/
+
+# Node
+node_modules/
+frontend/painel/dist/
+frontend/site/dist/
+archive/pitch/dist/
+dist/
+
+# Build artefacts
+archive/legacy/demo/post.jpg
+archive/legacy/demo/post_*.jpg
+archive/legacy/demo/approval.html
+archive/legacy/demo/_logo_b64.txt
+backend/tmp/
+
+# Editor / OS
 .DS_Store
+.vscode/
+.idea/
+
+# Vercel (legacy)
+.vercel
+
+# Claude
+.claude/
+
+# artefatos de debug temporarios
+backend/_chk*
+backend/import_check.txt
+
+# Brand assets do cliente (binários, não versionados)
+Di lorenzo/
+
+# Documentos com dado pessoal — repo é PÚBLICO.
+# Contrato e termo LGPD carregam nome completo, endereço, CPF e CNPJ das partes.
+# Ficam só na máquina local. Templates sem dado preenchido podem ser versionados
+# com sufixo -modelo.
+entregas/contrato-prestacao-servicos.md
+entregas/contrato-prestacao-servicos.pdf
+entregas/termo-lgpd-clientes.md
+entregas/termo-lgpd-clientes.pdf

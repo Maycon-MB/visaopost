@@ -1,49 +1,40 @@
-# Projeto — Mandatos Técnicos
+# Projeto VisaoPost
 
-## Contexto
-SaaS B2B de automação de Instagram para pequenos negócios. Piloto: Ótica Di Lorenzo.
-Arquitetura multi-tenant desde o início. Stack 100% free tier até 10 clientes.
+SaaS B2B automação Instagram + WhatsApp + landing pra óticas. Cliente piloto Ótica Di Lorenzo (Premium R$297/mês, fechou 2026-05-28). Roadmap em [`PLANO.md`](PLANO.md). Pitch (fonte da verdade do escopo) em [`archive/pitch/`](archive/pitch/).
 
-## Stack obrigatória
-- Backend: Python 3.13 + FastAPI
-- Imagens: Pillow (composição de camadas — NÃO usar IA generativa para posts)
-- IA texto: Gemini 2.0 Flash via `google-generativeai`
-- DB: Supabase (PostgreSQL) — SQL puro, sem ORM
-- Storage: Supabase Storage
-- Email: Resend (NÃO usar Gmail SMTP em produção)
-- Deploy: Docker + Hostinger VPS
-- WhatsApp: Z-API (fase 1), Meta Business API (escala)
+## Estrutura
 
-## Convenções de código
-- Todo query filtra por `tenant_id` — sem exceção
-- Imagens sempre 1080x1080px JPEG qualidade 90
-- Variáveis de ambiente via `.env` — nunca hardcoded
-- `.env` nunca commitado (ver .gitignore)
-- Funções de serviço em `backend/app/services/`
-- Endpoints em `backend/app/api/`
+```
+backend/          API Python (FastAPI)
+frontend/
+  site/           site público Astro (landing, catálogo, galeria)
+  painel/         painel admin React (aprovações, clientes, relatório, reels)
+infra/
+  nginx/          config reverse proxy
+  devops/         scripts de deploy e screenshot
+archive/          pitch de vendas + código legado
+entregas/         documentos para o cliente
+docs/             output GH Pages
+previews/         screenshots dos posts aprovados
+```
 
-## O que NÃO fazer
-- Não usar ORM (SQLAlchemy, etc) — SQL puro no Supabase
-- Não instalar dependências sem atualizar `requirements.txt`
-- Não criar painel admin na Fase 1 — usar Supabase dashboard
-- Não subir assets de cliente no repositório
-- Não commitar `post.jpg`, `approval.html` gerados, `_logo_b64.txt`
-- Não usar WhatsApp pessoal — apenas número dedicado
+## Modo
 
-## Ordem de desenvolvimento (Jack, o Estripador)
-1. Schema SQL + seed calendário BR → valida no Supabase
-2. `composer.py` (Pillow) → gera imagem local
-3. `caption.py` (Gemini) → retorna legenda + hashtags
-4. `calendar.py` → retorna feriado correto por data
-5. `scheduler.py` (APScheduler) → dispara no horário
-6. `email.py` (Resend) + página de aprovação hospedada
-7. `instagram.py` (Graph API) → posta em conta Business
-8. WhatsApp bot (Z-API) — apenas no plano Premium
+- Caveman mode default. Código/commits/PRs em português normal.
+- Siga [`PLANO.md`](PLANO.md). Não pule fase sem dizer.
+- Decida sozinho. Pergunte só em irreversíveis (push, destrutivo, gasto $).
 
-## Planos do produto
-- **Starter** R$97/mês + R$800 setup
-- **Growth** R$197/mês + R$1.000 setup
-- **Premium** R$297/mês + R$1.500 setup
+## Decisões já tomadas (não me proponha revisar)
 
-## Sinal de pronto por fatia
-Cada fatia tem teste manual antes de avançar. Regra de Beyoncé: corrigiu bug = escreve o teste.
+- Stack consolidada num **VPS Hostinger**. Sem Supabase/Vercel/Railway/Cloudflare Pages.
+- **Zero ORM.** SQL puro em `backend/app/db/repositories/`. Repos devolvem Pydantic, `asyncpg.Record` morre na borda.
+- **Multi-tenant:** toda query filtra por `tenant_id`. Exceção única: `holidays_br`.
+- IA: `gemini-flash-latest` (texto), `gemini-2.5-flash-image` (Nano Banana, imagem).
+- Email Resend. WhatsApp Cloud API Meta. Instagram Graph API.
+
+## Inegociáveis
+
+- `.env` nunca commitado.
+- Rotas `/dev/*` só carregam quando `APP_ENV=dev`.
+- Dependências externas atrás de `Protocol` pra testes injetarem fake.
+- Migrations idempotentes em `backend/app/db/migrations/NNNN_*.sql`.

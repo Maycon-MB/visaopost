@@ -1,0 +1,102 @@
+# Stack de produção — VPS Hostinger.
+# Uso: docker compose -f docker-compose.prod.yml up -d --build
+#
+# Bootstrap de certs (primeira vez):
+#   1. Suba só nginx em modo HTTP: docker compose -f docker-compose.prod.yml up -d nginx
+#   2. docker compose -f docker-compose.prod.yml run --rm certbot certonly \
+#        --webroot -w /var/www/certbot \
+#        -d visaopost.com.br -d www.visaopost.com.br \
+#        -d api.visaopost.com.br -d app.visaopost.com.br \
+#        --email mayconbruno.constancio@gmail.com --agree-tos --no-eff-email
+#   3. docker compose -f docker-compose.prod.yml up -d
+#
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/app/db/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    restart: always
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: rq worker --url ${REDIS_URL} default
+    restart: always
+
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend/painel/dist:/var/www/app:ro
+      - ./frontend/site/dist:/var/www/landing:ro
+      - certbot_webroot:/var/www/certbot
+      - certbot_certs:/etc/letsencrypt:ro
+    depends_on:
+      - backend
+    restart: always
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - certbot_webroot:/var/www/certbot
+      - certbot_certs:/etc/letsencrypt
+    # Renova automaticamente (roda loop de 12h)
+    entrypoint: >
+      /bin/sh -c "trap exit TERM;
+      while :; do
+        certbot renew --webroot -w /var/www/certbot --quiet;
+        sleep 12h & wait $${!};
+      done"
+    restart: always
+
+volumes:
+  postgres_data:
+  redis_data:
+  certbot_webroot:
+  certbot_certs:
