@@ -1,56 +1,68 @@
 # Melhorias pendentes — frontend
 
-Levantamento feito comparando este frontend com outros projetos do mesmo
-autor, focado em bug real e risco, não em preferência de estilo.
+**Correção (22/08/2026):** a primeira versão deste arquivo foi escrita em
+cima de um clone local desatualizado, com estrutura antiga
+(`src/LandingPage.jsx` na raiz) que não existe mais. Esta versão reflete
+o repositório real, com dois apps: `frontend/painel` (React + Vite,
+dashboard do dono) e `frontend/site` (Astro, landing/catálogo público).
 
-## 1. Paleta de cor duplicada, com valores diferentes
+## `frontend/painel` — já está bem construído
 
-`src/styles/theme.js` define a paleta em JS (tema "SaaS" escuro e tema
-"landing" mais claro). `src/index.css` define OUTRA paleta, via variável
-CSS (`--lzo-dark`, `--lzo-orange`, `--lzo-gold`...), com hex ligeiramente
-diferente dos mesmos nomes conceituais.
+TypeScript completo, dark mode de verdade (`theme-context.tsx`, com
+`prefers-color-scheme`), split de bundle (`echarts-vendor` separado,
+`rollup-plugin-visualizer` configurado), testes E2E reais em
+`e2e/dashboard.spec.ts` (Playwright) cobrindo login, navegação, tema,
+rota protegida. Acessibilidade tem cuidado real (`aria-label`,
+`aria-expanded`, `aria-modal` em várias telas). Não precisa de ajuste
+estrutural — só o item abaixo.
 
-Duas fontes de verdade pra mesma marca divergem mais cedo ou mais tarde
-sem ninguém perceber — é assim que uma tela fica com laranja diferente da
-outra sem ninguém ter mudado nada de propósito.
+### Páginas grandes demais
 
-**Ação:** decidir qual arquivo é a fonte real (checar com grep quem
-realmente importa `theme.js` vs quem usa `var(--lzo-*)` nos componentes
-de verdade), fazer o outro derivar dele. Se as duas paletas forem
-intencionalmente diferentes pra contextos diferentes, documentar isso
-explicitamente no próprio arquivo — não deixar implícito.
+`Dashboard.tsx` (645 linhas), `Clientes.tsx` (602), `Cotacao.tsx` (596),
+`Apresentacao.tsx` (510), `Settings.tsx` (509), `Reels.tsx` (506) — seis
+arquivos passando de 500 linhas, misturando busca de dado, estado, e
+apresentação no mesmo arquivo.
 
-## 2. ESLint listado mas sem configuração
+**Ação:** extrair sub-componentes de seção pra `src/components/`, mover
+lógica de busca/estado pra hooks próprios. Não é urgente — o código
+funciona e tem teste — mas cada mudança futura nessas telas custa mais
+tempo de leitura do que precisava.
 
-`package.json` tem `eslint` e plugins em devDependencies e um script
-`lint`, mas não existe `.eslintrc*` nem `eslint.config.js` no repositório.
-`npm run lint` falha hoje.
+## `frontend/site` — aqui sim tem trabalho real
 
-**Ação:** criar a configuração mínima pro stack (React 18 + Vite + JS,
-sem TypeScript) usando os plugins já instalados, rodar o lint de verdade
-e corrigir o que ele apontar.
+Este app ficou pra trás do `painel` em três frentes:
 
-## 3. Imagem hotlinkada do Imgur
+### Sem TypeScript
 
-`LandingPage.jsx` (~linha 293) usa `<img src="https://i.imgur.com/8Km9tLL.png">`.
-Depender de host externo que o projeto não controla é risco de
-disponibilidade — o Imgur pode remover, limitar taxa, ou trocar a imagem
-sem aviso, e o site quebra sem nenhum commit ter mudado nada aqui.
+`frontend/site` não tem `tsconfig.json` — é o único dos dois frontends
+que ainda não migrou. Não é bug, mas é a maior causa provável dos outros
+dois problemas abaixo (menos type-check, menos disciplina de padrão).
 
-**Ação:** baixar a imagem pro repositório (`src/assets/` ou `public/`,
-seguindo o padrão que as outras imagens do projeto já usam) e trocar a
-referência pra local.
+### Zero acessibilidade
 
-## Observações de menor prioridade
+Nenhum atributo `aria-*` em todo `src/`, e só 8 ocorrências de `alt=` no
+app inteiro (`galeria.astro`, `catalogo.astro`, `LandingPage.jsx`). É a
+parte do produto que clientes finais realmente veem — vale mais atenção
+aqui do que no painel interno.
 
-- **Zero `aria-*`/`role` em todo o `src`** — só 4 tags `<img>` têm `alt`,
-  e são genéricos ("Post", "Logo"). Não é bug, é acessibilidade ausente.
-- **Sem lazy loading nem code splitting** — `Vite` dá build padrão, mas
-  nada de `React.lazy`/`loading="lazy"` foi adicionado.
-- Estilo pesado em `style={{}}` inline (122 ocorrências em
-  `LandingPage.jsx`, 62 em `PresentationPage.jsx`) — funciona, mas
-  dificulta manter tema consistente a longo prazo.
+### Páginas monolíticas
+
+`galeria.astro` (566 linhas), `catalogo.astro` (513), `LandingPage.jsx`
+(388) — markup, lógica e estilo misturados no mesmo arquivo cada um.
+
+**Ação sugerida, nessa ordem:** acessibilidade primeiro (impacto direto
+em quem visita o site), depois quebrar as páginas grandes, TypeScript por
+último (maior, adia sem custo imediato).
+
+## Observação de consistência — não é bug, mas registra
+
+A paleta de marca (`ochre #C1750B`, `rich-black #03191E`, `sage
+#638475`) está definida duas vezes: `frontend/painel/src/styles.css`
+(variável CSS) e `frontend/site/src/styles/theme.js` (objeto JS).
+**Os valores batem exatamente hoje** — não é bug agora — mas são duas
+fontes de verdade que podem divergir no futuro sem ninguém perceber, se
+alguém mudar um cantinho da marca só num dos dois apps.
 
 ---
-Gerado por revisão comparativa de frontend, sem mudança de código —
-documento apenas.
+Corrigido após verificação contra o repositório real — documento apenas,
+sem mudança de código.
