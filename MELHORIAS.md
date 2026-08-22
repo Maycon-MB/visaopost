@@ -63,6 +63,33 @@ A paleta de marca (`ochre #C1750B`, `rich-black #03191E`, `sage
 fontes de verdade que podem divergir no futuro sem ninguém perceber, se
 alguém mudar um cantinho da marca só num dos dois apps.
 
+## Nota comparativa (0-10)
+
+Levantamento feito junto com outros 3 projetos do mesmo autor, comparando
+todos contra o `site/` do vaga-radar (referência interna de qualidade).
+
+**Atenção:** a primeira rodada dessa comparação deu nota global 4.2 pro
+"visaopost", em cima do clone desatualizado. Não vale — este projeto real
+é dois apps com qualidade bem diferente, então a nota certa é por app,
+não uma média única:
+
+| Aspecto | `frontend/painel` | `frontend/site` | vaga-radar |
+|---|---|---|---|
+| Stack/Tooling | 7 | 3 | 7 |
+| Sistema de design | 8 | 5 | 8 |
+| Organização código | 6 | 4 | 8 |
+| Performance | 8 | 3 | 6 |
+| Acessibilidade | 7 | 2 | 6 |
+| Polish visual | 8 | 6 | 8 |
+| **Média** | **7.3** | **3.8** | **7.2** |
+
+`frontend/painel` empata com o vaga-radar — TypeScript completo, dark
+mode de verdade, testes E2E, split de bundle e cache PWA configurados
+(bate ou passa o vaga-radar em performance, por sinal). `frontend/site`
+é o inverso: sem TS, sem teste, zero acessibilidade — é ele que puxa a
+média pra baixo, e é nele que a maior parte do trabalho listado acima
+deveria ir primeiro.
+
 ---
 Corrigido após verificação contra o repositório real — documento apenas,
 sem mudança de código.
