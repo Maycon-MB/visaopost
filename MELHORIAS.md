@@ -73,15 +73,15 @@ todos contra o `site/` do vaga-radar (referência interna de qualidade).
 é dois apps com qualidade bem diferente, então a nota certa é por app,
 não uma média única:
 
-| Aspecto | `frontend/painel` | `frontend/site` | vaga-radar |
-|---|---|---|---|
-| Stack/Tooling | 7 | 3 | 7 |
-| Sistema de design | 8 | 5 | 8 |
-| Organização código | 6 | 4 | 8 |
-| Performance | 8 | 3 | 6 |
-| Acessibilidade | 7 | 2 | 6 |
-| Polish visual | 8 | 6 | 8 |
-| **Média** | **7.3** | **3.8** | **7.2** |
+| Aspecto | `frontend/painel` | `frontend/site` |
+|---|---|---|
+| Stack/Tooling | 7 | 3 |
+| Sistema de design | 8 | 5 |
+| Organização código | 6 | 4 |
+| Performance | 8 | 3 |
+| Acessibilidade | 7 | 2 |
+| Polish visual | 8 | 6 |
+| **Média** | **7.3** | **3.8** |
 
 `frontend/painel` empata com o vaga-radar — TypeScript completo, dark
 mode de verdade, testes E2E, split de bundle e cache PWA configurados
