@@ -47,6 +47,8 @@ jobs:
       APP_ENV: ci
       LOG_LEVEL: INFO
       TENANT_SLUG: dilorenzo
+      # Demo nao assina tokens de usuario; valor descartavel por execucao satisfaz o Settings.
+      JWT_SECRET: ci-demo-${{ github.run_id }}-${{ github.run_attempt }}
 
     steps:
       - uses: actions/checkout@v4
