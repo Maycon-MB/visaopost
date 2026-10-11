@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -23,7 +23,7 @@ class Settings(BaseSettings):
         description="Lista CSV de origens liberadas pelo CORSMiddleware.",
     )
 
-    jwt_secret: str = Field(default="change-me")
+    jwt_secret: str = Field(description="Obrigatório: sem ele a API não sobe.")
     jwt_algorithm: str = Field(default="HS256")
     jwt_expires_hours: int = Field(default=24)
     session_expires_hours: int = Field(default=168, description="TTL do token de sessão do painel (7 dias).")
@@ -52,6 +52,14 @@ class Settings(BaseSettings):
     whatsapp_access_token: str = Field(default="")
     whatsapp_verify_token: str = Field(default="")
     whatsapp_app_secret: str = Field(default="")
+
+    @field_validator("jwt_secret")
+    @classmethod
+    def _rejeita_segredo_inseguro(cls, valor: str) -> str:
+        # O placeholder do .env.example é público: aceitar ele equivale a não ter segredo.
+        if not valor.strip() or valor.startswith("change-me"):
+            raise ValueError("JWT_SECRET ausente ou placeholder; gere um valor aleatório")
+        return valor
 
 
 @lru_cache
