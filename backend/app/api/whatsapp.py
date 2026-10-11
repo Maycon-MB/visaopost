@@ -58,11 +58,12 @@ async def receive_webhook(request: Request) -> dict[str, str]:
 
 
 def _verify_signature(request: Request, body: bytes) -> None:
-    """Valida assinatura HMAC-SHA256 do Meta. Ignora se APP_SECRET não configurado."""
+    """Valida assinatura HMAC-SHA256 do Meta. Sem APP_SECRET configurado, rejeita tudo."""
     settings = get_settings()
-    app_secret = getattr(settings, "whatsapp_app_secret", "")
+    app_secret = settings.whatsapp_app_secret
     if not app_secret:
-        return  # dev sem secret configurado
+        logger.error("whatsapp.webhook_sem_app_secret")
+        raise HTTPException(status_code=503, detail="webhook não configurado")
 
     signature_header = request.headers.get("x-hub-signature-256", "")
     if not signature_header.startswith("sha256="):

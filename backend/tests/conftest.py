@@ -2,9 +2,14 @@
 
 from __future__ import annotations
 
+import os
+
 import pytest
 
 from app.models.brand import BrandColors, BrandKit, ThemeContext
+
+# JWT_SECRET e obrigatorio em Settings; testes usam um valor fixo que nunca vai a producao.
+os.environ.setdefault("JWT_SECRET", "segredo-somente-para-testes")
 
 
 @pytest.fixture
